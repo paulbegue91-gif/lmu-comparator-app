@@ -20,10 +20,11 @@ Name: "desktopicon"; Description: "Créer un raccourci sur le Bureau"; GroupDesc
 
 [Files]
 Source: "dist\LMU_Comparator.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "icon.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\LMU Lap Comparator"; Filename: "{app}\LMU_Comparator.exe"
-Name: "{autodesktop}\LMU Lap Comparator"; Filename: "{app}\LMU_Comparator.exe"; Tasks: desktopicon
+Name: "{group}\LMU Lap Comparator"; Filename: "{app}\LMU_Comparator.exe"; IconFilename: "{app}\icon.ico"
+Name: "{autodesktop}\LMU Lap Comparator"; Filename: "{app}\LMU_Comparator.exe"; IconFilename: "{app}\icon.ico"; Tasks: desktopicon
 
 [Run]
 Filename: "{app}\LMU_Comparator.exe"; Description: "Lancer LMU Lap Comparator"; Flags: nowait postinstall skipifsilent
