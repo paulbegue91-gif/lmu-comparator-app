@@ -26,6 +26,7 @@ jobs:
             --onefile `
             --windowed `
             --name "LMU_Comparator" `
+            --icon "icon.ico" `
             --add-data "index.html;." `
             app.py
 
