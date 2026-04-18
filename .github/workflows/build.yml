@@ -1,0 +1,45 @@
+name: Build LMU Comparator
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build .exe with PyInstaller
+        run: |
+          python -m PyInstaller `
+            --onefile `
+            --windowed `
+            --name "LMU_Comparator" `
+            --add-data "index.html;." `
+            app.py
+
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup --yes
+
+      - name: Build installer
+        run: |
+          iscc setup.iss
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: LMU_Comparator_Setup
+          path: Output/LMU_Comparator_Setup.exe
+          retention-days: 90
