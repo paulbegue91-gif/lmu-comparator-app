@@ -4,171 +4,255 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LMU Lap Comparator</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg:      #05080D;
-  --bg2:     #090E15;
-  --bg3:     #0D1520;
-  --card:    #111827;
-  --border:  rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.12);
-  --red:     #E8003D;
-  --blue:    #2563EB;
-  --text:    #F1F5F9;
+  --bg:      #F1F3F7;
+  --white:   #FFFFFF;
+  --card:    #FFFFFF;
+  --border:  #E2E6ED;
+  --border2: #CBD2DC;
+  --red:     #DC2626;
+  --red2:    #FEE2E2;
+  --blue:    #1D4ED8;
+  --text:    #0F172A;
   --sub:     #64748B;
-  --green:   #10B981;
-  --gold:    #F59E0B;
-  --hyper:   #E8003D;
-  --gt3:     #2563EB;
-  --lmp2:    #D97706;
-  --lmp3:    #059669;
+  --sub2:    #94A3B8;
+  --green:   #059669;
+  --gold:    #B45309;
+  --hyper-bg:#FEE2E2; --hyper-fg:#991B1B;
+  --gt3-bg:  #DBEAFE; --gt3-fg:  #1E40AF;
+  --lmp2-bg: #FEF3C7; --lmp2-fg: #92400E;
+  --lmp3-bg: #D1FAE5; --lmp3-fg: #065F46;
 }
 * { margin:0; padding:0; box-sizing:border-box }
-html, body { height:100%; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden }
-
-/* Grid background */
-body { background-image: radial-gradient(ellipse at 20% 0%, rgba(37,99,235,0.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 0%, rgba(232,0,61,0.06) 0%, transparent 60%); }
+html,body { height:100%; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden }
 
 /* ── Header ── */
-header { position:fixed; top:0; left:0; right:0; z-index:200; height:56px; background:rgba(5,8,13,0.95); backdrop-filter:blur(24px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 24px; }
+header {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:54px; background:var(--white);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 24px;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+}
 .logo { display:flex; align-items:center; gap:10px; }
-.logo-mark { width:28px; height:28px; background:var(--red); clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%,20% 50%); }
-.logo-text { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:17px; letter-spacing:.06em; color:var(--text); }
+.logo-mark {
+  width:26px; height:26px; background:var(--red);
+  clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%,20% 50%);
+}
+.logo-text { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px; letter-spacing:.06em; color:var(--text); }
 .logo-text span { color:var(--red); }
-.header-actions { display:flex; align-items:center; gap:8px; }
-.pilot-pill { font-family:'JetBrains Mono',monospace; font-size:11px; background:rgba(232,0,61,.12); border:1px solid rgba(232,0,61,.25); color:var(--red); padding:3px 10px; border-radius:4px; display:none; letter-spacing:.04em; }
-.hbtn { display:flex; align-items:center; gap:5px; font-family:'Rajdhani',sans-serif; font-weight:600; font-size:12px; letter-spacing:.08em; padding:6px 14px; border:1px solid var(--border2); background:rgba(255,255,255,.04); color:var(--sub); cursor:pointer; border-radius:4px; transition:all .15s; text-transform:uppercase; }
-.hbtn:hover { background:rgba(255,255,255,.08); color:var(--text); border-color:rgba(255,255,255,.2); }
-.hbtn.primary { background:var(--red); border-color:var(--red); color:white; }
-.hbtn.primary:hover { background:#c9002f; }
-.sync-dot { width:5px; height:5px; border-radius:50%; background:var(--sub); }
-.sync-dot.on { background:var(--green); box-shadow:0 0 5px var(--green); animation:blink 2s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+.header-right { display:flex; align-items:center; gap:8px; }
+.pilot-pill {
+  font-family:'JetBrains Mono',monospace; font-size:11px;
+  background:var(--red2); border:1px solid #FECACA;
+  color:var(--red); padding:3px 10px; border-radius:4px;
+  display:none; letter-spacing:.04em; font-weight:500;
+}
+.hbtn {
+  display:flex; align-items:center; gap:5px;
+  font-family:'Inter',sans-serif; font-weight:500; font-size:12px;
+  padding:6px 14px; border:1px solid var(--border2);
+  background:var(--white); color:var(--sub);
+  cursor:pointer; border-radius:6px; transition:all .15s;
+}
+.hbtn:hover { background:var(--bg); color:var(--text); border-color:var(--sub2); }
+.hbtn.red { background:var(--red); border-color:var(--red); color:white; font-weight:600; }
+.hbtn.red:hover { background:#B91C1C; }
+.sdot { width:6px; height:6px; border-radius:50%; background:var(--sub2); }
+.sdot.on { background:var(--green); box-shadow:0 0 0 2px #D1FAE5; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.5} }
 
 /* ── Nav ── */
-nav { position:fixed; top:56px; left:0; right:0; z-index:199; background:rgba(5,8,13,.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; padding:0 24px; gap:4px; }
-.ntab { font-family:'Rajdhani',sans-serif; font-weight:600; font-size:12px; letter-spacing:.1em; text-transform:uppercase; padding:12px 16px; cursor:pointer; color:var(--sub); border-bottom:2px solid transparent; transition:all .15s; }
+nav {
+  position:fixed; top:54px; left:0; right:0; z-index:199;
+  background:var(--white); border-bottom:1px solid var(--border);
+  display:flex; padding:0 24px; gap:2px;
+}
+.ntab {
+  font-family:'Inter',sans-serif; font-weight:500; font-size:13px;
+  padding:12px 16px; cursor:pointer; color:var(--sub);
+  border-bottom:2px solid transparent; transition:all .15s;
+}
 .ntab:hover { color:var(--text); }
-.ntab.active { color:var(--red); border-bottom-color:var(--red); }
+.ntab.active { color:var(--red); border-bottom-color:var(--red); font-weight:600; }
 
 /* ── Main ── */
-main { padding-top:100px; padding-bottom:40px; }
-.page { display:none; padding:24px; }
-.page.active { display:block; animation:up .25s ease; }
-@keyframes up { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+main { padding-top:98px; padding-bottom:48px; }
+.page { display:none; padding:24px 28px; }
+.page.active { display:block; animation:up .2s ease; }
+@keyframes up { from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)} }
 
 /* ── Stats ── */
-.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
-.scard { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:18px 20px; position:relative; overflow:hidden; }
-.scard::after { content:''; position:absolute; bottom:0; left:0; width:40%; height:1px; background:var(--red); }
-.sval { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:30px; line-height:1; }
-.slbl { font-size:11px; color:var(--sub); letter-spacing:.06em; text-transform:uppercase; margin-top:5px; }
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+.scard {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:8px; padding:16px 20px;
+  border-top:3px solid var(--red);
+}
+.sval { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:28px; color:var(--text); line-height:1; }
+.slbl { font-size:11px; color:var(--sub); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
 
-/* ── Filters ── */
-.filterbar { display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
-.flabel { font-size:11px; color:var(--sub); letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+/* ── Filter bar ── */
+.filterbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+.flabel { font-size:11px; font-weight:600; color:var(--sub); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
 .pills { display:flex; gap:6px; }
-.pill { font-family:'Rajdhani',sans-serif; font-weight:600; font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:5px 14px; border-radius:4px; cursor:pointer; border:1px solid var(--border2); color:var(--sub); background:rgba(255,255,255,.03); transition:all .15s; }
-.pill:hover { color:var(--text); border-color:rgba(255,255,255,.2); }
-.pill.on { color:#fff; border-color:transparent; }
-.pill[data-c=""].on { background:var(--sub); }
-.pill[data-c="Hypercar"].on { background:var(--hyper); }
-.pill[data-c="GT3"].on { background:var(--gt3); }
-.pill[data-c="LMP2"].on { background:var(--lmp2); }
-.pill[data-c="LMP3"].on { background:var(--lmp3); }
-.fsep { width:1px; height:20px; background:var(--border2); margin:0 4px; }
-.fsel { background:var(--card); border:1px solid var(--border2); color:var(--text); font-family:'Inter',sans-serif; font-size:12px; padding:6px 30px 6px 12px; border-radius:4px; cursor:pointer; outline:none; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748B' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; background-color:var(--card); }
+.pill {
+  font-family:'Inter',sans-serif; font-weight:500; font-size:12px;
+  padding:5px 14px; border-radius:20px; cursor:pointer;
+  border:1px solid var(--border2); color:var(--sub);
+  background:var(--white); transition:all .15s;
+}
+.pill:hover { border-color:var(--sub2); color:var(--text); }
+.pill.on { color:white; border-color:transparent; font-weight:600; }
+.pill[data-c=""].on  { background:var(--sub); }
+.pill[data-c="Hypercar"].on { background:var(--red); }
+.pill[data-c="GT3"].on     { background:var(--blue); }
+.pill[data-c="LMP2"].on    { background:#D97706; }
+.pill[data-c="LMP3"].on    { background:#059669; }
+.fsep { width:1px; height:22px; background:var(--border2); margin:0 4px; }
+.fsel {
+  background:var(--white); border:1px solid var(--border2);
+  color:var(--text); font-family:'Inter',sans-serif; font-size:12px;
+  padding:6px 28px 6px 12px; border-radius:6px;
+  cursor:pointer; outline:none; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 9px center;
+  background-color:var(--white);
+}
 
 /* ── Table ── */
-.tbox { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.tbox { background:var(--white); border:1px solid var(--border); border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.04); }
 .tscroll { overflow-x:auto; }
 table { width:100%; border-collapse:collapse; }
-thead th { background:var(--bg3); padding:10px 16px; text-align:left; font-family:'Rajdhani',sans-serif; font-weight:600; font-size:11px; letter-spacing:.1em; color:var(--sub); text-transform:uppercase; border-bottom:1px solid var(--border); white-space:nowrap; }
+thead th {
+  background:#F8FAFC; padding:10px 16px; text-align:left;
+  font-family:'Inter',sans-serif; font-weight:600; font-size:11px;
+  letter-spacing:.06em; color:var(--sub); text-transform:uppercase;
+  border-bottom:1px solid var(--border); white-space:nowrap;
+}
 thead th.me-col { color:var(--red); }
 
-/* Circuit group header */
-tr.grp td { padding:10px 16px; background:var(--bg3); border-top:1px solid var(--border2); }
-.grp-inner { display:flex; align-items:center; gap:10px; }
-.grp-flag { width:24px; height:16px; border-radius:2px; object-fit:cover; flex-shrink:0; }
-.grp-name { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px; letter-spacing:.03em; color:var(--text); }
-.grp-config { font-size:11px; color:var(--sub); margin-left:2px; }
-.cat-tag { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:10px; letter-spacing:.08em; padding:2px 8px; border-radius:3px; margin-left:auto; text-transform:uppercase; flex-shrink:0; }
-.cat-Hypercar { background:rgba(232,0,61,.15); color:#ff4d75; border:1px solid rgba(232,0,61,.25); }
-.cat-GT3      { background:rgba(37,99,235,.15); color:#60a5fa; border:1px solid rgba(37,99,235,.25); }
-.cat-LMP2     { background:rgba(217,119,6,.15);  color:#fbbf24; border:1px solid rgba(217,119,6,.25); }
-.cat-LMP3     { background:rgba(5,150,105,.15);  color:#34d399; border:1px solid rgba(5,150,105,.25); }
-.cat-Unknown  { background:rgba(100,116,139,.1); color:var(--sub); border:1px solid var(--border); }
+/* Circuit group row */
+tr.grp td {
+  padding:8px 16px;
+  background:#F8FAFC;
+  border-top:2px solid var(--border);
+}
+tr.grp:first-child td { border-top:none; }
+.grp-inner { display:flex; align-items:center; gap:8px; }
+.flag-img {
+  width:22px; height:15px; border-radius:2px;
+  object-fit:cover; flex-shrink:0;
+  border:1px solid rgba(0,0,0,.08);
+}
+.grp-name { font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--text); }
+.grp-config { font-size:11px; color:var(--sub2); }
+.cat-pill {
+  font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+  letter-spacing:.05em; padding:2px 8px; border-radius:10px;
+  text-transform:uppercase; margin-left:2px; flex-shrink:0;
+}
+.cat-Hypercar { background:var(--hyper-bg); color:var(--hyper-fg); }
+.cat-GT3      { background:var(--gt3-bg);   color:var(--gt3-fg); }
+.cat-LMP2     { background:var(--lmp2-bg);  color:var(--lmp2-fg); }
+.cat-LMP3     { background:var(--lmp3-bg);  color:var(--lmp3-fg); }
+.cat-Unknown  { background:#F1F5F9; color:var(--sub); }
 
 /* Data rows */
-tr.drow td { padding:9px 16px; border-bottom:1px solid rgba(255,255,255,.03); font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--sub); white-space:nowrap; transition:background .1s; }
+tr.drow td {
+  padding:9px 16px; border-bottom:1px solid #F1F5F9;
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  color:var(--sub); white-space:nowrap;
+}
 tr.drow:last-child td { border-bottom:none; }
-tr.drow:hover td { background:rgba(255,255,255,.02); }
-tr.drow td.best { color:var(--gold); font-weight:500; }
-.brand-wrap { display:inline-flex; align-items:center; gap:6px; }
-.brand-img { height:13px; width:auto; object-fit:contain; opacity:.75; filter:brightness(0) invert(1); vertical-align:middle; }
-.brand-txt { font-size:10px; color:var(--sub); font-family:'Inter',sans-serif; }
+tr.drow:hover td { background:#FAFBFC; }
+tr.drow td.best { color:var(--gold); font-weight:600; }
+tr.drow td:first-child { color:var(--text); font-family:'Inter',sans-serif; font-size:12px; }
+.brand-wrap { display:inline-flex; align-items:center; gap:5px; vertical-align:middle; }
+.brand-img { height:11px; width:auto; object-fit:contain; opacity:.6; vertical-align:middle; }
+.brand-txt { font-size:10px; color:var(--sub2); font-family:'Inter',sans-serif; font-weight:500; }
 
 /* ── Charts ── */
-.chart-grid { display:grid; grid-template-columns:1fr; gap:20px; }
-.ccard { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:24px; }
-.ccard h3 { font-family:'Rajdhani',sans-serif; font-weight:600; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--sub); margin-bottom:18px; }
-.ccard h3 em { color:var(--text); font-style:normal; }
-.cwrap { position:relative; height:320px; }
+.chart-grid { display:grid; grid-template-columns:1fr; gap:18px; }
+.ccard { background:var(--white); border:1px solid var(--border); border-radius:8px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.ccard-title { font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--text); margin-bottom:4px; }
+.ccard-sub { font-size:11px; color:var(--sub); margin-bottom:18px; }
+.cwrap { position:relative; height:300px; }
 
-/* ── Pilots online ── */
-.pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
-.pcard { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:18px; position:relative; overflow:hidden; transition:all .15s; }
-.pcard:hover { border-color:var(--border2); transform:translateY(-1px); }
-.pcard.me { border-color:rgba(232,0,61,.3); }
-.pcard-top { position:absolute; top:0; left:0; right:0; height:2px; }
-.pname { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:17px; display:flex; align-items:center; gap:8px; margin-bottom:5px; }
-.me-tag { font-size:9px; background:rgba(232,0,61,.15); color:var(--red); padding:2px 6px; border-radius:3px; letter-spacing:.06em; font-family:'Rajdhani',sans-serif; font-weight:700; }
+/* ── Pilots ── */
+.sec-title { font-family:'Inter',sans-serif; font-weight:600; font-size:16px; color:var(--text); margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+.pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
+.pcard {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:8px; padding:16px; position:relative;
+  overflow:hidden; transition:all .15s;
+}
+.pcard:hover { box-shadow:0 4px 12px rgba(0,0,0,.08); transform:translateY(-1px); }
+.pcard.me { border-color:#FECACA; }
+.pcard-top { position:absolute; top:0; left:0; right:0; height:3px; }
+.pname { font-family:'Inter',sans-serif; font-weight:600; font-size:15px; color:var(--text); display:flex; align-items:center; gap:7px; margin-bottom:4px; }
+.me-tag { font-size:9px; background:var(--red2); color:var(--red); padding:2px 6px; border-radius:3px; letter-spacing:.05em; font-weight:700; }
 .pmeta { font-size:12px; color:var(--sub); }
-.pupd { font-size:10px; color:var(--sub); margin-top:6px; font-family:'JetBrains Mono',monospace; opacity:.7; }
+.pupd { font-size:10px; color:var(--sub2); margin-top:5px; font-family:'JetBrains Mono',monospace; }
 
 /* ── Setup ── */
-.setup-wrap { max-width:520px; margin:50px auto; }
-.setup-hero { text-align:center; margin-bottom:40px; }
-.setup-hero h1 { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:40px; letter-spacing:.05em; background:linear-gradient(120deg,#fff 0%,var(--red) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.setup-hero p { color:var(--sub); font-size:14px; margin-top:8px; }
-.setup-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:24px; margin-bottom:14px; position:relative; }
-.setup-card::before { content:''; position:absolute; left:0; top:12px; bottom:12px; width:2px; background:var(--red); border-radius:0 2px 2px 0; }
-.setup-label { font-family:'Rajdhani',sans-serif; font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--sub); margin-bottom:10px; display:block; }
-.setup-input { width:100%; background:var(--bg3); border:1px solid var(--border2); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:13px; padding:11px 14px; border-radius:6px; outline:none; transition:.15s; }
-.setup-input:focus { border-color:rgba(232,0,61,.4); background:var(--bg2); }
-.setup-input::placeholder { color:var(--sub); opacity:.6; }
-.setup-hint { font-size:11px; color:var(--sub); margin-top:7px; line-height:1.5; }
+.setup-wrap { max-width:500px; margin:48px auto; }
+.setup-hero { text-align:center; margin-bottom:36px; }
+.setup-hero h1 { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:36px; letter-spacing:.04em; color:var(--text); }
+.setup-hero h1 span { color:var(--red); }
+.setup-hero p { color:var(--sub); font-size:14px; margin-top:6px; }
+.setup-card { background:var(--white); border:1px solid var(--border); border-radius:8px; padding:22px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.setup-label { display:block; font-size:12px; font-weight:600; color:var(--text); margin-bottom:8px; }
+.setup-input {
+  width:100%; background:var(--bg); border:1px solid var(--border2);
+  color:var(--text); font-family:'JetBrains Mono',monospace; font-size:13px;
+  padding:10px 13px; border-radius:6px; outline:none; transition:.15s;
+}
+.setup-input:focus { border-color:var(--red); background:var(--white); box-shadow:0 0 0 3px #FEE2E2; }
+.setup-input::placeholder { color:var(--sub2); }
+.setup-hint { font-size:11px; color:var(--sub); margin-top:6px; line-height:1.5; }
 .setup-row { display:flex; gap:8px; }
 .setup-row .setup-input { flex:1; }
-.setup-msg { padding:10px 14px; border-radius:6px; font-size:13px; display:none; margin-top:10px; }
-.setup-msg.ok { background:rgba(16,185,129,.1); color:#34d399; border:1px solid rgba(16,185,129,.2); }
-.setup-msg.err { background:rgba(232,0,61,.1); color:#ff4d75; border:1px solid rgba(232,0,61,.2); }
-.setup-btn { width:100%; padding:13px; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15px; letter-spacing:.1em; text-transform:uppercase; background:var(--red); color:white; border:none; border-radius:6px; cursor:pointer; transition:.15s; margin-top:6px; }
-.setup-btn:hover { background:#c9002f; transform:translateY(-1px); }
-
-/* ── Section title ── */
-.sec-title { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:.04em; margin-bottom:20px; display:flex; align-items:center; gap:14px; color:var(--text); }
-.sec-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.setup-msg { padding:10px 14px; border-radius:6px; font-size:13px; display:none; margin-top:8px; }
+.setup-msg.ok  { background:#D1FAE5; color:#065F46; border:1px solid #A7F3D0; }
+.setup-msg.err { background:var(--red2); color:var(--red); border:1px solid #FECACA; }
+.setup-btn {
+  width:100%; padding:12px; font-family:'Inter',sans-serif;
+  font-weight:600; font-size:14px; background:var(--red); color:white;
+  border:none; border-radius:8px; cursor:pointer; transition:.15s; margin-top:4px;
+}
+.setup-btn:hover { background:#B91C1C; transform:translateY(-1px); box-shadow:0 4px 12px rgba(220,38,38,.3); }
 
 /* ── Status ── */
-.statusbar { position:fixed; bottom:0; left:0; right:0; z-index:200; background:rgba(5,8,13,.95); border-top:1px solid var(--border); padding:6px 24px; display:flex; align-items:center; gap:14px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub); }
+.statusbar {
+  position:fixed; bottom:0; left:0; right:0; z-index:200;
+  background:var(--white); border-top:1px solid var(--border);
+  padding:7px 24px; display:flex; align-items:center; gap:14px;
+  font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub);
+}
 .statusbar .sep { color:var(--border2); }
 
 /* ── Loading ── */
-#loading { position:fixed; inset:0; background:var(--bg); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; }
-.load-logo { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:36px; letter-spacing:.1em; background:linear-gradient(120deg,#fff,var(--red)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.load-bar { width:180px; height:2px; background:var(--card); border-radius:1px; overflow:hidden; }
-.load-prog { height:100%; background:var(--red); animation:loadanim 1.1s ease-in-out infinite; }
-@keyframes loadanim { 0%{width:0%;margin-left:0} 50%{width:55%;margin-left:20%} 100%{width:0%;margin-left:100%} }
-.load-txt { font-size:11px; color:var(--sub); letter-spacing:.12em; text-transform:uppercase; }
+#loading {
+  position:fixed; inset:0; background:var(--white); z-index:9999;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+}
+.load-logo { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:32px; letter-spacing:.08em; color:var(--text); }
+.load-logo span { color:var(--red); }
+.load-bar { width:160px; height:2px; background:var(--border); border-radius:1px; overflow:hidden; }
+.load-prog { height:100%; background:var(--red); animation:lanim 1s ease-in-out infinite; }
+@keyframes lanim { 0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%} }
+.load-txt { font-size:11px; color:var(--sub); letter-spacing:.1em; text-transform:uppercase; }
 </style>
 </head>
 <body>
 
 <div id="loading">
-  <div class="load-logo">LMU LAP COMPARATOR</div>
+  <div class="load-logo">LMU <span>LAP</span> COMPARATOR</div>
   <div class="load-bar"><div class="load-prog"></div></div>
   <div class="load-txt">Connexion au serveur…</div>
 </div>
@@ -178,10 +262,10 @@ tr.drow td.best { color:var(--gold); font-weight:500; }
     <div class="logo-mark"></div>
     <div class="logo-text">LMU <span>LAP</span> COMPARATOR</div>
   </div>
-  <div class="header-actions">
+  <div class="header-right">
     <div class="pilot-pill" id="pilotPill"></div>
     <button class="hbtn" onclick="reload()">↺ Recharger</button>
-    <button class="hbtn" onclick="syncNow()"><div class="sync-dot" id="syncDot"></div> Sync</button>
+    <button class="hbtn" onclick="syncNow()"><div class="sdot" id="sdot"></div> Sync</button>
     <button class="hbtn" onclick="exportCSV()">↓ CSV</button>
   </div>
 </header>
@@ -201,7 +285,7 @@ tr.drow td.best { color:var(--gold); font-weight:500; }
       <div class="scard"><div class="sval" id="s-pilots">—</div><div class="slbl">Pilotes</div></div>
       <div class="scard"><div class="sval" id="s-circuits">—</div><div class="slbl">Circuits</div></div>
       <div class="scard"><div class="sval" id="s-tours">—</div><div class="slbl">Meilleurs temps</div></div>
-      <div class="scard"><div class="sval" id="s-sync" style="font-size:15px;color:var(--sub)">—</div><div class="slbl">Dernière sync</div></div>
+      <div class="scard"><div class="sval" id="s-sync" style="font-size:14px;color:var(--sub)">—</div><div class="slbl">Dernière sync</div></div>
     </div>
     <div class="filterbar">
       <span class="flabel">Catégorie</span>
@@ -237,8 +321,16 @@ tr.drow td.best { color:var(--gold); font-weight:500; }
       <select class="fsel" id="fCircG" onchange="renderCharts()"><option value="">Tous</option></select>
     </div>
     <div class="chart-grid">
-      <div class="ccard"><h3>Meilleur temps par circuit <em>— absolu</em></h3><div class="cwrap"><canvas id="chart1" role="img" aria-label="Temps par circuit"></canvas></div></div>
-      <div class="ccard"><h3>Écart au meilleur temps <em>— secondes</em></h3><div class="cwrap"><canvas id="chart2" role="img" aria-label="Écarts entre pilotes"></canvas></div></div>
+      <div class="ccard">
+        <div class="ccard-title">Meilleur temps par circuit</div>
+        <div class="ccard-sub">Temps absolu par pilote</div>
+        <div class="cwrap"><canvas id="chart1" role="img" aria-label="Temps par circuit"></canvas></div>
+      </div>
+      <div class="ccard">
+        <div class="ccard-title">Écart au meilleur temps</div>
+        <div class="ccard-sub">En secondes — 0 = référence</div>
+        <div class="cwrap"><canvas id="chart2" role="img" aria-label="Écarts entre pilotes"></canvas></div>
+      </div>
     </div>
   </div>
 
@@ -252,22 +344,22 @@ tr.drow td.best { color:var(--gold); font-weight:500; }
   <div class="page" id="page-config">
     <div class="setup-wrap">
       <div class="setup-hero">
-        <h1>Configuration</h1>
-        <p>À faire une seule fois — vos potes font pareil sur leur PC</p>
+        <h1>LMU <span>LAP</span> COMPARATOR</h1>
+        <p>Configuration initiale — à faire une seule fois</p>
       </div>
       <div class="setup-card">
-        <span class="setup-label">Votre pseudo LMU</span>
+        <label class="setup-label">Votre pseudo LMU</label>
         <input type="text" class="setup-input" id="inName" placeholder="ex: Paul Begue" autocomplete="off">
-        <div class="setup-hint">Exactement comme dans vos sessions — respectez les majuscules</div>
+        <div class="setup-hint">Exactement comme dans vos sessions — respectez les majuscules et espaces</div>
       </div>
       <div class="setup-card">
-        <span class="setup-label">Dossier Results LMU</span>
+        <label class="setup-label">Dossier Results LMU</label>
         <div class="setup-row">
           <input type="text" class="setup-input" id="inFolder" placeholder="H:\SteamLibrary\...\Results">
         </div>
         <div class="setup-hint">H:\SteamLibrary\steamapps\common\Le Mans Ultimate\UserData\Log\Results</div>
       </div>
-      <button class="setup-btn" onclick="saveConfig()">Valider et démarrer</button>
+      <button class="setup-btn" onclick="saveConfig()">Valider et démarrer →</button>
       <div class="setup-msg" id="setupMsg"></div>
     </div>
   </div>
@@ -285,45 +377,46 @@ tr.drow td.best { color:var(--gold); font-weight:500; }
 <script>
 const REMOTE = 'https://lmu-comparator-server.onrender.com';
 const LOCAL  = '';
-const COLORS = ['#E8003D','#2563EB','#10B981','#F59E0B','#8B5CF6','#EC4899','#06B6D4','#F97316','#14B8A6','#A78BFA'];
+const COLORS = ['#DC2626','#1D4ED8','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#EA580C','#0D9488','#65A30D'];
 
-// ── Drapeaux via flagcdn.com (ISO 3166-1 alpha-2) ─────────────────
-const CIRCUIT_FLAGS = {
-  'algarve international':'pt','portimao':'pt',
+// ── Drapeaux via flagcdn.com ───────────────────────────────────────
+const FLAGS = {
+  'algarve':'pt','portimao':'pt',
   'autodromo enzo':'it','imola':'it',
-  'autodromo josé carlos':'br','interlagos':'br','autodromo jose carlos':'br',
-  'autodromo nazionale monza':'it','monza':'it',
+  'autodromo josé carlos':'br','autodromo jose carlos':'br','interlagos':'br',
+  'autodromo nazionale monza':'it','monza':'it','monza curva':'it',
   'bahrain international':'bh','bahrain':'bh',
   'circuit de barcelona':'es','barcelona':'es',
-  'circuit de la sarthe':'fr','le mans':'fr','la sarthe':'fr',
+  'circuit de la sarthe':'fr','la sarthe':'fr','le mans':'fr',
   'circuit de spa':'be','spa-francorchamps':'be','spa':'be',
   'circuit of the americas':'us','cota':'us',
   'fuji speedway':'jp','fuji':'jp',
-  'paul ricard':'fr','circuit paul ricard':'fr',
+  'paul ricard':'fr',
   'sebring international':'us','sebring':'us',
   'silverstone':'gb',
   'suzuka':'jp',
   'lusail':'qa','qatar':'qa',
   'nurburgring':'de','nordschleife':'de',
-  'zandvoort':'nl',
-  'mugello':'it',
+  'zandvoort':'nl','circuit zandvoort':'nl',
+  'mugello':'it','autodromo del mugello':'it',
   'misano':'it',
-  'daytona':'us',
+  'daytona':'us','daytona international':'us',
   'kyalami':'za',
-  'istanbul':'tr',
-  'shanghai':'cn',
-  'motegi':'jp',
+  'istanbul':'tr','istanbul park':'tr',
+  'shanghai':'cn','shanghai international':'cn',
+  'motegi':'jp','twin ring motegi':'jp',
   'buenos aires':'ar',
 };
 
 function getFlag(circuit) {
   const l = circuit.toLowerCase();
-  for (const [k, code] of Object.entries(CIRCUIT_FLAGS))
-    if (l.includes(k)) return `<img class="grp-flag" src="https://flagcdn.com/24x16/${code}.png" alt="${code}">`;
-  return `<span class="grp-flag" style="display:inline-flex;align-items:center;justify-content:center;font-size:14px">🏁</span>`;
+  for (const [k, code] of Object.entries(FLAGS))
+    if (l.includes(k))
+      return `<img class="flag-img" src="https://flagcdn.com/32x24/${code}.png" alt="${code}" onerror="this.style.display='none'">`;
+  return '';
 }
 
-// ── Logos constructeurs (Wikipedia Commons) ───────────────────────
+// ── Logos constructeurs ───────────────────────────────────────────
 const LOGOS = {
   'Ferrari':      'https://upload.wikimedia.org/wikipedia/commons/d/d1/Ferrari-Logo.svg',
   'Lamborghini':  'https://upload.wikimedia.org/wikipedia/commons/7/7f/Lamborghini_Logo.svg',
@@ -344,7 +437,7 @@ const LOGOS = {
 
 function brandHtml(brand) {
   const url = LOGOS[brand];
-  if (url) return `<img class="brand-img" src="${url}" alt="${brand}" onerror="this.outerHTML='<span class=brand-txt>${brand}</span>'">`;
+  if (url) return `<img class="brand-img" src="${url}" alt="${brand}" onerror="this.outerHTML='<span class=brand-txt>${brand||''}</span>'">`;
   return brand ? `<span class="brand-txt">${brand}</span>` : '';
 }
 
@@ -353,7 +446,11 @@ let S = { remote:{}, myName:'', myFolder:'', lastSync:null, c1:null, c2:null, cl
 
 // ── Boot ──────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
-  try { const r = await fetch(LOCAL+'/api/config'); const c = await r.json(); S.myName=c.name||''; S.myFolder=c.folder||''; } catch(e) {}
+  try {
+    const r = await fetch(LOCAL+'/api/config');
+    const c = await r.json();
+    S.myName = c.name||''; S.myFolder = c.folder||'';
+  } catch(e) {}
   if (S.myName) {
     document.getElementById('pilotPill').textContent = S.myName;
     document.getElementById('pilotPill').style.display = 'block';
@@ -363,215 +460,269 @@ window.addEventListener('load', async () => {
   }
   await syncNow();
   const l = document.getElementById('loading');
-  l.style.transition='opacity .4s'; l.style.opacity='0';
-  setTimeout(()=>l.style.display='none', 450);
+  l.style.transition = 'opacity .4s'; l.style.opacity = '0';
+  setTimeout(() => l.style.display = 'none', 440);
   if (!S.myName) showPage('config', document.querySelectorAll('.ntab')[3]);
 });
 
-// ── Pages ─────────────────────────────────────────────────────────
+// ── Navigation ────────────────────────────────────────────────────
 function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   el.classList.add('active');
-  if (id==='graphiques') renderCharts();
+  if (id === 'graphiques') renderCharts();
 }
 
-// ── Class filter ──────────────────────────────────────────────────
+// ── Filters ───────────────────────────────────────────────────────
 function setClass(cls, el, which) {
   if (which==='t') S.cls_t=cls; else S.cls_g=cls;
-  document.querySelectorAll(`#pills-${which} .pill`).forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll(`#pills-${which} .pill`).forEach(p => p.classList.remove('on'));
   el.classList.add('on');
   if (which==='t') renderTable(); else renderCharts();
 }
 
 // ── Config ────────────────────────────────────────────────────────
 async function saveConfig() {
-  const name=document.getElementById('inName').value.trim();
-  const folder=document.getElementById('inFolder').value.trim();
-  const msg=document.getElementById('setupMsg');
-  if (!name)   { showMsg('Entrez votre pseudo LMU','err'); return; }
-  if (!folder) { showMsg('Entrez le chemin du dossier','err'); return; }
-  S.myName=name; S.myFolder=folder;
-  document.getElementById('pilotPill').textContent=name;
-  document.getElementById('pilotPill').style.display='block';
-  document.getElementById('stFolder').textContent='Dossier : '+folder;
-  try { await fetch(LOCAL+'/api/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,folder})}); showMsg('✓ Sauvegardé !','ok'); }
-  catch(e) { showMsg('✓ Sauvegardé localement.','ok'); }
-  showPage('tableau',document.querySelectorAll('.ntab')[0]);
+  const name   = document.getElementById('inName').value.trim();
+  const folder = document.getElementById('inFolder').value.trim();
+  if (!name)   { showMsg('Entrez votre pseudo LMU', 'err'); return; }
+  if (!folder) { showMsg('Entrez le chemin du dossier', 'err'); return; }
+  S.myName = name; S.myFolder = folder;
+  document.getElementById('pilotPill').textContent = name;
+  document.getElementById('pilotPill').style.display = 'block';
+  document.getElementById('stFolder').textContent = 'Dossier : ' + folder;
+  try {
+    await fetch(LOCAL+'/api/config', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,folder}) });
+    showMsg('✓ Sauvegardé et synchronisé !', 'ok');
+  } catch(e) { showMsg('✓ Sauvegardé.', 'ok'); }
+  showPage('tableau', document.querySelectorAll('.ntab')[0]);
   syncNow();
 }
-function showMsg(t,type){const e=document.getElementById('setupMsg');e.textContent=t;e.className='setup-msg '+type;e.style.display='block';}
+function showMsg(t, type) {
+  const e = document.getElementById('setupMsg');
+  e.textContent = t; e.className = 'setup-msg '+type; e.style.display = 'block';
+}
 
 // ── Sync ──────────────────────────────────────────────────────────
 async function syncNow() {
-  const dot = document.getElementById('syncDot');
-  dot.className='sync-dot';
-  document.getElementById('stText').textContent='Synchronisation…';
+  const dot = document.getElementById('sdot');
+  dot.className = 'sdot';
+  document.getElementById('stText').textContent = 'Synchronisation…';
   try { await fetch(LOCAL+'/api/sync'); } catch(e) {}
   try {
-    const r = await fetch(REMOTE+'/all');
+    const r    = await fetch(REMOTE+'/all');
     const data = await r.json();
-    S.remote=data; S.lastSync=new Date().toLocaleTimeString('fr-FR');
-    dot.className='sync-dot on';
-    document.getElementById('stServer').textContent='Serveur : ✓ en ligne';
-    document.getElementById('stText').textContent=Object.keys(data).length+' pilotes synchronisés';
-    document.getElementById('s-sync').textContent=S.lastSync;
+    S.remote   = data;
+    S.lastSync = new Date().toLocaleTimeString('fr-FR');
+    dot.className = 'sdot on';
+    document.getElementById('stServer').textContent = 'Serveur : ✓ en ligne';
+    document.getElementById('stText').textContent   = Object.keys(data).length + ' pilotes synchronisés';
+    document.getElementById('s-sync').textContent   = S.lastSync;
   } catch(e) {
-    dot.className='sync-dot';
-    document.getElementById('stServer').textContent='Serveur : ✗ hors ligne';
-    document.getElementById('stText').textContent='Erreur de connexion';
+    dot.className = 'sdot';
+    document.getElementById('stServer').textContent = 'Serveur : ✗ hors ligne';
+    document.getElementById('stText').textContent   = 'Erreur de connexion';
   }
   updateStats(); updateFilters(); renderTable(); renderPilots();
 }
 function reload() { syncNow(); }
 
-// ── Data ──────────────────────────────────────────────────────────
+// ── Data helpers ──────────────────────────────────────────────────
 function getMerged(cf, cls) {
   const T = {};
   for (const [pilot, info] of Object.entries(S.remote)) {
     for (const [key, rec] of Object.entries(info.times||{})) {
-      const parts=key.split('|'); if(parts.length<2) continue;
-      const circ=parts[0], cfg=parts[1], cl=parts[2]||'Unknown';
-      if (cf&&circ!==cf) continue;
-      if (cls&&cl!==cls) continue;
-      const k=`${circ}||${cfg}||${cl}`;
-      if (!T[k]) T[k]={circuit:circ,config:cfg,car_class:cl,times:{}};
-      const cur=T[k].times[pilot];
-      if (!cur||rec.time_sec<cur.time_sec) T[k].times[pilot]={time_sec:rec.time_sec,brand:rec.brand||'',car_type:rec.car_type||''};
+      const parts = key.split('|');
+      if (parts.length < 2) continue;
+      const circ = parts[0], cfg = parts[1], cl = parts[2]||'Unknown';
+      if (cf  && circ !== cf)  continue;
+      if (cls && cl   !== cls) continue;
+      const k = `${circ}||${cfg}||${cl}`;
+      if (!T[k]) T[k] = { circuit:circ, config:cfg, car_class:cl, times:{} };
+      const cur = T[k].times[pilot];
+      if (!cur || rec.time_sec < cur.time_sec)
+        T[k].times[pilot] = { time_sec:rec.time_sec, brand:rec.brand||'', car_type:rec.car_type||'' };
     }
   }
-  return Object.values(T).sort((a,b)=>{const c=a.circuit.localeCompare(b.circuit);return c||a.car_class.localeCompare(b.car_class);});
+  return Object.values(T).sort((a,b) => {
+    const c = a.circuit.localeCompare(b.circuit);
+    return c || a.car_class.localeCompare(b.car_class);
+  });
 }
 
 function fmt(s) {
-  if (!s) return '—';
-  const m=Math.floor(s/60), sec=s-m*60;
+  if (!s && s !== 0) return '—';
+  const m = Math.floor(s/60), sec = s - m*60;
   return `${String(m).padStart(2,'0')}:${sec.toFixed(3).padStart(6,'0')}`;
 }
 
 function updateStats() {
-  const merged=getMerged(null,null);
-  document.getElementById('s-pilots').textContent=Object.keys(S.remote).length;
-  document.getElementById('s-circuits').textContent=[...new Set(merged.map(r=>r.circuit))].length;
-  document.getElementById('s-tours').textContent=merged.reduce((s,r)=>s+Object.keys(r.times).length,0);
+  const merged = getMerged(null, null);
+  document.getElementById('s-pilots').textContent   = Object.keys(S.remote).length;
+  document.getElementById('s-circuits').textContent = [...new Set(merged.map(r=>r.circuit))].length;
+  document.getElementById('s-tours').textContent    = merged.reduce((s,r) => s + Object.keys(r.times).length, 0);
 }
 
 function updateFilters() {
-  const circs=[...new Set(getMerged(null,null).map(r=>r.circuit))].sort();
-  ['fCirc','fCircG'].forEach(id=>{
-    const sel=document.getElementById(id),cur=sel.value;
-    sel.innerHTML='<option value="">Tous les circuits</option>'+circs.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
+  const circs = [...new Set(getMerged(null,null).map(r=>r.circuit))].sort();
+  ['fCirc','fCircG'].forEach(id => {
+    const sel = document.getElementById(id), cur = sel.value;
+    sel.innerHTML = '<option value="">Tous les circuits</option>' +
+      circs.map(c => `<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
   });
 }
 
 // ── Table ─────────────────────────────────────────────────────────
 function renderTable() {
-  const cf=document.getElementById('fCirc').value;
-  const merged=getMerged(cf||null,S.cls_t||null);
-  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
-  const me=(S.myName||'').toLowerCase();
+  const cf     = document.getElementById('fCirc').value;
+  const merged = getMerged(cf||null, S.cls_t||null);
+  const pilots = [...new Set(merged.flatMap(r => Object.keys(r.times)))].sort();
+  const me     = (S.myName||'').toLowerCase();
 
-  document.getElementById('tHead').innerHTML=`<tr>
-    <th style="min-width:260px">Circuit</th>
-    ${pilots.map(p=>`<th class="${p.toLowerCase()===me?'me-col':''}" style="min-width:130px">${p}${p.toLowerCase()===me?' ★':''}</th>`).join('')}
+  document.getElementById('tHead').innerHTML = `<tr>
+    <th style="min-width:220px">Circuit / Catégorie</th>
+    ${pilots.map(p=>`<th class="${p.toLowerCase()===me?'me-col':''}" style="min-width:130px;text-align:right">${p}${p.toLowerCase()===me?' ★':''}</th>`).join('')}
   </tr>`;
 
-  let lastCirc=null;
-  document.getElementById('tBody').innerHTML=merged.map(row=>{
-    const times=row.times;
-    const vals=Object.values(times).map(v=>v.time_sec);
-    const bestT=Math.min(...vals);
-    const bestP=Object.entries(times).find(([,v])=>v.time_sec===bestT)?.[0];
-    let header='';
-    if (row.circuit!==lastCirc) {
-      lastCirc=row.circuit;
-      header=`<tr class="grp"><td colspan="${pilots.length+1}">
+  let lastCirc = null;
+  document.getElementById('tBody').innerHTML = merged.map(row => {
+    const times  = row.times;
+    const bestT  = Math.min(...Object.values(times).map(v=>v.time_sec));
+    const bestP  = Object.entries(times).find(([,v])=>v.time_sec===bestT)?.[0];
+    const flag   = getFlag(row.circuit);
+
+    // Show circuit name only when it changes
+    let circHeader = '';
+    if (row.circuit !== lastCirc) {
+      lastCirc = row.circuit;
+      circHeader = `<tr class="grp"><td colspan="${pilots.length+1}">
         <div class="grp-inner">
-          ${getFlag(row.circuit)}
+          ${flag}
           <span class="grp-name">${row.circuit}</span>
-          <span class="grp-config">${row.config!==row.circuit?'/ '+row.config:''}</span>
-          <span class="cat-tag cat-${row.car_class}">${row.car_class}</span>
+          <span class="grp-config">${row.config && row.config!==row.circuit ? '/ '+row.config : ''}</span>
+          <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
         </div>
       </td></tr>`;
     } else {
-      header=`<tr class="grp"><td colspan="${pilots.length+1}" style="padding-left:60px">
+      // Same circuit, different category
+      circHeader = `<tr class="grp"><td colspan="${pilots.length+1}" style="padding-left:54px">
         <div class="grp-inner">
-          <span class="cat-tag cat-${row.car_class}">${row.car_class}</span>
-          <span class="grp-config">${row.config!==row.circuit?row.config:''}</span>
+          <span class="grp-config">${row.config && row.config!==row.circuit ? row.config+' — ':''}</span>
+          <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
         </div>
       </td></tr>`;
     }
-    const cells=pilots.map(p=>{
-      const rec=times[p]; const isBest=p===bestP&&rec;
-      if (!rec) return `<td>—</td>`;
-      return `<td class="${isBest?'best':''}">${isBest?`<span class="brand-wrap">${brandHtml(rec.brand)}${fmt(rec.time_sec)}</span>`:fmt(rec.time_sec)}</td>`;
+
+    const cells = pilots.map(p => {
+      const rec    = times[p];
+      const isBest = p === bestP && rec;
+      if (!rec) return `<td style="text-align:right;color:var(--sub2)">—</td>`;
+      if (isBest) return `<td class="best" style="text-align:right">
+        <span class="brand-wrap">${brandHtml(rec.brand)}<span>${fmt(rec.time_sec)}</span></span>
+      </td>`;
+      return `<td style="text-align:right">${fmt(rec.time_sec)}</td>`;
     }).join('');
-    return header+`<tr class="drow"><td></td>${cells}</tr>`;
+
+    return circHeader + `<tr class="drow"><td></td>${cells}</tr>`;
   }).join('');
 }
 
 // ── Charts ────────────────────────────────────────────────────────
 function renderCharts() {
-  const cf=document.getElementById('fCircG').value;
-  const merged=getMerged(cf||null,S.cls_g||null).slice(0,16);
-  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
-  const me=(S.myName||'').toLowerCase();
-  const labels=merged.map(r=>`${r.circuit} [${r.car_class}]`);
-  const n=pilots.length, bw=0.8/Math.max(n,1);
-  if (S.c1) S.c1.destroy();
-  if (S.c2) S.c2.destroy();
-  const chartOpts={responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmt(ctx.raw)||ctx.raw}`}}},
-    scales:{x:{ticks:{color:'#64748B',font:{size:9},maxRotation:35},grid:{color:'rgba(255,255,255,.04)'}},
-            y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'rgba(255,255,255,.04)'}}}};
+  const cf     = document.getElementById('fCircG').value;
+  const merged = getMerged(cf||null, S.cls_g||null).slice(0, 18);
+  const pilots = [...new Set(merged.flatMap(r => Object.keys(r.times)))].sort();
+  const me     = (S.myName||'').toLowerCase();
+  const labels = merged.map(r => r.circuit + (r.car_class!=='Unknown'?' ['+r.car_class+']':''));
 
-  S.c1=new Chart(document.getElementById('chart1'),{
-    type:'bar',
-    data:{labels,datasets:pilots.map((p,i)=>({label:p,data:merged.map(r=>r.times[p]?.time_sec||0),
-      backgroundColor:COLORS[i%COLORS.length]+(p.toLowerCase()===me?'FF':'99'),
-      borderColor:p.toLowerCase()===me?'#fff':'transparent',borderWidth:p.toLowerCase()===me?1:0,borderRadius:2,
-      barThickness:Math.max(6,Math.floor(50/Math.max(n,1)))}))},
-    options:{...chartOpts,plugins:{...chartOpts.plugins,legend:{display:true,labels:{color:'#64748B',font:{size:10},boxWidth:10,boxHeight:10}}},
-      scales:{...chartOpts.scales,y:{...chartOpts.scales.y,ticks:{...chartOpts.scales.y.ticks,callback:v=>{if(!v)return'';const m=Math.floor(v/60),s=v-m*60;return`${m}:${String(Math.floor(s)).padStart(2,'0')}`}}}}}
+  const baseOpts = {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ display:true, labels:{ color:'#64748B', font:{size:11}, boxWidth:10, boxHeight:10, padding:16 } } },
+    scales:{
+      x:{ ticks:{ color:'#94A3B8', font:{size:9}, maxRotation:35 }, grid:{ color:'rgba(0,0,0,.05)' } },
+      y:{ ticks:{ color:'#94A3B8', font:{size:9} }, grid:{ color:'rgba(0,0,0,.05)' } }
+    }
+  };
+
+  if (S.c1) S.c1.destroy();
+  S.c1 = new Chart(document.getElementById('chart1'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: pilots.map((p,i) => ({
+        label: p,
+        data:  merged.map(r => r.times[p]?.time_sec || 0),
+        backgroundColor: COLORS[i%COLORS.length] + (p.toLowerCase()===me ? 'EE' : '88'),
+        borderColor:     p.toLowerCase()===me ? COLORS[i%COLORS.length] : 'transparent',
+        borderWidth: p.toLowerCase()===me ? 1.5 : 0,
+        borderRadius: 3,
+        barThickness: Math.max(6, Math.floor(44/Math.max(pilots.length,1))),
+      }))
+    },
+    options: { ...baseOpts, scales:{ ...baseOpts.scales, y:{ ...baseOpts.scales.y, ticks:{ ...baseOpts.scales.y.ticks,
+      callback: v => { if(!v) return ''; const m=Math.floor(v/60),s=v-m*60; return `${m}:${String(Math.floor(s)).padStart(2,'0')}`; }
+    }}}}
   });
 
-  S.c2=new Chart(document.getElementById('chart2'),{
-    type:'line',
-    data:{labels,datasets:pilots.map((p,i)=>({label:p,
-      data:merged.map(r=>{if(!r.times[p])return null;const b=Math.min(...Object.values(r.times).map(v=>v.time_sec));return parseFloat((r.times[p].time_sec-b).toFixed(3));}),
-      borderColor:COLORS[i%COLORS.length],backgroundColor:COLORS[i%COLORS.length]+'22',
-      pointBackgroundColor:COLORS[i%COLORS.length],pointRadius:4,pointHoverRadius:6,
-      borderWidth:p.toLowerCase()===me?2.5:1.5,tension:0.3,spanGaps:true}))},
-    options:{...chartOpts,plugins:{...chartOpts.plugins,legend:{display:true,labels:{color:'#64748B',font:{size:10},boxWidth:10,boxHeight:10}}},
-      scales:{...chartOpts.scales,y:{...chartOpts.scales.y,min:0,ticks:{...chartOpts.scales.y.ticks,callback:v=>`+${v.toFixed(1)}s`}}}}
+  if (S.c2) S.c2.destroy();
+  S.c2 = new Chart(document.getElementById('chart2'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: pilots.map((p,i) => ({
+        label: p,
+        data:  merged.map(r => {
+          if (!r.times[p]) return null;
+          const best = Math.min(...Object.values(r.times).map(v=>v.time_sec));
+          return parseFloat((r.times[p].time_sec - best).toFixed(3));
+        }),
+        borderColor:         COLORS[i%COLORS.length],
+        backgroundColor:     COLORS[i%COLORS.length]+'18',
+        pointBackgroundColor:COLORS[i%COLORS.length],
+        pointRadius: 4, pointHoverRadius: 6,
+        borderWidth: p.toLowerCase()===me ? 2.5 : 1.5,
+        tension: 0.3, spanGaps: true,
+      }))
+    },
+    options: { ...baseOpts, scales:{ ...baseOpts.scales, y:{ ...baseOpts.scales.y, min:0, ticks:{ ...baseOpts.scales.y.ticks,
+      callback: v => `+${v.toFixed(1)}s`
+    }}}}
   });
 }
 
 // ── Pilots ────────────────────────────────────────────────────────
 function renderPilots() {
-  const me=(S.myName||'').toLowerCase();
-  document.getElementById('pilotsGrid').innerHTML=Object.entries(S.remote).sort(([a],[b])=>a.localeCompare(b)).map(([pilot,info],i)=>{
-    const isMe=pilot.toLowerCase()===me, color=COLORS[i%COLORS.length], n=Object.keys(info.times||{}).length;
-    return`<div class="pcard${isMe?' me':''}">
-      <div class="pcard-top" style="background:${color}"></div>
-      <div class="pname" style="color:${color}">${pilot}${isMe?'<span class="me-tag">MOI</span>':''}</div>
-      <div class="pmeta">${n} entrée${n>1?'s':''}</div>
-      <div class="pupd">${info.updated_at||''}</div>
-    </div>`;
-  }).join('');
+  const me = (S.myName||'').toLowerCase();
+  document.getElementById('pilotsGrid').innerHTML = Object.entries(S.remote)
+    .sort(([a],[b]) => a.localeCompare(b))
+    .map(([pilot, info], i) => {
+      const isMe  = pilot.toLowerCase() === me;
+      const color = COLORS[i % COLORS.length];
+      const n     = Object.keys(info.times||{}).length;
+      return `<div class="pcard${isMe?' me':''}">
+        <div class="pcard-top" style="background:${color}"></div>
+        <div class="pname" style="color:${color}">${pilot}${isMe?'<span class="me-tag">MOI</span>':''}</div>
+        <div class="pmeta">${n} entrée${n>1?'s':''}</div>
+        <div class="pupd">${info.updated_at||''}</div>
+      </div>`;
+    }).join('');
 }
 
 // ── CSV ───────────────────────────────────────────────────────────
 function exportCSV() {
-  const merged=getMerged(null,S.cls_t||null);
-  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const merged = getMerged(null, S.cls_t||null);
+  const pilots = [...new Set(merged.flatMap(r => Object.keys(r.times)))].sort();
   if (!merged.length) return;
-  let csv='Circuit,Config,Categorie,'+pilots.join(',')+'\n';
-  merged.forEach(row=>{
-    csv+=[row.circuit,row.config,row.car_class,...pilots.map(p=>row.times[p]?fmt(row.times[p].time_sec):'')].join(',')+'\n';
+  let csv = 'Circuit,Config,Categorie,' + pilots.join(',') + '\n';
+  merged.forEach(row => {
+    csv += [row.circuit, row.config, row.car_class,
+      ...pilots.map(p => row.times[p] ? fmt(row.times[p].time_sec) : '')
+    ].join(',') + '\n';
   });
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='lmu_times.csv';a.click();
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'lmu_times.csv'; a.click();
 }
 
 setInterval(syncNow, 60000);
