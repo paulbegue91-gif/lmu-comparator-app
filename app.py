@@ -1,8 +1,8 @@
 """
-LMU Lap Comparator — App principale v3
-- Parse CarClass + CarType + S1/S2/S3 par pilote
-- Fenetre config Windows native
-- Serveur local silencieux
+LMU Lap Comparator — App principale v4
+- Lit le temps de tour depuis le contenu texte de <Lap>
+- Lit s1/s2/s3 depuis les attributs de <Lap>
+- Ignore les tours invalides (--.----)
 """
 import os, sys, json, re, threading, time, webbrowser
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -24,16 +24,10 @@ SERVER_URL   = "https://lmu-comparator-server.onrender.com"
 DEFAULT_PATH = r"H:\SteamLibrary\steamapps\common\Le Mans Ultimate\UserData\Log\Results"
 PORT         = 5731
 
-RE_SCORE = re.compile(r"^(.+?)\(\d+\)\s+lap=\d+\s+point=(\d+)\s+t=([\d\.]+)", re.I)
-
 def fmt(s):
     if s is None: return "—"
     m = int(s // 60); sec = s - m * 60
     return f"{m:02d}:{sec:06.3f}"
-
-def fmt_sector(s):
-    if s is None or s <= 0: return None
-    return f"{s:.3f}"
 
 def extract_brand(car_type):
     if not car_type: return ""
@@ -43,20 +37,32 @@ def extract_brand(car_type):
               "Genesis","Vanwall","Isotta Fraschini","Lexus","Honda","Acura"]
     for b in brands:
         if b.lower() in car_type.lower(): return b
-    return car_type.split()[0]
+    return car_type.split()[0] if car_type else ""
+
+def is_valid_lap(text):
+    """Lap time is valid if text is a number (not --.----  or empty)"""
+    if not text: return False
+    text = text.strip()
+    if '-' in text: return False
+    try:
+        t = float(text)
+        return t > 0
+    except ValueError:
+        return False
 
 def parse_folder(folder, my_name):
     """
-    Retourne dict: "circuit|config|car_class" → {
-        time_sec, time_str, car_class, car_type, brand,
-        best_s1, best_s2, best_s3  (meilleurs secteurs individuels)
-    }
+    Parse all XML files, extract best lap + best individual sectors per circuit/class.
+    <Lap num="2" s1="37.82" s2="28.66" s3="38.35" ...>104.8403</Lap>
+    Lap time = text content, sectors = attributes s1/s2/s3
     """
     best = {}
     try:
         for fp in sorted(Path(folder).glob("*.xml"), key=lambda x: x.stat().st_mtime):
             try:
                 root = ET.parse(str(fp)).getroot()
+
+                # Track info
                 circ = cfg = ""
                 for e in root.iter("TrackVenue"):
                     if e.text: circ = e.text.strip(); break
@@ -65,104 +71,65 @@ def parse_folder(folder, my_name):
                 if not circ: continue
                 if cfg == circ: cfg = "WEC"
 
-                # Driver info map
-                driver_info = {}
-                for drv in root.iter("Driver"):
-                    name_el  = drv.find("Name")
-                    class_el = drv.find("CarClass")
-                    type_el  = drv.find("CarType")
-                    if name_el is not None and name_el.text:
-                        dn = name_el.text.strip().lower()
-                        ct = type_el.text.strip() if type_el is not None and type_el.text else ""
-                        cc = class_el.text.strip() if class_el is not None and class_el.text else "Unknown"
-                        driver_info[dn] = {
-                            "car_class": cc,
-                            "car_type":  ct,
-                            "brand":     extract_brand(ct)
-                        }
-
-                # Parse laps from <Lap> tags with s1/s2/s3 attributes
-                # Each driver has their own <Driver> block containing <Lap> elements
+                # Find my Driver block
                 for drv in root.iter("Driver"):
                     name_el = drv.find("Name")
                     if not name_el or not name_el.text: continue
-                    driver = name_el.text.strip()
-                    if driver.lower() != my_name.lower(): continue
+                    if name_el.text.strip().lower() != my_name.lower(): continue
 
-                    info = driver_info.get(driver.lower(), {})
-                    cc   = info.get("car_class", "Unknown")
-                    ct   = info.get("car_type", "")
-                    br   = info.get("brand", "")
-                    k    = f"{circ}|{cfg}|{cc}"
+                    # Car info
+                    class_el = drv.find("CarClass")
+                    type_el  = drv.find("CarType")
+                    cc = class_el.text.strip() if class_el is not None and class_el.text else "Unknown"
+                    ct = type_el.text.strip()  if type_el  is not None and type_el.text  else ""
+                    br = extract_brand(ct)
+                    k  = f"{circ}|{cfg}|{cc}"
 
-                    for lap in drv.iter("Lap"):
-                        try:
-                            # et = elapsed time of lap (total lap time)
-                            et_str = lap.get("et", "")
-                            s1_str = lap.get("s1", "")
-                            s2_str = lap.get("s2", "")
-                            s3_str = lap.get("s3", "")
-
-                            if not et_str: continue
-                            t_sec = float(et_str)
-                            if t_sec <= 0: continue
-
-                            s1 = float(s1_str) if s1_str and float(s1_str) > 0 else None
-                            s2 = float(s2_str) if s2_str and float(s2_str) > 0 else None
-                            s3 = float(s3_str) if s3_str and float(s3_str) > 0 else None
-
-                            if k not in best:
-                                best[k] = {
-                                    "time_sec":  t_sec,
-                                    "time_str":  fmt(t_sec),
-                                    "car_class": cc,
-                                    "car_type":  ct,
-                                    "brand":     br,
-                                    "best_s1":   s1,
-                                    "best_s2":   s2,
-                                    "best_s3":   s3,
-                                }
-                            else:
-                                rec = best[k]
-                                # Update best lap time
-                                if t_sec < rec["time_sec"]:
-                                    rec["time_sec"] = t_sec
-                                    rec["time_str"] = fmt(t_sec)
-                                # Update best individual sectors
-                                if s1 and (rec["best_s1"] is None or s1 < rec["best_s1"]):
-                                    rec["best_s1"] = s1
-                                if s2 and (rec["best_s2"] is None or s2 < rec["best_s2"]):
-                                    rec["best_s2"] = s2
-                                if s3 and (rec["best_s3"] is None or s3 < rec["best_s3"]):
-                                    rec["best_s3"] = s3
-                        except (ValueError, TypeError):
+                    # Parse each Lap
+                    for lap in drv.findall("Lap"):
+                        lap_text = (lap.text or "").strip()
+                        if not is_valid_lap(lap_text):
                             continue
 
-                # Fallback: if no Lap tags found, use Score stream
-                if not any(k.startswith(f"{circ}|") for k in best):
-                    for sc in root.iter("Score"):
-                        m = RE_SCORE.match((sc.text or "").strip())
-                        if not m: continue
-                        driver = m.group(1).strip()
-                        if driver.lower() != my_name.lower(): continue
-                        if int(m.group(2)) == 0 and float(m.group(3)) > 0:
-                            t   = float(m.group(3))
-                            inf = driver_info.get(driver.lower(), {})
-                            cc  = inf.get("car_class", "Unknown")
-                            ct  = inf.get("car_type", "")
-                            br  = inf.get("brand", "")
-                            k   = f"{circ}|{cfg}|{cc}"
-                            if k not in best or t < best[k]["time_sec"]:
-                                best[k] = {
-                                    "time_sec":  t,
-                                    "time_str":  fmt(t),
-                                    "car_class": cc,
-                                    "car_type":  ct,
-                                    "brand":     br,
-                                    "best_s1":   None,
-                                    "best_s2":   None,
-                                    "best_s3":   None,
-                                }
+                        # Also skip pit laps (very slow)
+                        if lap.get("pit"): continue
+
+                        t_sec = float(lap_text)
+                        if t_sec > 600: continue  # skip obviously wrong times
+
+                        # Sectors from attributes
+                        def safe_s(attr):
+                            v = lap.get(attr)
+                            if not v: return None
+                            try:
+                                f = float(v)
+                                return f if f > 0 else None
+                            except: return None
+
+                        s1 = safe_s("s1")
+                        s2 = safe_s("s2")
+                        s3 = safe_s("s3")
+
+                        if k not in best:
+                            best[k] = {
+                                "time_sec": t_sec, "time_str": fmt(t_sec),
+                                "car_class": cc, "car_type": ct, "brand": br,
+                                "best_s1": s1, "best_s2": s2, "best_s3": s3,
+                            }
+                        else:
+                            rec = best[k]
+                            # Best overall lap
+                            if t_sec < rec["time_sec"]:
+                                rec["time_sec"] = t_sec
+                                rec["time_str"] = fmt(t_sec)
+                            # Best individual sectors
+                            if s1 is not None and (rec["best_s1"] is None or s1 < rec["best_s1"]):
+                                rec["best_s1"] = s1
+                            if s2 is not None and (rec["best_s2"] is None or s2 < rec["best_s2"]):
+                                rec["best_s2"] = s2
+                            if s3 is not None and (rec["best_s3"] is None or s3 < rec["best_s3"]):
+                                rec["best_s3"] = s3
+
             except Exception as e:
                 print(f"[WARN] {fp}: {e}")
     except Exception as e:
@@ -190,7 +157,6 @@ def save_config(cfg):
         with open(CONFIG_FILE, "w") as f: json.dump(cfg, f)
     except: pass
 
-# ── HTTP Handler ───────────────────────────────────────────────────
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *a): pass
 
@@ -262,7 +228,6 @@ class Handler(BaseHTTPRequestHandler):
 def start_server():
     HTTPServer(("127.0.0.1", PORT), Handler).serve_forever()
 
-# ── Config Window ──────────────────────────────────────────────────
 class ConfigWindow(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -280,6 +245,7 @@ class ConfigWindow(tk.Tk):
                  bg="#0D1117", fg="white").pack(anchor="w")
         tk.Label(logo, text="Configuration — à faire une seule fois",
                  font=("Segoe UI",9), bg="#0D1117", fg="#5A6A80").pack(anchor="w", pady=(2,0))
+
         form = tk.Frame(self, bg="#0D1117", padx=28); form.pack(fill="x")
         tk.Label(form, text="VOTRE PSEUDO LMU", font=("Segoe UI",8,"bold"),
                  bg="#0D1117", fg="#5A6A80").pack(anchor="w", pady=(0,4))
@@ -287,6 +253,7 @@ class ConfigWindow(tk.Tk):
         tk.Entry(form, textvariable=self.v_name, font=("Segoe UI",11),
                  bg="#161B22", fg="white", insertbackground="white", relief="flat",
                  highlightbackground="#30363D", highlightthickness=1).pack(fill="x", ipady=8)
+
         tk.Label(form, text="DOSSIER RESULTS LMU", font=("Segoe UI",8,"bold"),
                  bg="#0D1117", fg="#5A6A80").pack(anchor="w", pady=(16,4))
         row = tk.Frame(form, bg="#0D1117"); row.pack(fill="x")
@@ -298,6 +265,7 @@ class ConfigWindow(tk.Tk):
         tk.Button(row, text="...", command=self._browse, bg="#21262D", fg="white",
                   font=("Segoe UI",9), relief="flat", padx=10, cursor="hand2", bd=0).pack(
                   side="left", padx=(6,0), ipady=7)
+
         btns = tk.Frame(self, bg="#0D1117", padx=28, pady=20); btns.pack(fill="x")
         tk.Button(btns, text="OUVRIR L'INTERFACE →", command=self._open,
                   bg="#DC2626", fg="white", font=("Segoe UI",10,"bold"),
@@ -307,6 +275,7 @@ class ConfigWindow(tk.Tk):
                   bg="#21262D", fg="white", font=("Segoe UI",9),
                   relief="flat", padx=16, pady=10, cursor="hand2", bd=0).pack(
                   side="right", padx=(0,8))
+
         self.v_status = tk.StringVar(value="")
         tk.Label(self, textvariable=self.v_status, font=("Segoe UI",8),
                  bg="#0D1117", fg="#5A6A80").pack(side="bottom", pady=8)
