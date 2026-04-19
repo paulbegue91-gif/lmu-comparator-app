@@ -1,6 +1,6 @@
 [Setup]
 AppName=LMU Lap Comparator
-AppVersion=1.3
+AppVersion=1.0
 AppPublisher=LMU Lap Comparator
 DefaultDirName={autopf}\LMU Lap Comparator
 DefaultGroupName=LMU Lap Comparator
