@@ -11,6 +11,7 @@
   --bg:#F1F3F7; --white:#FFFFFF; --border:#E2E6ED; --bord2:#CBD2DC;
   --red:#DC2626; --red2:#FEE2E2; --blue:#1D4ED8; --text:#0F172A;
   --sub:#64748B; --sub2:#94A3B8; --green:#059669; --gold:#B45309;
+  --s1:#7C3AED; --s2:#0891B2; --s3:#059669;
   --hyper-bg:#FEE2E2; --hyper-fg:#991B1B;
   --gt3-bg:#DBEAFE;   --gt3-fg:#1E40AF;
   --lmp2-bg:#FEF3C7;  --lmp2-fg:#92400E;
@@ -19,7 +20,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 
-/* Header */
 header{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .logo{display:flex;align-items:center;gap:10px}
 .logo-mark{width:26px;height:26px;background:var(--red);clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%,20% 50%)}
@@ -33,25 +33,21 @@ header{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:va
 .sdot.on{background:var(--green);box-shadow:0 0 0 2px #D1FAE5;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
-/* Nav */
 nav{position:fixed;top:54px;left:0;right:0;z-index:199;background:var(--white);border-bottom:1px solid var(--border);display:flex;padding:0 24px;gap:2px;overflow-x:auto}
 .ntab{font-weight:500;font-size:13px;padding:12px 16px;cursor:pointer;color:var(--sub);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
 .ntab:hover{color:var(--text)}
 .ntab.active{color:var(--red);border-bottom-color:var(--red);font-weight:600}
 
-/* Main */
 main{padding-top:98px;padding-bottom:48px}
 .page{display:none;padding:24px 28px}
 .page.active{display:block;animation:up .2s ease}
 @keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-/* Stats bar */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
 .scard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;border-top:3px solid var(--red)}
 .sval{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;line-height:1}
 .slbl{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
 
-/* Filters */
 .filterbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .flabel{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
 .pills{display:flex;gap:6px;flex-wrap:wrap}
@@ -66,18 +62,28 @@ main{padding-top:98px;padding-bottom:48px}
 .fsep{width:1px;height:22px;background:var(--bord2);margin:0 4px;flex-shrink:0}
 .fsel{background:var(--white);border:1px solid var(--bord2);color:var(--text);font-size:12px;padding:6px 28px 6px 12px;border-radius:6px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-color:var(--white)}
 
-/* Table */
+/* View toggle */
+.view-toggle{display:flex;gap:0;border:1px solid var(--bord2);border-radius:6px;overflow:hidden;margin-left:auto}
+.vbtn{font-size:12px;font-weight:500;padding:5px 14px;cursor:pointer;color:var(--sub);background:var(--white);border:none;transition:all .15s}
+.vbtn:hover{background:var(--bg);color:var(--text)}
+.vbtn.on{background:var(--red);color:white;font-weight:600}
+.vbtn:not(:last-child){border-right:1px solid var(--bord2)}
+
 .tbox{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .tscroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse}
-thead th{background:#F8FAFC;padding:10px 16px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.06em;color:var(--sub);text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
+thead th{background:#F8FAFC;padding:10px 16px;text-align:right;font-weight:600;font-size:11px;letter-spacing:.06em;color:var(--sub);text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
+thead th:first-child{text-align:left}
 thead th.me-col{color:var(--red)}
-thead th:not(:first-child){text-align:right}
+thead th.s1h{color:var(--s1)}
+thead th.s2h{color:var(--s2)}
+thead th.s3h{color:var(--s3)}
+
 tr.grp td{padding:8px 16px;background:#F8FAFC;border-top:2px solid var(--border)}
 tr.grp:first-child td{border-top:none}
 .grp-inner{display:flex;align-items:center;gap:8px}
 .flag-img{width:22px;height:15px;border-radius:2px;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,0,0,.08)}
-.grp-name{font-weight:600;font-size:13px;color:var(--text)}
+.grp-name{font-weight:600;font-size:13px}
 .grp-cfg{font-size:11px;color:var(--sub2)}
 .cat-pill{font-weight:600;font-size:10px;letter-spacing:.05em;padding:2px 8px;border-radius:10px;text-transform:uppercase;flex-shrink:0}
 .cat-Hypercar{background:var(--hyper-bg);color:var(--hyper-fg)}
@@ -85,28 +91,37 @@ tr.grp:first-child td{border-top:none}
 .cat-LMP2{background:var(--lmp2-bg);color:var(--lmp2-fg)}
 .cat-LMP3{background:var(--lmp3-bg);color:var(--lmp3-fg)}
 .cat-Unknown{background:#F1F5F9;color:var(--sub)}
+
 tr.drow td{padding:9px 16px;border-bottom:1px solid #F1F5F9;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--sub);white-space:nowrap;text-align:right}
 tr.drow:last-child td{border-bottom:none}
 tr.drow:hover td{background:#FAFBFC}
-tr.drow td.best{color:var(--gold);font-weight:600}
 tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:12px;color:var(--text)}
+tr.drow td.best-lap{color:var(--gold);font-weight:600}
+tr.drow td.best-s1{color:var(--s1);font-weight:600}
+tr.drow td.best-s2{color:var(--s2);font-weight:600}
+tr.drow td.best-s3{color:var(--s3);font-weight:600}
 .brand-wrap{display:inline-flex;align-items:center;gap:5px;vertical-align:middle}
 .brand-img{height:11px;width:auto;object-fit:contain;opacity:.55;vertical-align:middle}
 .brand-txt{font-size:10px;color:var(--sub2);font-weight:500}
 
+/* Sector legend */
+.sector-legend{display:flex;gap:16px;margin-bottom:12px;font-size:11px;font-weight:500}
+.sl-item{display:flex;align-items:center;gap:5px}
+.sl-dot{width:8px;height:8px;border-radius:50%}
+
 /* Section title */
-.sec-title{font-weight:600;font-size:16px;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sec-title{font-weight:600;font-size:16px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 
 /* Championship */
 .champ-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:32px}
-.champ-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s}
+.champ-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s}
 .champ-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .champ-card.rank-1{border-top:3px solid #F59E0B}
 .champ-card.rank-2{border-top:3px solid #94A3B8}
 .champ-card.rank-3{border-top:3px solid #B45309}
 .champ-medal{font-size:28px;line-height:1;margin-bottom:6px}
 .champ-name{font-weight:600;font-size:14px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.champ-pts{font-size:12px;color:var(--sub);margin-bottom:8px}
+.champ-pts{font-size:12px;color:var(--sub);margin-bottom:6px}
 .champ-wins{font-size:11px;color:var(--sub2)}
 .champ-bar{height:3px;background:var(--bg);border-radius:2px;margin-top:10px;overflow:hidden}
 .champ-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
@@ -127,7 +142,7 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
 .pp-gap{font-size:10px;color:var(--red);font-weight:500;margin-top:1px}
 .pp-brand{height:10px;width:auto;opacity:.45;flex-shrink:0}
 
-/* Pilot profiles */
+/* Profiles */
 .profiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .profile-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s}
 .profile-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-2px)}
@@ -135,13 +150,12 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
 .profile-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;color:white;flex-shrink:0}
 .profile-name{font-weight:600;font-size:15px}
 .profile-sync{font-size:10px;color:var(--sub2);font-family:'JetBrains Mono',monospace;margin-top:2px}
-.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr)}
 .ps{padding:12px 14px;border-right:1px solid var(--border);text-align:center}
 .ps:last-child{border-right:none}
-.ps-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px;color:var(--text)}
+.ps-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px}
 .ps-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
 .profile-best{padding:10px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--sub);display:flex;align-items:center;gap:6px}
-.profile-best strong{color:var(--text);font-weight:600}
 .streak-badge{display:inline-flex;align-items:center;gap:4px;background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin-left:auto}
 
 /* Charts */
@@ -151,11 +165,9 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
 .ccard-sub{font-size:11px;color:var(--sub);margin-bottom:18px}
 .cwrap{position:relative;height:300px}
 
-/* Status */
 .statusbar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--white);border-top:1px solid var(--border);padding:7px 24px;display:flex;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--sub)}
 .statusbar .sep{color:var(--bord2)}
 
-/* Loading */
 #loading{position:fixed;inset:0;background:var(--white);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
 .load-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:32px;letter-spacing:.08em}
 .load-logo span{color:var(--red)}
@@ -164,10 +176,9 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
 @keyframes lanim{0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%}}
 .load-txt{font-size:11px;color:var(--sub);letter-spacing:.1em;text-transform:uppercase}
 
-/* Record badge */
 #record-badge{position:fixed;top:70px;right:24px;z-index:300;background:var(--white);border:2px solid #F59E0B;border-radius:10px;padding:12px 18px;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none;animation:slidein .3s ease;max-width:280px}
 @keyframes slidein{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-.rb-title{font-weight:700;font-size:13px;color:#92400E;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.rb-title{font-weight:700;font-size:13px;color:#92400E;margin-bottom:4px}
 .rb-body{font-size:12px;color:var(--sub)}
 </style>
 </head>
@@ -199,6 +210,7 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
 
 <nav>
   <div class="ntab active" onclick="showPage('tableau',this)">Tableau</div>
+  <div class="ntab" onclick="showPage('secteurs',this)">Secteurs S1/S2/S3</div>
   <div class="ntab" onclick="showPage('podium',this)">Podium & Classement</div>
   <div class="ntab" onclick="showPage('profils',this)">Profils pilotes</div>
   <div class="ntab" onclick="showPage('graphiques',this)">Graphiques</div>
@@ -232,7 +244,33 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
     </div></div>
   </div>
 
-  <!-- PODIUM & CLASSEMENT -->
+  <!-- SECTEURS -->
+  <div class="page" id="page-secteurs">
+    <div class="filterbar">
+      <span class="flabel">Catégorie</span>
+      <div class="pills" id="pills-s">
+        <div class="pill on" data-c="" onclick="setClass('',this,'s')">Toutes</div>
+        <div class="pill" data-c="Hypercar" onclick="setClass('Hypercar',this,'s')">Hypercar</div>
+        <div class="pill" data-c="GT3" onclick="setClass('GT3',this,'s')">GT3</div>
+        <div class="pill" data-c="LMP2" onclick="setClass('LMP2',this,'s')">LMP2</div>
+        <div class="pill" data-c="LMP3" onclick="setClass('LMP3',this,'s')">LMP3</div>
+      </div>
+      <div class="fsep"></div>
+      <span class="flabel">Circuit</span>
+      <select class="fsel" id="fCircS" onchange="renderSectors()"><option value="">Tous</option></select>
+    </div>
+    <div class="sector-legend">
+      <div class="sl-item"><div class="sl-dot" style="background:var(--s1)"></div><span style="color:var(--s1)">Meilleur S1</span></div>
+      <div class="sl-item"><div class="sl-dot" style="background:var(--s2)"></div><span style="color:var(--s2)">Meilleur S2</span></div>
+      <div class="sl-item"><div class="sl-dot" style="background:var(--s3)"></div><span style="color:var(--s3)">Meilleur S3</span></div>
+      <div class="sl-item"><div class="sl-dot" style="background:var(--gold)"></div><span style="color:var(--gold)">Meilleur tour</span></div>
+    </div>
+    <div class="tbox"><div class="tscroll">
+      <table><thead id="sHead"></thead><tbody id="sBody"></tbody></table>
+    </div></div>
+  </div>
+
+  <!-- PODIUM -->
   <div class="page" id="page-podium">
     <div class="filterbar">
       <span class="flabel">Catégorie</span>
@@ -250,7 +288,7 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
     <div class="podium-grid" id="podiumGrid"></div>
   </div>
 
-  <!-- PROFILS PILOTES -->
+  <!-- PROFILS -->
   <div class="page" id="page-profils">
     <div class="sec-title">Profils pilotes</div>
     <div class="profiles-grid" id="profilesGrid"></div>
@@ -300,7 +338,7 @@ const REMOTE = 'https://lmu-comparator-server.onrender.com';
 const LOCAL  = '';
 const COLORS = ['#DC2626','#1D4ED8','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#EA580C','#0D9488','#65A30D'];
 const MEDALS = ['🥇','🥈','🥉'];
-const PTS_SYS = [25,18,15,12,10,8,6,4,2,1];
+const PTS    = [25,18,15,12,10,8,6,4,2,1];
 
 const FLAGS = {
   'algarve':'pt','portimao':'pt','autodromo enzo':'it','imola':'it',
@@ -318,7 +356,6 @@ const FLAGS = {
   'mugello':'it','misano':'it','daytona':'us','kyalami':'za',
   'istanbul':'tr','shanghai':'cn','motegi':'jp','buenos aires':'ar',
 };
-
 const LOGOS = {
   'Ferrari':'https://upload.wikimedia.org/wikipedia/commons/d/d1/Ferrari-Logo.svg',
   'Lamborghini':'https://upload.wikimedia.org/wikipedia/commons/7/7f/Lamborghini_Logo.svg',
@@ -335,6 +372,7 @@ const LOGOS = {
   'Chevrolet':'https://upload.wikimedia.org/wikipedia/commons/f/f5/Chevrolet_logo.svg',
   'Nissan':'https://upload.wikimedia.org/wikipedia/commons/8/8a/Nissan_2020_logo.svg',
   'Genesis':'https://upload.wikimedia.org/wikipedia/commons/7/72/Genesis_Motor_logo.svg',
+  'Lexus':'https://upload.wikimedia.org/wikipedia/commons/3/35/Lexus_division_wordmark.svg',
 };
 
 function getFlag(circuit) {
@@ -362,18 +400,19 @@ function fmt(s) {
   const m=Math.floor(s/60), sec=s-m*60;
   return `${String(m).padStart(2,'0')}:${sec.toFixed(3).padStart(6,'0')}`;
 }
+function fmtS(s) {
+  if (!s || s<=0) return '—';
+  return s.toFixed(3);
+}
 function initials(name) {
   return name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
 }
 
-// State
 let S = {
-  remote:{}, myName:'', myFolder:'', lastSync:null,
-  prevBests:{}, c1:null, c2:null,
-  cls_t:'', cls_g:'', cls_p:''
+  remote:{}, myName:'', myFolder:'', lastSync:null, prevBests:{},
+  c1:null, c2:null, cls_t:'', cls_g:'', cls_p:'', cls_s:''
 };
 
-// Boot
 window.addEventListener('load', async () => {
   try {
     const r = await fetch(LOCAL+'/api/config');
@@ -391,28 +430,27 @@ window.addEventListener('load', async () => {
   setTimeout(()=>l.style.display='none', 440);
 });
 
-// Navigation
 function showPage(id, el) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   el.classList.add('active');
   if (id==='graphiques') renderCharts();
-  if (id==='podium')    renderPodium();
-  if (id==='profils')   renderProfiles();
+  if (id==='podium')     renderPodium();
+  if (id==='profils')    renderProfiles();
+  if (id==='secteurs')   renderSectors();
 }
 
-// Filters
 function setClass(cls, el, which) {
   S['cls_'+which] = cls;
   document.querySelectorAll(`#pills-${which} .pill`).forEach(p=>p.classList.remove('on'));
   el.classList.add('on');
   if (which==='t') renderTable();
   else if (which==='g') renderCharts();
-  else if (which==='p') { renderPodium(); }
+  else if (which==='p') renderPodium();
+  else if (which==='s') renderSectors();
 }
 
-// Sync + record detection
 async function syncNow() {
   const dot = document.getElementById('sdot');
   dot.className='sdot';
@@ -421,12 +459,11 @@ async function syncNow() {
   try {
     const r    = await fetch(REMOTE+'/all');
     const data = await r.json();
-
-    // Record detection for my pilot
-    if (S.myName && S.remote && Object.keys(S.prevBests).length) {
+    // Record detection
+    if (S.myName && Object.keys(S.prevBests).length) {
       const me = S.myName.toLowerCase();
       for (const [pilot, info] of Object.entries(data)) {
-        if (pilot.toLowerCase() !== me) continue;
+        if (pilot.toLowerCase()!==me) continue;
         for (const [key, rec] of Object.entries(info.times||{})) {
           const prev = S.prevBests[key];
           if (prev && rec.time_sec < prev) {
@@ -436,42 +473,39 @@ async function syncNow() {
         }
       }
     }
-
-    // Save current bests for next comparison
-    const me = S.myName.toLowerCase();
+    // Save prev bests
+    const me = (S.myName||'').toLowerCase();
     for (const [pilot, info] of Object.entries(data)) {
-      if (pilot.toLowerCase() !== me) continue;
+      if (pilot.toLowerCase()!==me) continue;
       for (const [key, rec] of Object.entries(info.times||{}))
         S.prevBests[key] = rec.time_sec;
     }
-
-    S.remote = data;
-    S.lastSync = new Date().toLocaleTimeString('fr-FR');
+    S.remote = data; S.lastSync = new Date().toLocaleTimeString('fr-FR');
     dot.className='sdot on';
-    document.getElementById('stServer').textContent = 'Serveur : ✓ en ligne';
-    document.getElementById('stText').textContent   = Object.keys(data).length+' pilotes synchronisés';
-    document.getElementById('s-sync').textContent   = S.lastSync;
+    document.getElementById('stServer').textContent='Serveur : ✓ en ligne';
+    document.getElementById('stText').textContent=Object.keys(data).length+' pilotes synchronisés';
+    document.getElementById('s-sync').textContent=S.lastSync;
   } catch(e) {
     dot.className='sdot';
     document.getElementById('stServer').textContent='Serveur : ✗ hors ligne';
-    document.getElementById('stText').textContent  ='Erreur de connexion';
+    document.getElementById('stText').textContent='Erreur de connexion';
   }
   updateStats(); updateFilters(); renderTable(); renderPilots_mini();
   const active = document.querySelector('.page.active');
   if (active?.id==='page-podium')  renderPodium();
   if (active?.id==='page-profils') renderProfiles();
+  if (active?.id==='page-secteurs') renderSectors();
 }
 function reload() { syncNow(); }
 
 function showRecord(circuit, newTime, oldTime) {
-  const gain = (oldTime - parseFloat(newTime||0)).toFixed(3);
+  const gain = (oldTime - parseFloat(newTime||oldTime)).toFixed(3);
   document.getElementById('rb-body').textContent = `${circuit} — ${newTime} (-${gain}s)`;
   const b = document.getElementById('record-badge');
-  b.style.display='block';
-  setTimeout(()=>{b.style.transition='opacity .5s';b.style.opacity='0';setTimeout(()=>{b.style.display='none';b.style.opacity='1';},500);}, 5000);
+  b.style.display='block'; b.style.opacity='1';
+  setTimeout(()=>{b.style.transition='opacity .5s';b.style.opacity='0';setTimeout(()=>{b.style.display='none';},500);}, 5000);
 }
 
-// Data
 function getMerged(cf, cls) {
   const T = {};
   for (const [pilot, info] of Object.entries(S.remote)) {
@@ -485,7 +519,7 @@ function getMerged(cf, cls) {
       if (!T[k]) T[k]={circuit:circ,config:cfg,car_class:clNorm,times:{}};
       const cur=T[k].times[pilot];
       if (!cur||rec.time_sec<cur.time_sec)
-        T[k].times[pilot]={time_sec:rec.time_sec,brand:rec.brand||'',car_type:rec.car_type||''};
+        T[k].times[pilot]=rec;
     }
   }
   return Object.values(T).sort((a,b)=>{
@@ -496,21 +530,24 @@ function getMerged(cf, cls) {
 
 function updateStats() {
   const merged=getMerged(null,null);
-  document.getElementById('s-pilots').textContent   = Object.keys(S.remote).length;
-  document.getElementById('s-circuits').textContent = [...new Set(merged.map(r=>r.circuit))].length;
-  document.getElementById('s-tours').textContent    = merged.reduce((s,r)=>s+Object.keys(r.times).length,0);
+  document.getElementById('s-pilots').textContent=Object.keys(S.remote).length;
+  document.getElementById('s-circuits').textContent=[...new Set(merged.map(r=>r.circuit))].length;
+  document.getElementById('s-tours').textContent=merged.reduce((s,r)=>s+Object.keys(r.times).length,0);
+}
+function renderPilots_mini() {
+  document.getElementById('s-pilots').textContent=Object.keys(S.remote).length;
 }
 
 function updateFilters() {
   const circs=[...new Set(getMerged(null,null).map(r=>r.circuit))].sort();
-  ['fCirc','fCircG'].forEach(id=>{
+  ['fCirc','fCircG','fCircS'].forEach(id=>{
     const sel=document.getElementById(id), cur=sel.value;
     sel.innerHTML='<option value="">Tous les circuits</option>'+
       circs.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
   });
 }
 
-// Table
+// ── TABLE ─────────────────────────────────────────────────────────
 function renderTable() {
   const cf=document.getElementById('fCirc').value;
   const merged=getMerged(cf||null,S.cls_t||null);
@@ -546,32 +583,108 @@ function renderTable() {
     const cells=pilots.map(p=>{
       const rec=times[p], isBest=p===bestP&&rec;
       if (!rec) return `<td style="color:var(--sub2)">—</td>`;
-      if (isBest) return `<td class="best"><span class="brand-wrap">${brandImg(rec.brand)}${fmt(rec.time_sec)}</span></td>`;
+      if (isBest) return `<td class="best-lap"><span class="brand-wrap">${brandImg(rec.brand)}${fmt(rec.time_sec)}</span></td>`;
       return `<td>${fmt(rec.time_sec)}</td>`;
     }).join('');
     return header+`<tr class="drow"><td></td>${cells}</tr>`;
   }).join('');
 }
 
-// Podium & Championship
+// ── SECTORS ───────────────────────────────────────────────────────
+function renderSectors() {
+  const cf=document.getElementById('fCircS').value;
+  const merged=getMerged(cf||null, S.cls_s||null);
+  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const me=(S.myName||'').toLowerCase();
+
+  // Header: Circuit | P1 Lap | P1 S1 | P1 S2 | P1 S3 | P2 Lap | ...
+  const pilotCols = pilots.flatMap(p => [
+    `<th class="${p.toLowerCase()===me?'me-col':''}" colspan="4" style="text-align:center;border-left:2px solid var(--border)">${p}${p.toLowerCase()===me?' ★':''}</th>`
+  ]).join('');
+
+  const subCols = pilots.flatMap(p => [
+    `<th style="min-width:110px;border-left:2px solid var(--border)">Tour</th>`,
+    `<th class="s1h" style="min-width:80px">S1</th>`,
+    `<th class="s2h" style="min-width:80px">S2</th>`,
+    `<th class="s3h" style="min-width:80px">S3</th>`,
+  ]).join('');
+
+  document.getElementById('sHead').innerHTML=`
+    <tr><th rowspan="2" style="min-width:220px;vertical-align:middle">Circuit / Catégorie</th>${pilotCols}</tr>
+    <tr>${subCols}</tr>`;
+
+  // Best S1/S2/S3 across all pilots per row
+  let lastCirc=null;
+  document.getElementById('sBody').innerHTML=merged.map(row=>{
+    const times=row.times;
+
+    // Find global bests per sector
+    let globalBestLap=Infinity, globalBestS1=Infinity, globalBestS2=Infinity, globalBestS3=Infinity;
+    const bestLapPilot={}, bestS1Pilot={}, bestS2Pilot={}, bestS3Pilot={};
+    for (const [p,rec] of Object.entries(times)) {
+      if (rec.time_sec < globalBestLap) { globalBestLap=rec.time_sec; bestLapPilot.p=p; }
+      if (rec.best_s1 && rec.best_s1 < globalBestS1) { globalBestS1=rec.best_s1; bestS1Pilot.p=p; }
+      if (rec.best_s2 && rec.best_s2 < globalBestS2) { globalBestS2=rec.best_s2; bestS2Pilot.p=p; }
+      if (rec.best_s3 && rec.best_s3 < globalBestS3) { globalBestS3=rec.best_s3; bestS3Pilot.p=p; }
+    }
+
+    let header;
+    if (row.circuit!==lastCirc) {
+      lastCirc=row.circuit;
+      header=`<tr class="grp"><td colspan="${pilots.length*4+1}">
+        <div class="grp-inner">${getFlag(row.circuit)}
+          <span class="grp-name">${row.circuit}</span>
+          <span class="grp-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
+          <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
+        </div></td></tr>`;
+    } else {
+      header=`<tr class="grp"><td colspan="${pilots.length*4+1}" style="padding-left:54px">
+        <div class="grp-inner">
+          <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
+        </div></td></tr>`;
+    }
+
+    const cells=pilots.flatMap(p=>{
+      const rec=times[p];
+      const borderStyle='border-left:2px solid var(--border)';
+      if (!rec) return [
+        `<td style="${borderStyle};color:var(--sub2)">—</td>`,
+        `<td style="color:var(--sub2)">—</td>`,
+        `<td style="color:var(--sub2)">—</td>`,
+        `<td style="color:var(--sub2)">—</td>`,
+      ];
+      const isLap = p===bestLapPilot.p;
+      const isS1  = p===bestS1Pilot.p && rec.best_s1;
+      const isS2  = p===bestS2Pilot.p && rec.best_s2;
+      const isS3  = p===bestS3Pilot.p && rec.best_s3;
+      return [
+        `<td class="${isLap?'best-lap':''}" style="${borderStyle}">${isLap?`<span class="brand-wrap">${brandImg(rec.brand)}`:''} ${fmt(rec.time_sec)}${isLap?'</span>':''}</td>`,
+        `<td class="${isS1?'best-s1':''}">${fmtS(rec.best_s1)}</td>`,
+        `<td class="${isS2?'best-s2':''}">${fmtS(rec.best_s2)}</td>`,
+        `<td class="${isS3?'best-s3':''}">${fmtS(rec.best_s3)}</td>`,
+      ];
+    }).join('');
+
+    return header+`<tr class="drow"><td></td>${cells}</tr>`;
+  }).join('');
+}
+
+// ── PODIUM ────────────────────────────────────────────────────────
 function renderPodium() {
   const merged=getMerged(null,S.cls_p||null);
   const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
-  const scores={}, wins={}, podiums={};
-  pilots.forEach(p=>{scores[p]=0;wins[p]=0;podiums[p]=0;});
-
+  const scores={},wins={},podiums_={};
+  pilots.forEach(p=>{scores[p]=0;wins[p]=0;podiums_[p]=0;});
   merged.forEach(row=>{
     const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
     sorted.forEach(([p],i)=>{
-      if(PTS_SYS[i]) scores[p]=(scores[p]||0)+PTS_SYS[i];
-      if(i===0) wins[p]=(wins[p]||0)+1;
-      if(i<3)   podiums[p]=(podiums[p]||0)+1;
+      if(PTS[i]) scores[p]=(scores[p]||0)+PTS[i];
+      if(i===0)  wins[p]=(wins[p]||0)+1;
+      if(i<3)    podiums_[p]=(podiums_[p]||0)+1;
     });
   });
-
   const ranked=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
   const maxPts=ranked[0]?.[1]||1;
-
   document.getElementById('champGrid').innerHTML=ranked.map(([pilot,pts],i)=>{
     const color=COLORS[pilots.indexOf(pilot)%COLORS.length];
     const rankClass=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
@@ -580,11 +693,10 @@ function renderPodium() {
       <div class="champ-medal">${medal}</div>
       <div class="champ-name" title="${pilot}">${pilot}</div>
       <div class="champ-pts">${pts} pts</div>
-      <div class="champ-wins">${wins[pilot]||0} victoire${wins[pilot]>1?'s':''} · ${podiums[pilot]||0} podium${podiums[pilot]>1?'s':''}</div>
+      <div class="champ-wins">${wins[pilot]||0} victoire${wins[pilot]>1?'s':''} · ${podiums_[pilot]||0} podium${podiums_[pilot]>1?'s':''}</div>
       <div class="champ-bar"><div class="champ-bar-fill" style="width:${Math.round(pts/maxPts*100)}%;background:${color}"></div></div>
     </div>`;
   }).join('');
-
   document.getElementById('podiumGrid').innerHTML=merged.map(row=>{
     const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec).slice(0,3);
     if(!sorted.length) return '';
@@ -615,17 +727,13 @@ function renderPodium() {
   }).join('');
 }
 
-// Pilot profiles
+// ── PROFILES ──────────────────────────────────────────────────────
 function renderProfiles() {
   const merged=getMerged(null,null);
   const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
   const me=(S.myName||'').toLowerCase();
-
-  // Compute stats per pilot
   const stats={};
-  pilots.forEach(p=>{
-    stats[p]={wins:0,podiums:0,entries:0,bestCircuit:'',bestTime:Infinity,brands:{}};
-  });
+  pilots.forEach(p=>{stats[p]={wins:0,podiums:0,entries:0,bestCircuit:'',bestTime:Infinity,brands:{}};});
   merged.forEach(row=>{
     const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
     sorted.forEach(([p,rec],i)=>{
@@ -634,31 +742,21 @@ function renderProfiles() {
       if(i===0) stats[p].wins++;
       if(i<3)   stats[p].podiums++;
       if(rec.brand) stats[p].brands[rec.brand]=(stats[p].brands[rec.brand]||0)+1;
-      if(rec.time_sec<stats[p].bestTime){
-        stats[p].bestTime=rec.time_sec;
-        stats[p].bestCircuit=row.circuit;
-      }
+      if(rec.time_sec<stats[p].bestTime){stats[p].bestTime=rec.time_sec;stats[p].bestCircuit=row.circuit;}
     });
   });
-
-  // Streak: how many consecutive circuits where pilot won
   function getStreak(pilot) {
     let streak=0;
-    const rows=[...merged].reverse();
-    for(const row of rows){
+    for(const row of [...merged].reverse()){
       const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
-      if(sorted[0]?.[0]===pilot) streak++;
-      else break;
+      if(sorted[0]?.[0]===pilot) streak++; else break;
     }
     return streak;
   }
-
-  function topBrand(brands) {
-    const entries=Object.entries(brands);
-    if(!entries.length) return '';
-    return entries.sort((a,b)=>b[1]-a[1])[0][0];
+  function topBrand(brands){
+    const e=Object.entries(brands);
+    return e.length?e.sort((a,b)=>b[1]-a[1])[0][0]:'';
   }
-
   document.getElementById('profilesGrid').innerHTML=pilots.map((pilot,i)=>{
     const color=COLORS[i%COLORS.length];
     const st=stats[pilot]||{};
@@ -670,7 +768,7 @@ function renderProfiles() {
       <div class="profile-header">
         <div class="profile-avatar" style="background:${color}">${initials(pilot)}</div>
         <div>
-          <div class="profile-name">${pilot}${isMe?` <span class="me-tag">MOI</span>`:''}</div>
+          <div class="profile-name">${pilot}${isMe?` <span style="font-size:9px;background:var(--red2);color:var(--red);padding:2px 6px;border-radius:3px;font-weight:700">MOI</span>`:''}</div>
           <div class="profile-sync">${info.updated_at||'—'}</div>
         </div>
         ${streak>=2?`<span class="streak-badge" style="margin-left:auto">🔥 ${streak} streak</span>`:''}
@@ -681,21 +779,14 @@ function renderProfiles() {
         <div class="ps"><div class="ps-val">${st.entries||0}</div><div class="ps-lbl">Circuits</div></div>
       </div>
       <div class="profile-best">
-        ${fav?`${brandImg(fav,12)}`:''}
-        <div>
-          <span>Circuit favori : <strong>${st.bestCircuit||'—'}</strong></span>
-        </div>
+        ${fav?brandImg(fav,12):''}
+        <span>Circuit favori : <strong>${st.bestCircuit||'—'}</strong></span>
       </div>
     </div>`;
   }).join('');
 }
 
-// Placeholder for mini pilot count in stats
-function renderPilots_mini() {
-  document.getElementById('s-pilots').textContent=Object.keys(S.remote).length;
-}
-
-// Charts
+// ── CHARTS ────────────────────────────────────────────────────────
 function renderCharts() {
   const cf=document.getElementById('fCircG').value;
   const merged=getMerged(cf||null,S.cls_g||null).slice(0,18);
@@ -730,14 +821,17 @@ function renderCharts() {
   });
 }
 
-// CSV
+// ── CSV ───────────────────────────────────────────────────────────
 function exportCSV() {
   const merged=getMerged(null,S.cls_t||null);
   const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
   if(!merged.length) return;
-  let csv='Circuit,Config,Categorie,'+pilots.join(',')+'\n';
+  let csv='Circuit,Config,Categorie,'+pilots.flatMap(p=>[p+' Tour',p+' S1',p+' S2',p+' S3']).join(',')+'\n';
   merged.forEach(row=>{
-    csv+=[row.circuit,row.config,row.car_class,...pilots.map(p=>row.times[p]?fmt(row.times[p].time_sec):'')].join(',')+'\n';
+    csv+=[row.circuit,row.config,row.car_class,...pilots.flatMap(p=>{
+      const r=row.times[p];
+      return r?[fmt(r.time_sec),fmtS(r.best_s1),fmtS(r.best_s2),fmtS(r.best_s3)]:['','','',''];
+    })].join(',')+'\n';
   });
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
