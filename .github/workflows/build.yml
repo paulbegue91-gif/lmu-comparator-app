@@ -5,14 +5,16 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -20,7 +22,7 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
 
-      - name: Build .exe with PyInstaller
+      - name: Build .exe
         run: |
           python -m PyInstaller `
             --onefile `
@@ -31,16 +33,28 @@ jobs:
             app.py
 
       - name: Install Inno Setup
-        run: |
-          choco install innosetup --yes
+        run: choco install innosetup --yes
 
       - name: Build installer
-        run: |
-          iscc setup.iss
+        run: iscc setup.iss
 
-      - name: Upload installer
-        uses: actions/upload-artifact@v4
+      - name: Delete old release
+        run: gh release delete latest --yes || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: LMU_Comparator_Setup
-          path: Output/LMU_Comparator_Setup.exe
-          retention-days: 90
+          tag_name: latest
+          name: "LMU Lap Comparator — Dernière version"
+          body: |
+            ## Installation
+            1. Téléchargez **LMU_Comparator_Setup.exe** ci-dessous
+            2. Double-cliquez pour installer
+            3. Lancez **LMU Lap Comparator** depuis le bureau
+            4. Entrez votre pseudo LMU + dossier Results → c'est parti !
+          files: Output/LMU_Comparator_Setup.exe
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
