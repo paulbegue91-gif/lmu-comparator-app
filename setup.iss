@@ -19,7 +19,7 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "desktopicon"; Description: "Créer un raccourci sur le Bureau"; GroupDescription: "Icônes supplémentaires:"
 
 [Files]
-Source: "dist\LMU_Comparator.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\LMU_Comparator\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "icon.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
