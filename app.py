@@ -1,8 +1,7 @@
 """
-LMU Lap Comparator — App principale v4
-- Lit le temps de tour depuis le contenu texte de <Lap>
-- Lit s1/s2/s3 depuis les attributs de <Lap>
-- Ignore les tours invalides (--.----)
+LMU Lap Comparator — App principale v5
+- Gestion robuste des fichiers XML corrompus
+- Push uniquement si des données sont trouvées
 """
 import os, sys, json, re, threading, time, webbrowser
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -39,30 +38,34 @@ def extract_brand(car_type):
         if b.lower() in car_type.lower(): return b
     return car_type.split()[0] if car_type else ""
 
-def is_valid_lap(text):
-    """Lap time is valid if text is a number (not --.----  or empty)"""
-    if not text: return False
-    text = text.strip()
-    if '-' in text: return False
+def parse_xml_safe(filepath):
+    """Parse XML with fallback for corrupted files."""
     try:
-        t = float(text)
-        return t > 0
-    except ValueError:
-        return False
+        return ET.parse(filepath).getroot()
+    except ET.ParseError:
+        # Try reading only valid portion
+        try:
+            with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.read()
+            # Find last valid closing tag
+            idx = content.rfind('</Driver>')
+            if idx == -1:
+                return None
+            content = content[:idx + len('</Driver>')] + '\n</RaceResults>\n</rFactorXML>'
+            return ET.fromstring(content)
+        except:
+            return None
 
 def parse_folder(folder, my_name):
-    """
-    Parse all XML files, extract best lap + best individual sectors per circuit/class.
-    <Lap num="2" s1="37.82" s2="28.66" s3="38.35" ...>104.8403</Lap>
-    Lap time = text content, sectors = attributes s1/s2/s3
-    """
     best = {}
     try:
-        for fp in sorted(Path(folder).glob("*.xml"), key=lambda x: x.stat().st_mtime):
+        files = sorted(Path(folder).glob("*.xml"), key=lambda x: x.stat().st_mtime)
+        for fp in files:
             try:
-                root = ET.parse(str(fp)).getroot()
+                root = parse_xml_safe(str(fp))
+                if root is None:
+                    continue
 
-                # Track info
                 circ = cfg = ""
                 for e in root.iter("TrackVenue"):
                     if e.text: circ = e.text.strip(); break
@@ -71,78 +74,77 @@ def parse_folder(folder, my_name):
                 if not circ: continue
                 if cfg == circ: cfg = "WEC"
 
-                # Find my Driver block
                 for drv in root.iter("Driver"):
-                    name_el = drv.find("Name")
-                    if not name_el or not name_el.text: continue
-                    if name_el.text.strip().lower() != my_name.lower(): continue
+                    try:
+                        name_el = drv.find("Name")
+                        if name_el is None or not name_el.text: continue
+                        if name_el.text.strip().lower() != my_name.lower(): continue
 
-                    # Car info
-                    class_el = drv.find("CarClass")
-                    type_el  = drv.find("CarType")
-                    cc = class_el.text.strip() if class_el is not None and class_el.text else "Unknown"
-                    ct = type_el.text.strip()  if type_el  is not None and type_el.text  else ""
-                    br = extract_brand(ct)
-                    k  = f"{circ}|{cfg}|{cc}"
+                        class_el = drv.find("CarClass")
+                        type_el  = drv.find("CarType")
+                        cc = class_el.text.strip() if class_el is not None and class_el.text else "Unknown"
+                        ct = type_el.text.strip()  if type_el  is not None and type_el.text  else ""
+                        br = extract_brand(ct)
+                        k  = f"{circ}|{cfg}|{cc}"
 
-                    # Parse each Lap
-                    for lap in drv.findall("Lap"):
-                        lap_text = (lap.text or "").strip()
-                        if not is_valid_lap(lap_text):
-                            continue
-
-                        # Also skip pit laps (very slow)
-                        if lap.get("pit"): continue
-
-                        t_sec = float(lap_text)
-                        if t_sec > 600: continue  # skip obviously wrong times
-
-                        # Sectors from attributes
-                        def safe_s(attr):
-                            v = lap.get(attr)
-                            if not v: return None
+                        for lap in drv.findall("Lap"):
                             try:
-                                f = float(v)
-                                return f if f > 0 else None
-                            except: return None
+                                lap_text = (lap.text or "").strip()
+                                # Skip invalid laps
+                                if not lap_text or '-' in lap_text: 
+                                    # Still grab sectors if available
+                                    pass
+                                else:
+                                    t_sec = float(lap_text)
+                                    if 0 < t_sec < 600 and not lap.get("pit"):
+                                        def safe_s(attr):
+                                            v = lap.get(attr)
+                                            if not v: return None
+                                            try:
+                                                f = float(v)
+                                                return f if 0 < f < 300 else None
+                                            except: return None
 
-                        s1 = safe_s("s1")
-                        s2 = safe_s("s2")
-                        s3 = safe_s("s3")
+                                        s1 = safe_s("s1")
+                                        s2 = safe_s("s2")
+                                        s3 = safe_s("s3")
 
-                        if k not in best:
-                            best[k] = {
-                                "time_sec": t_sec, "time_str": fmt(t_sec),
-                                "car_class": cc, "car_type": ct, "brand": br,
-                                "best_s1": s1, "best_s2": s2, "best_s3": s3,
-                            }
-                        else:
-                            rec = best[k]
-                            # Best overall lap
-                            if t_sec < rec["time_sec"]:
-                                rec["time_sec"] = t_sec
-                                rec["time_str"] = fmt(t_sec)
-                            # Best individual sectors
-                            if s1 is not None and (rec["best_s1"] is None or s1 < rec["best_s1"]):
-                                rec["best_s1"] = s1
-                            if s2 is not None and (rec["best_s2"] is None or s2 < rec["best_s2"]):
-                                rec["best_s2"] = s2
-                            if s3 is not None and (rec["best_s3"] is None or s3 < rec["best_s3"]):
-                                rec["best_s3"] = s3
-
-            except Exception as e:
-                print(f"[WARN] {fp}: {e}")
+                                        if k not in best:
+                                            best[k] = {
+                                                "time_sec": t_sec, "time_str": fmt(t_sec),
+                                                "car_class": cc, "car_type": ct, "brand": br,
+                                                "best_s1": s1, "best_s2": s2, "best_s3": s3,
+                                            }
+                                        else:
+                                            rec = best[k]
+                                            if t_sec < rec["time_sec"]:
+                                                rec["time_sec"] = t_sec
+                                                rec["time_str"] = fmt(t_sec)
+                                            if s1 and (rec["best_s1"] is None or s1 < rec["best_s1"]):
+                                                rec["best_s1"] = s1
+                                            if s2 and (rec["best_s2"] is None or s2 < rec["best_s2"]):
+                                                rec["best_s2"] = s2
+                                            if s3 and (rec["best_s3"] is None or s3 < rec["best_s3"]):
+                                                rec["best_s3"] = s3
+                            except: continue
+                    except: continue
+            except: continue
     except Exception as e:
         print(f"[ERR] {e}")
     return best
 
 def api_push(name, times):
+    if not times:
+        print("[SKIP] Aucune donnée à pousser")
+        return None
     try:
         body = json.dumps({"pilot": name, "times": times}).encode()
         req  = urllib.request.Request(SERVER_URL + "/push", data=body,
                headers={"Content-Type": "application/json"}, method="POST")
         with urllib.request.urlopen(req, timeout=15) as r:
-            return json.loads(r.read())
+            result = json.loads(r.read())
+            print(f"[PUSH OK] {result}")
+            return result
     except Exception as e:
         print(f"[PUSH ERR] {e}")
         return None
@@ -171,8 +173,11 @@ class Handler(BaseHTTPRequestHandler):
             folder = cfg.get("folder", "")
             result = {"ok": False, "pilots": 0, "times": 0, "error": ""}
             if name and folder:
+                print(f"[SYNC] Parsing {folder} pour {name}...")
                 times = parse_folder(folder, name)
-                api_push(name, times)
+                print(f"[SYNC] {len(times)} entrées trouvées")
+                if times:
+                    api_push(name, times)
                 result["times"] = len(times)
             try:
                 with urllib.request.urlopen(SERVER_URL + "/all", timeout=15) as r:
@@ -193,7 +198,8 @@ class Handler(BaseHTTPRequestHandler):
             name   = cfg.get("name", ""); folder = cfg.get("folder", "")
             if name and folder:
                 times = parse_folder(folder, name)
-                api_push(name, times)
+                if times:
+                    api_push(name, times)
             self._json({"ok": True})
         else:
             self.send_error(404)
@@ -245,7 +251,6 @@ class ConfigWindow(tk.Tk):
                  bg="#0D1117", fg="white").pack(anchor="w")
         tk.Label(logo, text="Configuration — à faire une seule fois",
                  font=("Segoe UI",9), bg="#0D1117", fg="#5A6A80").pack(anchor="w", pady=(2,0))
-
         form = tk.Frame(self, bg="#0D1117", padx=28); form.pack(fill="x")
         tk.Label(form, text="VOTRE PSEUDO LMU", font=("Segoe UI",8,"bold"),
                  bg="#0D1117", fg="#5A6A80").pack(anchor="w", pady=(0,4))
@@ -253,7 +258,6 @@ class ConfigWindow(tk.Tk):
         tk.Entry(form, textvariable=self.v_name, font=("Segoe UI",11),
                  bg="#161B22", fg="white", insertbackground="white", relief="flat",
                  highlightbackground="#30363D", highlightthickness=1).pack(fill="x", ipady=8)
-
         tk.Label(form, text="DOSSIER RESULTS LMU", font=("Segoe UI",8,"bold"),
                  bg="#0D1117", fg="#5A6A80").pack(anchor="w", pady=(16,4))
         row = tk.Frame(form, bg="#0D1117"); row.pack(fill="x")
@@ -265,7 +269,6 @@ class ConfigWindow(tk.Tk):
         tk.Button(row, text="...", command=self._browse, bg="#21262D", fg="white",
                   font=("Segoe UI",9), relief="flat", padx=10, cursor="hand2", bd=0).pack(
                   side="left", padx=(6,0), ipady=7)
-
         btns = tk.Frame(self, bg="#0D1117", padx=28, pady=20); btns.pack(fill="x")
         tk.Button(btns, text="OUVRIR L'INTERFACE →", command=self._open,
                   bg="#DC2626", fg="white", font=("Segoe UI",10,"bold"),
@@ -275,7 +278,6 @@ class ConfigWindow(tk.Tk):
                   bg="#21262D", fg="white", font=("Segoe UI",9),
                   relief="flat", padx=16, pady=10, cursor="hand2", bd=0).pack(
                   side="right", padx=(0,8))
-
         self.v_status = tk.StringVar(value="")
         tk.Label(self, textvariable=self.v_status, font=("Segoe UI",8),
                  bg="#0D1117", fg="#5A6A80").pack(side="bottom", pady=8)
@@ -290,9 +292,8 @@ class ConfigWindow(tk.Tk):
         self.cfg["name"] = name; self.cfg["folder"] = folder
         save_config(self.cfg); self.v_status.set("✓ Sauvegardé")
         def push():
-            if folder:
-                times = parse_folder(folder, name)
-                api_push(name, times)
+            times = parse_folder(folder, name)
+            if times: api_push(name, times)
         threading.Thread(target=push, daemon=True).start()
 
     def _open(self):
