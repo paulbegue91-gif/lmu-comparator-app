@@ -8,245 +8,161 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg:      #F1F3F7;
-  --white:   #FFFFFF;
-  --card:    #FFFFFF;
-  --border:  #E2E6ED;
-  --border2: #CBD2DC;
-  --red:     #DC2626;
-  --red2:    #FEE2E2;
-  --blue:    #1D4ED8;
-  --text:    #0F172A;
-  --sub:     #64748B;
-  --sub2:    #94A3B8;
-  --green:   #059669;
-  --gold:    #B45309;
+  --bg:     #F1F3F7;
+  --white:  #FFFFFF;
+  --border: #E2E6ED;
+  --bord2:  #CBD2DC;
+  --red:    #DC2626;
+  --red2:   #FEE2E2;
+  --blue:   #1D4ED8;
+  --text:   #0F172A;
+  --sub:    #64748B;
+  --sub2:   #94A3B8;
+  --green:  #059669;
+  --gold:   #B45309;
   --hyper-bg:#FEE2E2; --hyper-fg:#991B1B;
-  --gt3-bg:  #DBEAFE; --gt3-fg:  #1E40AF;
-  --lmp2-bg: #FEF3C7; --lmp2-fg: #92400E;
-  --lmp3-bg: #D1FAE5; --lmp3-fg: #065F46;
+  --gt3-bg: #DBEAFE; --gt3-fg:  #1E40AF;
+  --lmp2-bg:#FEF3C7; --lmp2-fg: #92400E;
+  --lmp3-bg:#D1FAE5; --lmp3-fg: #065F46;
 }
-* { margin:0; padding:0; box-sizing:border-box }
-html,body { height:100%; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden }
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 
-/* ── Header ── */
-header {
-  position:fixed; top:0; left:0; right:0; z-index:200;
-  height:54px; background:var(--white);
-  border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between;
-  padding:0 24px;
-  box-shadow:0 1px 3px rgba(0,0,0,.06);
-}
-.logo { display:flex; align-items:center; gap:10px; }
-.logo-mark {
-  width:26px; height:26px; background:var(--red);
-  clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%,20% 50%);
-}
-.logo-text { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px; letter-spacing:.06em; color:var(--text); }
-.logo-text span { color:var(--red); }
-.header-right { display:flex; align-items:center; gap:8px; }
-.pilot-pill {
-  font-family:'JetBrains Mono',monospace; font-size:11px;
-  background:var(--red2); border:1px solid #FECACA;
-  color:var(--red); padding:3px 10px; border-radius:4px;
-  display:none; letter-spacing:.04em; font-weight:500;
-}
-.hbtn {
-  display:flex; align-items:center; gap:5px;
-  font-family:'Inter',sans-serif; font-weight:500; font-size:12px;
-  padding:6px 14px; border:1px solid var(--border2);
-  background:var(--white); color:var(--sub);
-  cursor:pointer; border-radius:6px; transition:all .15s;
-}
-.hbtn:hover { background:var(--bg); color:var(--text); border-color:var(--sub2); }
-.hbtn.red { background:var(--red); border-color:var(--red); color:white; font-weight:600; }
-.hbtn.red:hover { background:#B91C1C; }
-.sdot { width:6px; height:6px; border-radius:50%; background:var(--sub2); }
-.sdot.on { background:var(--green); box-shadow:0 0 0 2px #D1FAE5; animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.5} }
+/* Header */
+header{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:26px;height:26px;background:var(--red);clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%,20% 50%)}
+.logo-text{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:.06em}
+.logo-text span{color:var(--red)}
+.hright{display:flex;align-items:center;gap:8px}
+.pilot-pill{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--red2);border:1px solid #FECACA;color:var(--red);padding:3px 10px;border-radius:4px;display:none;font-weight:500}
+.hbtn{display:flex;align-items:center;gap:5px;font-weight:500;font-size:12px;padding:6px 14px;border:1px solid var(--bord2);background:var(--white);color:var(--sub);cursor:pointer;border-radius:6px;transition:all .15s}
+.hbtn:hover{background:var(--bg);color:var(--text)}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--sub2)}
+.sdot.on{background:var(--green);box-shadow:0 0 0 2px #D1FAE5;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
-/* ── Nav ── */
-nav {
-  position:fixed; top:54px; left:0; right:0; z-index:199;
-  background:var(--white); border-bottom:1px solid var(--border);
-  display:flex; padding:0 24px; gap:2px;
-}
-.ntab {
-  font-family:'Inter',sans-serif; font-weight:500; font-size:13px;
-  padding:12px 16px; cursor:pointer; color:var(--sub);
-  border-bottom:2px solid transparent; transition:all .15s;
-}
-.ntab:hover { color:var(--text); }
-.ntab.active { color:var(--red); border-bottom-color:var(--red); font-weight:600; }
+/* Nav */
+nav{position:fixed;top:54px;left:0;right:0;z-index:199;background:var(--white);border-bottom:1px solid var(--border);display:flex;padding:0 24px;gap:2px}
+.ntab{font-weight:500;font-size:13px;padding:12px 16px;cursor:pointer;color:var(--sub);border-bottom:2px solid transparent;transition:all .15s}
+.ntab:hover{color:var(--text)}
+.ntab.active{color:var(--red);border-bottom-color:var(--red);font-weight:600}
 
-/* ── Main ── */
-main { padding-top:98px; padding-bottom:48px; }
-.page { display:none; padding:24px 28px; }
-.page.active { display:block; animation:up .2s ease; }
-@keyframes up { from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)} }
+/* Main */
+main{padding-top:98px;padding-bottom:48px}
+.page{display:none;padding:24px 28px}
+.page.active{display:block;animation:up .2s ease}
+@keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── Stats ── */
-.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
-.scard {
-  background:var(--white); border:1px solid var(--border);
-  border-radius:8px; padding:16px 20px;
-  border-top:3px solid var(--red);
-}
-.sval { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:28px; color:var(--text); line-height:1; }
-.slbl { font-size:11px; color:var(--sub); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.scard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;border-top:3px solid var(--red)}
+.sval{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;line-height:1}
+.slbl{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
 
-/* ── Filter bar ── */
-.filterbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
-.flabel { font-size:11px; font-weight:600; color:var(--sub); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
-.pills { display:flex; gap:6px; }
-.pill {
-  font-family:'Inter',sans-serif; font-weight:500; font-size:12px;
-  padding:5px 14px; border-radius:20px; cursor:pointer;
-  border:1px solid var(--border2); color:var(--sub);
-  background:var(--white); transition:all .15s;
-}
-.pill:hover { border-color:var(--sub2); color:var(--text); }
-.pill.on { color:white; border-color:transparent; font-weight:600; }
-.pill[data-c=""].on  { background:var(--sub); }
-.pill[data-c="Hypercar"].on { background:var(--red); }
-.pill[data-c="GT3"].on     { background:var(--blue); }
-.pill[data-c="LMP2"].on    { background:#D97706; }
-.pill[data-c="LMP3"].on    { background:#059669; }
-.fsep { width:1px; height:22px; background:var(--border2); margin:0 4px; }
-.fsel {
-  background:var(--white); border:1px solid var(--border2);
-  color:var(--text); font-family:'Inter',sans-serif; font-size:12px;
-  padding:6px 28px 6px 12px; border-radius:6px;
-  cursor:pointer; outline:none; appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 9px center;
-  background-color:var(--white);
-}
+/* Filter bar */
+.filterbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.flabel{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.pills{display:flex;gap:6px}
+.pill{font-weight:500;font-size:12px;padding:5px 14px;border-radius:20px;cursor:pointer;border:1px solid var(--bord2);color:var(--sub);background:var(--white);transition:all .15s}
+.pill:hover{border-color:var(--sub2);color:var(--text)}
+.pill.on{color:white;border-color:transparent;font-weight:600}
+.pill[data-c=""].on{background:var(--sub)}
+.pill[data-c="Hypercar"].on{background:var(--red)}
+.pill[data-c="GT3"].on{background:var(--blue)}
+.pill[data-c="LMP2"].on{background:#D97706}
+.pill[data-c="LMP3"].on{background:#059669}
+.fsep{width:1px;height:22px;background:var(--bord2);margin:0 4px}
+.fsel{background:var(--white);border:1px solid var(--bord2);color:var(--text);font-size:12px;padding:6px 28px 6px 12px;border-radius:6px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-color:var(--white)}
 
-/* ── Table ── */
-.tbox { background:var(--white); border:1px solid var(--border); border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.04); }
-.tscroll { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; }
-thead th {
-  background:#F8FAFC; padding:10px 16px; text-align:left;
-  font-family:'Inter',sans-serif; font-weight:600; font-size:11px;
-  letter-spacing:.06em; color:var(--sub); text-transform:uppercase;
-  border-bottom:1px solid var(--border); white-space:nowrap;
-}
-thead th.me-col { color:var(--red); }
+/* Table */
+.tbox{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:#F8FAFC;padding:10px 16px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.06em;color:var(--sub);text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
+thead th.me-col{color:var(--red)}
+thead th:not(:first-child){text-align:right}
+tr.grp td{padding:8px 16px;background:#F8FAFC;border-top:2px solid var(--border)}
+tr.grp:first-child td{border-top:none}
+.grp-inner{display:flex;align-items:center;gap:8px}
+.flag-img{width:22px;height:15px;border-radius:2px;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,0,0,.08)}
+.grp-name{font-weight:600;font-size:13px;color:var(--text)}
+.grp-cfg{font-size:11px;color:var(--sub2)}
+.cat-pill{font-weight:600;font-size:10px;letter-spacing:.05em;padding:2px 8px;border-radius:10px;text-transform:uppercase;flex-shrink:0}
+.cat-Hypercar{background:var(--hyper-bg);color:var(--hyper-fg)}
+.cat-GT3{background:var(--gt3-bg);color:var(--gt3-fg)}
+.cat-LMP2{background:var(--lmp2-bg);color:var(--lmp2-fg)}
+.cat-LMP3{background:var(--lmp3-bg);color:var(--lmp3-fg)}
+.cat-Unknown{background:#F1F5F9;color:var(--sub)}
+tr.drow td{padding:9px 16px;border-bottom:1px solid #F1F5F9;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--sub);white-space:nowrap;text-align:right}
+tr.drow:last-child td{border-bottom:none}
+tr.drow:hover td{background:#FAFBFC}
+tr.drow td.best{color:var(--gold);font-weight:600}
+tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:12px;color:var(--text)}
+.brand-wrap{display:inline-flex;align-items:center;gap:5px;vertical-align:middle}
+.brand-img{height:11px;width:auto;object-fit:contain;opacity:.55;vertical-align:middle}
+.brand-txt{font-size:10px;color:var(--sub2);font-weight:500}
+.medal{font-size:13px;margin-right:2px}
 
-/* Circuit group row */
-tr.grp td {
-  padding:8px 16px;
-  background:#F8FAFC;
-  border-top:2px solid var(--border);
-}
-tr.grp:first-child td { border-top:none; }
-.grp-inner { display:flex; align-items:center; gap:8px; }
-.flag-img {
-  width:22px; height:15px; border-radius:2px;
-  object-fit:cover; flex-shrink:0;
-  border:1px solid rgba(0,0,0,.08);
-}
-.grp-name { font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--text); }
-.grp-config { font-size:11px; color:var(--sub2); }
-.cat-pill {
-  font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
-  letter-spacing:.05em; padding:2px 8px; border-radius:10px;
-  text-transform:uppercase; margin-left:2px; flex-shrink:0;
-}
-.cat-Hypercar { background:var(--hyper-bg); color:var(--hyper-fg); }
-.cat-GT3      { background:var(--gt3-bg);   color:var(--gt3-fg); }
-.cat-LMP2     { background:var(--lmp2-bg);  color:var(--lmp2-fg); }
-.cat-LMP3     { background:var(--lmp3-bg);  color:var(--lmp3-fg); }
-.cat-Unknown  { background:#F1F5F9; color:var(--sub); }
+/* Podium & championship */
+.section-title{font-weight:600;font-size:16px;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.champ-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:32px}
+.champ-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.champ-card.rank-1{border-top:3px solid #F59E0B}
+.champ-card.rank-2{border-top:3px solid #94A3B8}
+.champ-card.rank-3{border-top:3px solid #B45309}
+.champ-rank{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:36px;line-height:1;margin-bottom:4px}
+.rank-1 .champ-rank{color:#F59E0B}
+.rank-2 .champ-rank{color:#94A3B8}
+.rank-3 .champ-rank{color:#B45309}
+.champ-name{font-weight:600;font-size:14px;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.champ-pts{font-size:12px;color:var(--sub)}
+.champ-bar{height:3px;background:var(--bg);border-radius:2px;margin-top:10px;overflow:hidden}
+.champ-bar-fill{height:100%;border-radius:2px;background:var(--red);transition:width .5s ease}
+.podium-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.podium-row{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.podium-header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--border)}
+.podium-circuit{font-weight:600;font-size:13px;color:var(--text)}
+.podium-cfg{font-size:11px;color:var(--sub2)}
+.podium-places{display:flex;gap:0}
+.podium-place{flex:1;padding:10px 16px;display:flex;align-items:center;gap:10px;border-right:1px solid var(--border)}
+.podium-place:last-child{border-right:none}
+.pp-medal{font-size:18px;flex-shrink:0}
+.pp-name{font-weight:600;font-size:13px;color:var(--text)}
+.pp-time{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--sub)}
+.pp-gap{font-size:10px;color:var(--red);font-weight:500;margin-top:1px}
+.pp-brand{height:10px;width:auto;object-fit:contain;opacity:.5;margin-left:auto;flex-shrink:0}
 
-/* Data rows */
-tr.drow td {
-  padding:9px 16px; border-bottom:1px solid #F1F5F9;
-  font-family:'JetBrains Mono',monospace; font-size:12px;
-  color:var(--sub); white-space:nowrap;
-}
-tr.drow:last-child td { border-bottom:none; }
-tr.drow:hover td { background:#FAFBFC; }
-tr.drow td.best { color:var(--gold); font-weight:600; }
-tr.drow td:first-child { color:var(--text); font-family:'Inter',sans-serif; font-size:12px; }
-.brand-wrap { display:inline-flex; align-items:center; gap:5px; vertical-align:middle; }
-.brand-img { height:11px; width:auto; object-fit:contain; opacity:.6; vertical-align:middle; }
-.brand-txt { font-size:10px; color:var(--sub2); font-family:'Inter',sans-serif; font-weight:500; }
+/* Charts */
+.chart-grid{display:grid;grid-template-columns:1fr;gap:18px}
+.ccard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.ccard-title{font-weight:600;font-size:13px;color:var(--text);margin-bottom:3px}
+.ccard-sub{font-size:11px;color:var(--sub);margin-bottom:18px}
+.cwrap{position:relative;height:300px}
 
-/* ── Charts ── */
-.chart-grid { display:grid; grid-template-columns:1fr; gap:18px; }
-.ccard { background:var(--white); border:1px solid var(--border); border-radius:8px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
-.ccard-title { font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--text); margin-bottom:4px; }
-.ccard-sub { font-size:11px; color:var(--sub); margin-bottom:18px; }
-.cwrap { position:relative; height:300px; }
+/* Pilots */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.pcard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative;overflow:hidden;transition:all .15s}
+.pcard:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-1px)}
+.pcard.me{border-color:#FECACA}
+.pcard-top{position:absolute;top:0;left:0;right:0;height:3px}
+.pname{font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.me-tag{font-size:9px;background:var(--red2);color:var(--red);padding:2px 6px;border-radius:3px;font-weight:700}
+.pmeta{font-size:12px;color:var(--sub)}
+.pupd{font-size:10px;color:var(--sub2);margin-top:5px;font-family:'JetBrains Mono',monospace}
 
-/* ── Pilots ── */
-.sec-title { font-family:'Inter',sans-serif; font-weight:600; font-size:16px; color:var(--text); margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border); }
-.pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
-.pcard {
-  background:var(--white); border:1px solid var(--border);
-  border-radius:8px; padding:16px; position:relative;
-  overflow:hidden; transition:all .15s;
-}
-.pcard:hover { box-shadow:0 4px 12px rgba(0,0,0,.08); transform:translateY(-1px); }
-.pcard.me { border-color:#FECACA; }
-.pcard-top { position:absolute; top:0; left:0; right:0; height:3px; }
-.pname { font-family:'Inter',sans-serif; font-weight:600; font-size:15px; color:var(--text); display:flex; align-items:center; gap:7px; margin-bottom:4px; }
-.me-tag { font-size:9px; background:var(--red2); color:var(--red); padding:2px 6px; border-radius:3px; letter-spacing:.05em; font-weight:700; }
-.pmeta { font-size:12px; color:var(--sub); }
-.pupd { font-size:10px; color:var(--sub2); margin-top:5px; font-family:'JetBrains Mono',monospace; }
+/* Status */
+.statusbar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--white);border-top:1px solid var(--border);padding:7px 24px;display:flex;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--sub)}
+.statusbar .sep{color:var(--bord2)}
 
-/* ── Setup ── */
-.setup-wrap { max-width:500px; margin:48px auto; }
-.setup-hero { text-align:center; margin-bottom:36px; }
-.setup-hero h1 { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:36px; letter-spacing:.04em; color:var(--text); }
-.setup-hero h1 span { color:var(--red); }
-.setup-hero p { color:var(--sub); font-size:14px; margin-top:6px; }
-.setup-card { background:var(--white); border:1px solid var(--border); border-radius:8px; padding:22px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
-.setup-label { display:block; font-size:12px; font-weight:600; color:var(--text); margin-bottom:8px; }
-.setup-input {
-  width:100%; background:var(--bg); border:1px solid var(--border2);
-  color:var(--text); font-family:'JetBrains Mono',monospace; font-size:13px;
-  padding:10px 13px; border-radius:6px; outline:none; transition:.15s;
-}
-.setup-input:focus { border-color:var(--red); background:var(--white); box-shadow:0 0 0 3px #FEE2E2; }
-.setup-input::placeholder { color:var(--sub2); }
-.setup-hint { font-size:11px; color:var(--sub); margin-top:6px; line-height:1.5; }
-.setup-row { display:flex; gap:8px; }
-.setup-row .setup-input { flex:1; }
-.setup-msg { padding:10px 14px; border-radius:6px; font-size:13px; display:none; margin-top:8px; }
-.setup-msg.ok  { background:#D1FAE5; color:#065F46; border:1px solid #A7F3D0; }
-.setup-msg.err { background:var(--red2); color:var(--red); border:1px solid #FECACA; }
-.setup-btn {
-  width:100%; padding:12px; font-family:'Inter',sans-serif;
-  font-weight:600; font-size:14px; background:var(--red); color:white;
-  border:none; border-radius:8px; cursor:pointer; transition:.15s; margin-top:4px;
-}
-.setup-btn:hover { background:#B91C1C; transform:translateY(-1px); box-shadow:0 4px 12px rgba(220,38,38,.3); }
-
-/* ── Status ── */
-.statusbar {
-  position:fixed; bottom:0; left:0; right:0; z-index:200;
-  background:var(--white); border-top:1px solid var(--border);
-  padding:7px 24px; display:flex; align-items:center; gap:14px;
-  font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--sub);
-}
-.statusbar .sep { color:var(--border2); }
-
-/* ── Loading ── */
-#loading {
-  position:fixed; inset:0; background:var(--white); z-index:9999;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
-}
-.load-logo { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:32px; letter-spacing:.08em; color:var(--text); }
-.load-logo span { color:var(--red); }
-.load-bar { width:160px; height:2px; background:var(--border); border-radius:1px; overflow:hidden; }
-.load-prog { height:100%; background:var(--red); animation:lanim 1s ease-in-out infinite; }
-@keyframes lanim { 0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%} }
-.load-txt { font-size:11px; color:var(--sub); letter-spacing:.1em; text-transform:uppercase; }
+/* Loading */
+#loading{position:fixed;inset:0;background:var(--white);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.load-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:32px;letter-spacing:.08em;color:var(--text)}
+.load-logo span{color:var(--red)}
+.load-bar{width:160px;height:2px;background:var(--border);border-radius:1px;overflow:hidden}
+.load-prog{height:100%;background:var(--red);animation:lanim 1s ease-in-out infinite}
+@keyframes lanim{0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%}}
+.load-txt{font-size:11px;color:var(--sub);letter-spacing:.1em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -262,7 +178,7 @@ tr.drow td:first-child { color:var(--text); font-family:'Inter',sans-serif; font
     <div class="logo-mark"></div>
     <div class="logo-text">LMU <span>LAP</span> COMPARATOR</div>
   </div>
-  <div class="header-right">
+  <div class="hright">
     <div class="pilot-pill" id="pilotPill"></div>
     <button class="hbtn" onclick="reload()">↺ Recharger</button>
     <button class="hbtn" onclick="syncNow()"><div class="sdot" id="sdot"></div> Sync</button>
@@ -272,9 +188,9 @@ tr.drow td:first-child { color:var(--text); font-family:'Inter',sans-serif; font
 
 <nav>
   <div class="ntab active" onclick="showPage('tableau',this)">Tableau</div>
+  <div class="ntab" onclick="showPage('podium',this)">Podium & Classement</div>
   <div class="ntab" onclick="showPage('graphiques',this)">Graphiques</div>
   <div class="ntab" onclick="showPage('pilotes',this)">Pilotes en ligne</div>
-  <div class="ntab" onclick="showPage('config',this)">⚙ Config</div>
 </nav>
 
 <main>
@@ -303,6 +219,24 @@ tr.drow td:first-child { color:var(--text); font-family:'Inter',sans-serif; font
     <div class="tbox"><div class="tscroll">
       <table><thead id="tHead"></thead><tbody id="tBody"></tbody></table>
     </div></div>
+  </div>
+
+  <!-- PODIUM & CLASSEMENT -->
+  <div class="page" id="page-podium">
+    <div class="filterbar">
+      <span class="flabel">Catégorie</span>
+      <div class="pills" id="pills-p">
+        <div class="pill on" data-c="" onclick="setClass('',this,'p')">Toutes</div>
+        <div class="pill" data-c="Hypercar" onclick="setClass('Hypercar',this,'p')">Hypercar</div>
+        <div class="pill" data-c="GT3" onclick="setClass('GT3',this,'p')">GT3</div>
+        <div class="pill" data-c="LMP2" onclick="setClass('LMP2',this,'p')">LMP2</div>
+        <div class="pill" data-c="LMP3" onclick="setClass('LMP3',this,'p')">LMP3</div>
+      </div>
+    </div>
+    <div class="section-title">🏆 Classement général</div>
+    <div class="champ-grid" id="champGrid"></div>
+    <div class="section-title">🥇 Podiums par circuit</div>
+    <div class="podium-grid" id="podiumGrid"></div>
   </div>
 
   <!-- GRAPHIQUES -->
@@ -336,32 +270,8 @@ tr.drow td:first-child { color:var(--text); font-family:'Inter',sans-serif; font
 
   <!-- PILOTES -->
   <div class="page" id="page-pilotes">
-    <div class="sec-title">Pilotes synchronisés</div>
+    <div class="section-title">Pilotes synchronisés</div>
     <div class="pgrid" id="pilotsGrid"></div>
-  </div>
-
-  <!-- CONFIG -->
-  <div class="page" id="page-config">
-    <div class="setup-wrap">
-      <div class="setup-hero">
-        <h1>LMU <span>LAP</span> COMPARATOR</h1>
-        <p>Configuration initiale — à faire une seule fois</p>
-      </div>
-      <div class="setup-card">
-        <label class="setup-label">Votre pseudo LMU</label>
-        <input type="text" class="setup-input" id="inName" placeholder="ex: Paul Begue" autocomplete="off">
-        <div class="setup-hint">Exactement comme dans vos sessions — respectez les majuscules et espaces</div>
-      </div>
-      <div class="setup-card">
-        <label class="setup-label">Dossier Results LMU</label>
-        <div class="setup-row">
-          <input type="text" class="setup-input" id="inFolder" placeholder="H:\SteamLibrary\...\Results">
-        </div>
-        <div class="setup-hint">H:\SteamLibrary\steamapps\common\Le Mans Ultimate\UserData\Log\Results</div>
-      </div>
-      <button class="setup-btn" onclick="saveConfig()">Valider et démarrer →</button>
-      <div class="setup-msg" id="setupMsg"></div>
-    </div>
   </div>
 
 </main>
@@ -371,20 +281,21 @@ tr.drow td:first-child { color:var(--text); font-family:'Inter',sans-serif; font
   <span class="sep">|</span>
   <span id="stServer">Serveur : —</span>
   <span class="sep">|</span>
-  <span id="stFolder">Dossier : non configuré</span>
+  <span id="stFolder">—</span>
 </div>
 
 <script>
 const REMOTE = 'https://lmu-comparator-server.onrender.com';
 const LOCAL  = '';
 const COLORS = ['#DC2626','#1D4ED8','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#EA580C','#0D9488','#65A30D'];
+const MEDALS = ['🥇','🥈','🥉'];
 
-// ── Drapeaux via flagcdn.com ───────────────────────────────────────
+// Drapeaux flagcdn.com
 const FLAGS = {
   'algarve':'pt','portimao':'pt',
   'autodromo enzo':'it','imola':'it',
   'autodromo josé carlos':'br','autodromo jose carlos':'br','interlagos':'br',
-  'autodromo nazionale monza':'it','monza':'it','monza curva':'it',
+  'autodromo nazionale monza':'it','monza':'it',
   'bahrain international':'bh','bahrain':'bh',
   'circuit de barcelona':'es','barcelona':'es',
   'circuit de la sarthe':'fr','la sarthe':'fr','le mans':'fr',
@@ -397,54 +308,52 @@ const FLAGS = {
   'suzuka':'jp',
   'lusail':'qa','qatar':'qa',
   'nurburgring':'de','nordschleife':'de',
-  'zandvoort':'nl','circuit zandvoort':'nl',
-  'mugello':'it','autodromo del mugello':'it',
+  'zandvoort':'nl',
+  'mugello':'it',
   'misano':'it',
-  'daytona':'us','daytona international':'us',
+  'daytona':'us',
   'kyalami':'za',
-  'istanbul':'tr','istanbul park':'tr',
-  'shanghai':'cn','shanghai international':'cn',
-  'motegi':'jp','twin ring motegi':'jp',
+  'istanbul':'tr',
+  'shanghai':'cn',
+  'motegi':'jp',
   'buenos aires':'ar',
 };
-
 function getFlag(circuit) {
   const l = circuit.toLowerCase();
-  for (const [k, code] of Object.entries(FLAGS))
-    if (l.includes(k))
-      return `<img class="flag-img" src="https://flagcdn.com/32x24/${code}.png" alt="${code}" onerror="this.style.display='none'">`;
+  for (const [k,code] of Object.entries(FLAGS))
+    if (l.includes(k)) return `<img class="flag-img" src="https://flagcdn.com/32x24/${code}.png" alt="${code}" onerror="this.style.display='none'">`;
   return '';
 }
 
-// ── Logos constructeurs ───────────────────────────────────────────
+// Logos constructeurs
 const LOGOS = {
-  'Ferrari':      'https://upload.wikimedia.org/wikipedia/commons/d/d1/Ferrari-Logo.svg',
-  'Lamborghini':  'https://upload.wikimedia.org/wikipedia/commons/7/7f/Lamborghini_Logo.svg',
-  'Porsche':      'https://upload.wikimedia.org/wikipedia/en/3/3c/Porsche_logo.svg',
-  'BMW':          'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg',
-  'McLaren':      'https://upload.wikimedia.org/wikipedia/commons/5/5d/McLaren_Automotive_logo.svg',
-  'Aston Martin': 'https://upload.wikimedia.org/wikipedia/commons/1/17/Aston_Martin.svg',
-  'Mercedes':     'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg',
-  'Ford':         'https://upload.wikimedia.org/wikipedia/commons/3/3e/Ford_logo_flat.svg',
-  'Toyota':       'https://upload.wikimedia.org/wikipedia/commons/9/9d/Toyota_carlogo.svg',
-  'Peugeot':      'https://upload.wikimedia.org/wikipedia/commons/9/94/Peugeot_2021_Logo.svg',
-  'Alpine':       'https://upload.wikimedia.org/wikipedia/commons/6/6c/Alpine_logo.svg',
-  'Cadillac':     'https://upload.wikimedia.org/wikipedia/commons/9/99/Cadillac_logo.svg',
-  'Chevrolet':    'https://upload.wikimedia.org/wikipedia/commons/f/f5/Chevrolet_logo.svg',
-  'Nissan':       'https://upload.wikimedia.org/wikipedia/commons/8/8a/Nissan_2020_logo.svg',
-  'Genesis':      'https://upload.wikimedia.org/wikipedia/commons/7/72/Genesis_Motor_logo.svg',
+  'Ferrari':'https://upload.wikimedia.org/wikipedia/commons/d/d1/Ferrari-Logo.svg',
+  'Lamborghini':'https://upload.wikimedia.org/wikipedia/commons/7/7f/Lamborghini_Logo.svg',
+  'Porsche':'https://upload.wikimedia.org/wikipedia/en/3/3c/Porsche_logo.svg',
+  'BMW':'https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg',
+  'McLaren':'https://upload.wikimedia.org/wikipedia/commons/5/5d/McLaren_Automotive_logo.svg',
+  'Aston Martin':'https://upload.wikimedia.org/wikipedia/commons/1/17/Aston_Martin.svg',
+  'Mercedes':'https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg',
+  'Ford':'https://upload.wikimedia.org/wikipedia/commons/3/3e/Ford_logo_flat.svg',
+  'Toyota':'https://upload.wikimedia.org/wikipedia/commons/9/9d/Toyota_carlogo.svg',
+  'Peugeot':'https://upload.wikimedia.org/wikipedia/commons/9/94/Peugeot_2021_Logo.svg',
+  'Alpine':'https://upload.wikimedia.org/wikipedia/commons/6/6c/Alpine_logo.svg',
+  'Cadillac':'https://upload.wikimedia.org/wikipedia/commons/9/99/Cadillac_logo.svg',
+  'Chevrolet':'https://upload.wikimedia.org/wikipedia/commons/f/f5/Chevrolet_logo.svg',
+  'Nissan':'https://upload.wikimedia.org/wikipedia/commons/8/8a/Nissan_2020_logo.svg',
+  'Genesis':'https://upload.wikimedia.org/wikipedia/commons/7/72/Genesis_Motor_logo.svg',
 };
-
-function brandHtml(brand) {
+function brandImg(brand, h=11) {
   const url = LOGOS[brand];
-  if (url) return `<img class="brand-img" src="${url}" alt="${brand}" onerror="this.outerHTML='<span class=brand-txt>${brand||''}</span>'">`;
+  if (url) return `<img class="brand-img" style="height:${h}px" src="${url}" alt="${brand||''}" onerror="this.outerHTML='<span class=brand-txt>${brand||''}</span>'">`;
   return brand ? `<span class="brand-txt">${brand}</span>` : '';
 }
 
-// ── State ─────────────────────────────────────────────────────────
-let S = { remote:{}, myName:'', myFolder:'', lastSync:null, c1:null, c2:null, cls_t:'', cls_g:'' };
+// State
+let S = { remote:{}, myName:'', myFolder:'', lastSync:null, c1:null, c2:null,
+           cls_t:'', cls_g:'', cls_p:'' };
 
-// ── Boot ──────────────────────────────────────────────────────────
+// Boot
 window.addEventListener('load', async () => {
   try {
     const r = await fetch(LOCAL+'/api/config');
@@ -454,253 +363,271 @@ window.addEventListener('load', async () => {
   if (S.myName) {
     document.getElementById('pilotPill').textContent = S.myName;
     document.getElementById('pilotPill').style.display = 'block';
-    document.getElementById('inName').value   = S.myName;
-    document.getElementById('inFolder').value = S.myFolder;
-    document.getElementById('stFolder').textContent = 'Dossier : ' + S.myFolder;
+    document.getElementById('stFolder').textContent = S.myFolder;
   }
   await syncNow();
   const l = document.getElementById('loading');
-  l.style.transition = 'opacity .4s'; l.style.opacity = '0';
-  setTimeout(() => l.style.display = 'none', 440);
-  if (!S.myName) showPage('config', document.querySelectorAll('.ntab')[3]);
+  l.style.transition='opacity .4s'; l.style.opacity='0';
+  setTimeout(()=>l.style.display='none', 440);
 });
 
-// ── Navigation ────────────────────────────────────────────────────
+// Navigation
 function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.ntab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   el.classList.add('active');
-  if (id === 'graphiques') renderCharts();
+  if (id==='graphiques') renderCharts();
+  if (id==='podium') renderPodium();
 }
 
-// ── Filters ───────────────────────────────────────────────────────
+// Filters
 function setClass(cls, el, which) {
-  if (which==='t') S.cls_t=cls; else S.cls_g=cls;
-  document.querySelectorAll(`#pills-${which} .pill`).forEach(p => p.classList.remove('on'));
+  S['cls_'+which] = cls;
+  document.querySelectorAll(`#pills-${which} .pill`).forEach(p=>p.classList.remove('on'));
   el.classList.add('on');
-  if (which==='t') renderTable(); else renderCharts();
+  if (which==='t') renderTable();
+  else if (which==='g') renderCharts();
+  else if (which==='p') renderPodium();
 }
 
-// ── Config ────────────────────────────────────────────────────────
-async function saveConfig() {
-  const name   = document.getElementById('inName').value.trim();
-  const folder = document.getElementById('inFolder').value.trim();
-  if (!name)   { showMsg('Entrez votre pseudo LMU', 'err'); return; }
-  if (!folder) { showMsg('Entrez le chemin du dossier', 'err'); return; }
-  S.myName = name; S.myFolder = folder;
-  document.getElementById('pilotPill').textContent = name;
-  document.getElementById('pilotPill').style.display = 'block';
-  document.getElementById('stFolder').textContent = 'Dossier : ' + folder;
-  try {
-    await fetch(LOCAL+'/api/config', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name,folder}) });
-    showMsg('✓ Sauvegardé et synchronisé !', 'ok');
-  } catch(e) { showMsg('✓ Sauvegardé.', 'ok'); }
-  showPage('tableau', document.querySelectorAll('.ntab')[0]);
-  syncNow();
-}
-function showMsg(t, type) {
-  const e = document.getElementById('setupMsg');
-  e.textContent = t; e.className = 'setup-msg '+type; e.style.display = 'block';
-}
-
-// ── Sync ──────────────────────────────────────────────────────────
+// Sync
 async function syncNow() {
   const dot = document.getElementById('sdot');
   dot.className = 'sdot';
   document.getElementById('stText').textContent = 'Synchronisation…';
   try { await fetch(LOCAL+'/api/sync'); } catch(e) {}
   try {
-    const r    = await fetch(REMOTE+'/all');
+    const r = await fetch(REMOTE+'/all');
     const data = await r.json();
-    S.remote   = data;
+    S.remote = data;
     S.lastSync = new Date().toLocaleTimeString('fr-FR');
     dot.className = 'sdot on';
     document.getElementById('stServer').textContent = 'Serveur : ✓ en ligne';
-    document.getElementById('stText').textContent   = Object.keys(data).length + ' pilotes synchronisés';
-    document.getElementById('s-sync').textContent   = S.lastSync;
+    document.getElementById('stText').textContent = Object.keys(data).length+' pilotes synchronisés';
+    document.getElementById('s-sync').textContent = S.lastSync;
   } catch(e) {
     dot.className = 'sdot';
     document.getElementById('stServer').textContent = 'Serveur : ✗ hors ligne';
-    document.getElementById('stText').textContent   = 'Erreur de connexion';
+    document.getElementById('stText').textContent = 'Erreur de connexion';
   }
   updateStats(); updateFilters(); renderTable(); renderPilots();
+  const active = document.querySelector('.page.active');
+  if (active && active.id==='page-podium') renderPodium();
 }
 function reload() { syncNow(); }
 
-// ── Data helpers ──────────────────────────────────────────────────
+// Data
 function getMerged(cf, cls) {
   const T = {};
   for (const [pilot, info] of Object.entries(S.remote)) {
     for (const [key, rec] of Object.entries(info.times||{})) {
       const parts = key.split('|');
       if (parts.length < 2) continue;
-      const circ = parts[0], cfg = parts[1], cl = parts[2]||'Unknown';
-      if (cf  && circ !== cf)  continue;
-      if (cls && cl   !== cls) continue;
-      const k = `${circ}||${cfg}||${cl}`;
-      if (!T[k]) T[k] = { circuit:circ, config:cfg, car_class:cl, times:{} };
+      const circ = parts[0], cfg = parts[1], cl = parts[2]||'';
+      // FIX: normalise car class — match "Hyper" → "Hypercar" etc.
+      const clNorm = normalizeClass(cl);
+      if (cf  && circ   !== cf)      continue;
+      if (cls && clNorm !== cls)     continue;
+      const k = `${circ}||${cfg}||${clNorm}`;
+      if (!T[k]) T[k] = { circuit:circ, config:cfg, car_class:clNorm, times:{} };
       const cur = T[k].times[pilot];
       if (!cur || rec.time_sec < cur.time_sec)
         T[k].times[pilot] = { time_sec:rec.time_sec, brand:rec.brand||'', car_type:rec.car_type||'' };
     }
   }
-  return Object.values(T).sort((a,b) => {
+  return Object.values(T).sort((a,b)=>{
     const c = a.circuit.localeCompare(b.circuit);
     return c || a.car_class.localeCompare(b.car_class);
   });
 }
 
+function normalizeClass(cl) {
+  if (!cl) return 'Unknown';
+  const l = cl.toLowerCase();
+  if (l.includes('hyper'))   return 'Hypercar';
+  if (l.includes('gt3'))     return 'GT3';
+  if (l.includes('lmp2'))    return 'LMP2';
+  if (l.includes('lmp3'))    return 'LMP3';
+  if (l === 'gt3')           return 'GT3';
+  return cl;
+}
+
 function fmt(s) {
-  if (!s && s !== 0) return '—';
-  const m = Math.floor(s/60), sec = s - m*60;
+  if (!s && s!==0) return '—';
+  const m=Math.floor(s/60), sec=s-m*60;
   return `${String(m).padStart(2,'0')}:${sec.toFixed(3).padStart(6,'0')}`;
 }
 
 function updateStats() {
-  const merged = getMerged(null, null);
+  const merged = getMerged(null,null);
   document.getElementById('s-pilots').textContent   = Object.keys(S.remote).length;
   document.getElementById('s-circuits').textContent = [...new Set(merged.map(r=>r.circuit))].length;
-  document.getElementById('s-tours').textContent    = merged.reduce((s,r) => s + Object.keys(r.times).length, 0);
+  document.getElementById('s-tours').textContent    = merged.reduce((s,r)=>s+Object.keys(r.times).length,0);
 }
 
 function updateFilters() {
   const circs = [...new Set(getMerged(null,null).map(r=>r.circuit))].sort();
-  ['fCirc','fCircG'].forEach(id => {
-    const sel = document.getElementById(id), cur = sel.value;
+  ['fCirc','fCircG'].forEach(id=>{
+    const sel=document.getElementById(id), cur=sel.value;
     sel.innerHTML = '<option value="">Tous les circuits</option>' +
-      circs.map(c => `<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
+      circs.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
   });
 }
 
-// ── Table ─────────────────────────────────────────────────────────
+// Table
 function renderTable() {
   const cf     = document.getElementById('fCirc').value;
   const merged = getMerged(cf||null, S.cls_t||null);
-  const pilots = [...new Set(merged.flatMap(r => Object.keys(r.times)))].sort();
+  const pilots = [...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
   const me     = (S.myName||'').toLowerCase();
 
   document.getElementById('tHead').innerHTML = `<tr>
     <th style="min-width:220px">Circuit / Catégorie</th>
-    ${pilots.map(p=>`<th class="${p.toLowerCase()===me?'me-col':''}" style="min-width:130px;text-align:right">${p}${p.toLowerCase()===me?' ★':''}</th>`).join('')}
+    ${pilots.map(p=>`<th class="${p.toLowerCase()===me?'me-col':''}" style="min-width:130px">${p}${p.toLowerCase()===me?' ★':''}</th>`).join('')}
   </tr>`;
 
   let lastCirc = null;
-  document.getElementById('tBody').innerHTML = merged.map(row => {
-    const times  = row.times;
-    const bestT  = Math.min(...Object.values(times).map(v=>v.time_sec));
-    const bestP  = Object.entries(times).find(([,v])=>v.time_sec===bestT)?.[0];
-    const flag   = getFlag(row.circuit);
-
-    // Show circuit name only when it changes
-    let circHeader = '';
+  document.getElementById('tBody').innerHTML = merged.map(row=>{
+    const times = row.times;
+    const bestT = Math.min(...Object.values(times).map(v=>v.time_sec));
+    const bestP = Object.entries(times).find(([,v])=>v.time_sec===bestT)?.[0];
+    let header;
     if (row.circuit !== lastCirc) {
       lastCirc = row.circuit;
-      circHeader = `<tr class="grp"><td colspan="${pilots.length+1}">
+      header = `<tr class="grp"><td colspan="${pilots.length+1}">
         <div class="grp-inner">
-          ${flag}
+          ${getFlag(row.circuit)}
           <span class="grp-name">${row.circuit}</span>
-          <span class="grp-config">${row.config && row.config!==row.circuit ? '/ '+row.config : ''}</span>
+          <span class="grp-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
           <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
         </div>
       </td></tr>`;
     } else {
-      // Same circuit, different category
-      circHeader = `<tr class="grp"><td colspan="${pilots.length+1}" style="padding-left:54px">
+      header = `<tr class="grp"><td colspan="${pilots.length+1}" style="padding-left:54px">
         <div class="grp-inner">
-          <span class="grp-config">${row.config && row.config!==row.circuit ? row.config+' — ':''}</span>
           <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
+          <span class="grp-cfg">${row.config&&row.config!==row.circuit?row.config:''}</span>
         </div>
       </td></tr>`;
     }
-
-    const cells = pilots.map(p => {
-      const rec    = times[p];
-      const isBest = p === bestP && rec;
-      if (!rec) return `<td style="text-align:right;color:var(--sub2)">—</td>`;
-      if (isBest) return `<td class="best" style="text-align:right">
-        <span class="brand-wrap">${brandHtml(rec.brand)}<span>${fmt(rec.time_sec)}</span></span>
-      </td>`;
-      return `<td style="text-align:right">${fmt(rec.time_sec)}</td>`;
+    const cells = pilots.map(p=>{
+      const rec=times[p], isBest=p===bestP&&rec;
+      if (!rec) return `<td style="color:var(--sub2)">—</td>`;
+      if (isBest) return `<td class="best"><span class="brand-wrap">${brandImg(rec.brand)}${fmt(rec.time_sec)}</span></td>`;
+      return `<td>${fmt(rec.time_sec)}</td>`;
     }).join('');
-
-    return circHeader + `<tr class="drow"><td></td>${cells}</tr>`;
+    return header+`<tr class="drow"><td></td>${cells}</tr>`;
   }).join('');
 }
 
-// ── Charts ────────────────────────────────────────────────────────
-function renderCharts() {
-  const cf     = document.getElementById('fCircG').value;
-  const merged = getMerged(cf||null, S.cls_g||null).slice(0, 18);
-  const pilots = [...new Set(merged.flatMap(r => Object.keys(r.times)))].sort();
-  const me     = (S.myName||'').toLowerCase();
-  const labels = merged.map(r => r.circuit + (r.car_class!=='Unknown'?' ['+r.car_class+']':''));
+// Podium & Championship
+function renderPodium() {
+  const merged = getMerged(null, S.cls_p||null);
+  const pilots = [...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
 
-  const baseOpts = {
-    responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{ display:true, labels:{ color:'#64748B', font:{size:11}, boxWidth:10, boxHeight:10, padding:16 } } },
-    scales:{
-      x:{ ticks:{ color:'#94A3B8', font:{size:9}, maxRotation:35 }, grid:{ color:'rgba(0,0,0,.05)' } },
-      y:{ ticks:{ color:'#94A3B8', font:{size:9} }, grid:{ color:'rgba(0,0,0,.05)' } }
-    }
-  };
+  // Championship score: 1st=25, 2nd=18, 3rd=15, 4th=12, 5th=10...
+  const PTS = [25,18,15,12,10,8,6,4,2,1];
+  const scores = {};
+  pilots.forEach(p => scores[p] = 0);
 
-  if (S.c1) S.c1.destroy();
-  S.c1 = new Chart(document.getElementById('chart1'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: pilots.map((p,i) => ({
-        label: p,
-        data:  merged.map(r => r.times[p]?.time_sec || 0),
-        backgroundColor: COLORS[i%COLORS.length] + (p.toLowerCase()===me ? 'EE' : '88'),
-        borderColor:     p.toLowerCase()===me ? COLORS[i%COLORS.length] : 'transparent',
-        borderWidth: p.toLowerCase()===me ? 1.5 : 0,
-        borderRadius: 3,
-        barThickness: Math.max(6, Math.floor(44/Math.max(pilots.length,1))),
-      }))
-    },
-    options: { ...baseOpts, scales:{ ...baseOpts.scales, y:{ ...baseOpts.scales.y, ticks:{ ...baseOpts.scales.y.ticks,
-      callback: v => { if(!v) return ''; const m=Math.floor(v/60),s=v-m*60; return `${m}:${String(Math.floor(s)).padStart(2,'0')}`; }
-    }}}}
+  merged.forEach(row=>{
+    const sorted = Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
+    sorted.forEach(([p],i)=>{ if(PTS[i]) scores[p]=(scores[p]||0)+PTS[i]; });
   });
 
+  const ranked = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const maxPts = ranked[0]?.[1] || 1;
+
+  // Championship grid
+  document.getElementById('champGrid').innerHTML = ranked.map(([pilot,pts],i)=>{
+    const color = COLORS[pilots.indexOf(pilot)%COLORS.length];
+    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const medal = MEDALS[i]||`#${i+1}`;
+    return `<div class="champ-card ${rankClass}">
+      <div class="champ-rank">${medal}</div>
+      <div class="champ-name" title="${pilot}">${pilot}</div>
+      <div class="champ-pts">${pts} points</div>
+      <div class="champ-bar"><div class="champ-bar-fill" style="width:${Math.round(pts/maxPts*100)}%;background:${color}"></div></div>
+    </div>`;
+  }).join('');
+
+  // Podium per circuit
+  document.getElementById('podiumGrid').innerHTML = merged.map(row=>{
+    const sorted = Object.entries(row.times)
+      .sort((a,b)=>a[1].time_sec-b[1].time_sec)
+      .slice(0,3);
+    if (sorted.length===0) return '';
+    const best = sorted[0][1].time_sec;
+    const places = sorted.map(([p,rec],i)=>{
+      const color = COLORS[pilots.indexOf(p)%COLORS.length];
+      const gap   = i===0 ? '' : `+${(rec.time_sec-best).toFixed(3)}s`;
+      return `<div class="podium-place">
+        <span class="pp-medal">${MEDALS[i]||''}</span>
+        <div>
+          <div class="pp-name" style="color:${color}">${p}</div>
+          <div class="pp-time">${fmt(rec.time_sec)}</div>
+          ${gap?`<div class="pp-gap">${gap}</div>`:''}
+        </div>
+        ${LOGOS[rec.brand]?`<img class="pp-brand" src="${LOGOS[rec.brand]}" alt="${rec.brand}" onerror="this.style.display='none'">` : ''}
+      </div>`;
+    }).join('');
+    return `<div class="podium-row">
+      <div class="podium-header">
+        ${getFlag(row.circuit)}
+        <span class="podium-circuit">${row.circuit}</span>
+        <span class="podium-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
+        <span class="cat-pill cat-${row.car_class}" style="margin-left:auto">${row.car_class}</span>
+      </div>
+      <div class="podium-places">${places}</div>
+    </div>`;
+  }).join('');
+}
+
+// Charts
+function renderCharts() {
+  const cf     = document.getElementById('fCircG').value;
+  const merged = getMerged(cf||null, S.cls_g||null).slice(0,18);
+  const pilots = [...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const me     = (S.myName||'').toLowerCase();
+  const labels = merged.map(r=>r.circuit+(r.car_class!=='Unknown'?' ['+r.car_class+']':''));
+  const base   = {responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,labels:{color:'#64748B',font:{size:11},boxWidth:10,boxHeight:10,padding:14}}},
+    scales:{x:{ticks:{color:'#94A3B8',font:{size:9},maxRotation:35},grid:{color:'rgba(0,0,0,.05)'}},
+            y:{ticks:{color:'#94A3B8',font:{size:9}},grid:{color:'rgba(0,0,0,.05)'}}}};
+  if (S.c1) S.c1.destroy();
+  S.c1 = new Chart(document.getElementById('chart1'),{
+    type:'bar',
+    data:{labels,datasets:pilots.map((p,i)=>({label:p,
+      data:merged.map(r=>r.times[p]?.time_sec||0),
+      backgroundColor:COLORS[i%COLORS.length]+(p.toLowerCase()===me?'EE':'88'),
+      borderColor:p.toLowerCase()===me?COLORS[i%COLORS.length]:'transparent',
+      borderWidth:p.toLowerCase()===me?1.5:0,borderRadius:3,
+      barThickness:Math.max(6,Math.floor(44/Math.max(pilots.length,1)))}))},
+    options:{...base,scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,
+      callback:v=>{if(!v)return'';const m=Math.floor(v/60),s=v-m*60;return`${m}:${String(Math.floor(s)).padStart(2,'0')}`}}}}}
+  });
   if (S.c2) S.c2.destroy();
-  S.c2 = new Chart(document.getElementById('chart2'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: pilots.map((p,i) => ({
-        label: p,
-        data:  merged.map(r => {
-          if (!r.times[p]) return null;
-          const best = Math.min(...Object.values(r.times).map(v=>v.time_sec));
-          return parseFloat((r.times[p].time_sec - best).toFixed(3));
-        }),
-        borderColor:         COLORS[i%COLORS.length],
-        backgroundColor:     COLORS[i%COLORS.length]+'18',
-        pointBackgroundColor:COLORS[i%COLORS.length],
-        pointRadius: 4, pointHoverRadius: 6,
-        borderWidth: p.toLowerCase()===me ? 2.5 : 1.5,
-        tension: 0.3, spanGaps: true,
-      }))
-    },
-    options: { ...baseOpts, scales:{ ...baseOpts.scales, y:{ ...baseOpts.scales.y, min:0, ticks:{ ...baseOpts.scales.y.ticks,
-      callback: v => `+${v.toFixed(1)}s`
-    }}}}
+  S.c2 = new Chart(document.getElementById('chart2'),{
+    type:'line',
+    data:{labels,datasets:pilots.map((p,i)=>({label:p,
+      data:merged.map(r=>{if(!r.times[p])return null;const b=Math.min(...Object.values(r.times).map(v=>v.time_sec));return parseFloat((r.times[p].time_sec-b).toFixed(3));}),
+      borderColor:COLORS[i%COLORS.length],backgroundColor:COLORS[i%COLORS.length]+'18',
+      pointBackgroundColor:COLORS[i%COLORS.length],pointRadius:4,pointHoverRadius:6,
+      borderWidth:p.toLowerCase()===me?2.5:1.5,tension:0.3,spanGaps:true}))},
+    options:{...base,scales:{...base.scales,y:{...base.scales.y,min:0,ticks:{...base.scales.y.ticks,callback:v=>`+${v.toFixed(1)}s`}}}}
   });
 }
 
-// ── Pilots ────────────────────────────────────────────────────────
+// Pilots
 function renderPilots() {
   const me = (S.myName||'').toLowerCase();
   document.getElementById('pilotsGrid').innerHTML = Object.entries(S.remote)
-    .sort(([a],[b]) => a.localeCompare(b))
-    .map(([pilot, info], i) => {
-      const isMe  = pilot.toLowerCase() === me;
-      const color = COLORS[i % COLORS.length];
-      const n     = Object.keys(info.times||{}).length;
-      return `<div class="pcard${isMe?' me':''}">
+    .sort(([a],[b])=>a.localeCompare(b))
+    .map(([pilot,info],i)=>{
+      const isMe=pilot.toLowerCase()===me, color=COLORS[i%COLORS.length];
+      const n=Object.keys(info.times||{}).length;
+      return`<div class="pcard${isMe?' me':''}">
         <div class="pcard-top" style="background:${color}"></div>
         <div class="pname" style="color:${color}">${pilot}${isMe?'<span class="me-tag">MOI</span>':''}</div>
         <div class="pmeta">${n} entrée${n>1?'s':''}</div>
@@ -709,20 +636,18 @@ function renderPilots() {
     }).join('');
 }
 
-// ── CSV ───────────────────────────────────────────────────────────
+// CSV
 function exportCSV() {
-  const merged = getMerged(null, S.cls_t||null);
-  const pilots = [...new Set(merged.flatMap(r => Object.keys(r.times)))].sort();
-  if (!merged.length) return;
-  let csv = 'Circuit,Config,Categorie,' + pilots.join(',') + '\n';
-  merged.forEach(row => {
-    csv += [row.circuit, row.config, row.car_class,
-      ...pilots.map(p => row.times[p] ? fmt(row.times[p].time_sec) : '')
-    ].join(',') + '\n';
+  const merged=getMerged(null,S.cls_t||null);
+  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  if(!merged.length) return;
+  let csv='Circuit,Config,Categorie,'+pilots.join(',')+'\n';
+  merged.forEach(row=>{
+    csv+=[row.circuit,row.config,row.car_class,...pilots.map(p=>row.times[p]?fmt(row.times[p].time_sec):'')].join(',')+'\n';
   });
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'lmu_times.csv'; a.click();
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='lmu_times.csv';a.click();
 }
 
 setInterval(syncNow, 60000);
