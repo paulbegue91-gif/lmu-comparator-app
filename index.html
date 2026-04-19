@@ -8,22 +8,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg:     #F1F3F7;
-  --white:  #FFFFFF;
-  --border: #E2E6ED;
-  --bord2:  #CBD2DC;
-  --red:    #DC2626;
-  --red2:   #FEE2E2;
-  --blue:   #1D4ED8;
-  --text:   #0F172A;
-  --sub:    #64748B;
-  --sub2:   #94A3B8;
-  --green:  #059669;
-  --gold:   #B45309;
+  --bg:#F1F3F7; --white:#FFFFFF; --border:#E2E6ED; --bord2:#CBD2DC;
+  --red:#DC2626; --red2:#FEE2E2; --blue:#1D4ED8; --text:#0F172A;
+  --sub:#64748B; --sub2:#94A3B8; --green:#059669; --gold:#B45309;
   --hyper-bg:#FEE2E2; --hyper-fg:#991B1B;
-  --gt3-bg: #DBEAFE; --gt3-fg:  #1E40AF;
-  --lmp2-bg:#FEF3C7; --lmp2-fg: #92400E;
-  --lmp3-bg:#D1FAE5; --lmp3-fg: #065F46;
+  --gt3-bg:#DBEAFE;   --gt3-fg:#1E40AF;
+  --lmp2-bg:#FEF3C7;  --lmp2-fg:#92400E;
+  --lmp3-bg:#D1FAE5;  --lmp3-fg:#065F46;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
@@ -43,8 +34,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:va
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 /* Nav */
-nav{position:fixed;top:54px;left:0;right:0;z-index:199;background:var(--white);border-bottom:1px solid var(--border);display:flex;padding:0 24px;gap:2px}
-.ntab{font-weight:500;font-size:13px;padding:12px 16px;cursor:pointer;color:var(--sub);border-bottom:2px solid transparent;transition:all .15s}
+nav{position:fixed;top:54px;left:0;right:0;z-index:199;background:var(--white);border-bottom:1px solid var(--border);display:flex;padding:0 24px;gap:2px;overflow-x:auto}
+.ntab{font-weight:500;font-size:13px;padding:12px 16px;cursor:pointer;color:var(--sub);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
 .ntab:hover{color:var(--text)}
 .ntab.active{color:var(--red);border-bottom-color:var(--red);font-weight:600}
 
@@ -54,16 +45,16 @@ main{padding-top:98px;padding-bottom:48px}
 .page.active{display:block;animation:up .2s ease}
 @keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-/* Stats */
+/* Stats bar */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
 .scard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;border-top:3px solid var(--red)}
 .sval{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;line-height:1}
 .slbl{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
 
-/* Filter bar */
+/* Filters */
 .filterbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .flabel{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
-.pills{display:flex;gap:6px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
 .pill{font-weight:500;font-size:12px;padding:5px 14px;border-radius:20px;cursor:pointer;border:1px solid var(--bord2);color:var(--sub);background:var(--white);transition:all .15s}
 .pill:hover{border-color:var(--sub2);color:var(--text)}
 .pill.on{color:white;border-color:transparent;font-weight:600}
@@ -72,7 +63,7 @@ main{padding-top:98px;padding-bottom:48px}
 .pill[data-c="GT3"].on{background:var(--blue)}
 .pill[data-c="LMP2"].on{background:#D97706}
 .pill[data-c="LMP3"].on{background:#059669}
-.fsep{width:1px;height:22px;background:var(--bord2);margin:0 4px}
+.fsep{width:1px;height:22px;background:var(--bord2);margin:0 4px;flex-shrink:0}
 .fsel{background:var(--white);border:1px solid var(--bord2);color:var(--text);font-size:12px;padding:6px 28px 6px 12px;border-radius:6px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-color:var(--white)}
 
 /* Table */
@@ -102,54 +93,63 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
 .brand-wrap{display:inline-flex;align-items:center;gap:5px;vertical-align:middle}
 .brand-img{height:11px;width:auto;object-fit:contain;opacity:.55;vertical-align:middle}
 .brand-txt{font-size:10px;color:var(--sub2);font-weight:500}
-.medal{font-size:13px;margin-right:2px}
 
-/* Podium & championship */
-.section-title{font-weight:600;font-size:16px;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.champ-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:32px}
-.champ-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+/* Section title */
+.sec-title{font-weight:600;font-size:16px;color:var(--text);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+
+/* Championship */
+.champ-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:32px}
+.champ-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s}
+.champ-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .champ-card.rank-1{border-top:3px solid #F59E0B}
 .champ-card.rank-2{border-top:3px solid #94A3B8}
 .champ-card.rank-3{border-top:3px solid #B45309}
-.champ-rank{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:36px;line-height:1;margin-bottom:4px}
-.rank-1 .champ-rank{color:#F59E0B}
-.rank-2 .champ-rank{color:#94A3B8}
-.rank-3 .champ-rank{color:#B45309}
-.champ-name{font-weight:600;font-size:14px;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.champ-pts{font-size:12px;color:var(--sub)}
+.champ-medal{font-size:28px;line-height:1;margin-bottom:6px}
+.champ-name{font-weight:600;font-size:14px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.champ-pts{font-size:12px;color:var(--sub);margin-bottom:8px}
+.champ-wins{font-size:11px;color:var(--sub2)}
 .champ-bar{height:3px;background:var(--bg);border-radius:2px;margin-top:10px;overflow:hidden}
-.champ-bar-fill{height:100%;border-radius:2px;background:var(--red);transition:width .5s ease}
+.champ-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
+
+/* Podium */
 .podium-grid{display:grid;grid-template-columns:1fr;gap:10px}
 .podium-row{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.podium-header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--border)}
-.podium-circuit{font-weight:600;font-size:13px;color:var(--text)}
+.podium-header{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--border)}
+.podium-circuit{font-weight:600;font-size:13px}
 .podium-cfg{font-size:11px;color:var(--sub2)}
-.podium-places{display:flex;gap:0}
-.podium-place{flex:1;padding:10px 16px;display:flex;align-items:center;gap:10px;border-right:1px solid var(--border)}
-.podium-place:last-child{border-right:none}
+.podium-places{display:flex}
+.pp{flex:1;padding:10px 14px;display:flex;align-items:center;gap:10px;border-right:1px solid var(--border)}
+.pp:last-child{border-right:none}
 .pp-medal{font-size:18px;flex-shrink:0}
-.pp-name{font-weight:600;font-size:13px;color:var(--text)}
+.pp-info{flex:1;min-width:0}
+.pp-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pp-time{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--sub)}
 .pp-gap{font-size:10px;color:var(--red);font-weight:500;margin-top:1px}
-.pp-brand{height:10px;width:auto;object-fit:contain;opacity:.5;margin-left:auto;flex-shrink:0}
+.pp-brand{height:10px;width:auto;opacity:.45;flex-shrink:0}
+
+/* Pilot profiles */
+.profiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.profile-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s}
+.profile-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-2px)}
+.profile-header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.profile-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;color:white;flex-shrink:0}
+.profile-name{font-weight:600;font-size:15px}
+.profile-sync{font-size:10px;color:var(--sub2);font-family:'JetBrains Mono',monospace;margin-top:2px}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.ps{padding:12px 14px;border-right:1px solid var(--border);text-align:center}
+.ps:last-child{border-right:none}
+.ps-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px;color:var(--text)}
+.ps-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.profile-best{padding:10px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--sub);display:flex;align-items:center;gap:6px}
+.profile-best strong{color:var(--text);font-weight:600}
+.streak-badge{display:inline-flex;align-items:center;gap:4px;background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin-left:auto}
 
 /* Charts */
 .chart-grid{display:grid;grid-template-columns:1fr;gap:18px}
 .ccard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.ccard-title{font-weight:600;font-size:13px;color:var(--text);margin-bottom:3px}
+.ccard-title{font-weight:600;font-size:13px;margin-bottom:3px}
 .ccard-sub{font-size:11px;color:var(--sub);margin-bottom:18px}
 .cwrap{position:relative;height:300px}
-
-/* Pilots */
-.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
-.pcard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative;overflow:hidden;transition:all .15s}
-.pcard:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-1px)}
-.pcard.me{border-color:#FECACA}
-.pcard-top{position:absolute;top:0;left:0;right:0;height:3px}
-.pname{font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px;margin-bottom:4px}
-.me-tag{font-size:9px;background:var(--red2);color:var(--red);padding:2px 6px;border-radius:3px;font-weight:700}
-.pmeta{font-size:12px;color:var(--sub)}
-.pupd{font-size:10px;color:var(--sub2);margin-top:5px;font-family:'JetBrains Mono',monospace}
 
 /* Status */
 .statusbar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--white);border-top:1px solid var(--border);padding:7px 24px;display:flex;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--sub)}
@@ -157,12 +157,18 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
 
 /* Loading */
 #loading{position:fixed;inset:0;background:var(--white);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
-.load-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:32px;letter-spacing:.08em;color:var(--text)}
+.load-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:32px;letter-spacing:.08em}
 .load-logo span{color:var(--red)}
 .load-bar{width:160px;height:2px;background:var(--border);border-radius:1px;overflow:hidden}
 .load-prog{height:100%;background:var(--red);animation:lanim 1s ease-in-out infinite}
 @keyframes lanim{0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%}}
 .load-txt{font-size:11px;color:var(--sub);letter-spacing:.1em;text-transform:uppercase}
+
+/* Record badge */
+#record-badge{position:fixed;top:70px;right:24px;z-index:300;background:var(--white);border:2px solid #F59E0B;border-radius:10px;padding:12px 18px;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none;animation:slidein .3s ease;max-width:280px}
+@keyframes slidein{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.rb-title{font-weight:700;font-size:13px;color:#92400E;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.rb-body{font-size:12px;color:var(--sub)}
 </style>
 </head>
 <body>
@@ -171,6 +177,11 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
   <div class="load-logo">LMU <span>LAP</span> COMPARATOR</div>
   <div class="load-bar"><div class="load-prog"></div></div>
   <div class="load-txt">Connexion au serveur…</div>
+</div>
+
+<div id="record-badge">
+  <div class="rb-title">🏆 Nouveau record !</div>
+  <div class="rb-body" id="rb-body"></div>
 </div>
 
 <header>
@@ -189,8 +200,8 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
 <nav>
   <div class="ntab active" onclick="showPage('tableau',this)">Tableau</div>
   <div class="ntab" onclick="showPage('podium',this)">Podium & Classement</div>
+  <div class="ntab" onclick="showPage('profils',this)">Profils pilotes</div>
   <div class="ntab" onclick="showPage('graphiques',this)">Graphiques</div>
-  <div class="ntab" onclick="showPage('pilotes',this)">Pilotes en ligne</div>
 </nav>
 
 <main>
@@ -233,10 +244,16 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
         <div class="pill" data-c="LMP3" onclick="setClass('LMP3',this,'p')">LMP3</div>
       </div>
     </div>
-    <div class="section-title">🏆 Classement général</div>
+    <div class="sec-title">🏆 Classement général <span style="font-size:12px;font-weight:400;color:var(--sub);margin-left:4px">— système F1 : 25-18-15-12-10-8-6-4-2-1 pts</span></div>
     <div class="champ-grid" id="champGrid"></div>
-    <div class="section-title">🥇 Podiums par circuit</div>
+    <div class="sec-title">🥇 Podiums par circuit</div>
     <div class="podium-grid" id="podiumGrid"></div>
+  </div>
+
+  <!-- PROFILS PILOTES -->
+  <div class="page" id="page-profils">
+    <div class="sec-title">Profils pilotes</div>
+    <div class="profiles-grid" id="profilesGrid"></div>
   </div>
 
   <!-- GRAPHIQUES -->
@@ -268,12 +285,6 @@ tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:
     </div>
   </div>
 
-  <!-- PILOTES -->
-  <div class="page" id="page-pilotes">
-    <div class="section-title">Pilotes synchronisés</div>
-    <div class="pgrid" id="pilotsGrid"></div>
-  </div>
-
 </main>
 
 <div class="statusbar">
@@ -289,11 +300,10 @@ const REMOTE = 'https://lmu-comparator-server.onrender.com';
 const LOCAL  = '';
 const COLORS = ['#DC2626','#1D4ED8','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#EA580C','#0D9488','#65A30D'];
 const MEDALS = ['🥇','🥈','🥉'];
+const PTS_SYS = [25,18,15,12,10,8,6,4,2,1];
 
-// Drapeaux flagcdn.com
 const FLAGS = {
-  'algarve':'pt','portimao':'pt',
-  'autodromo enzo':'it','imola':'it',
+  'algarve':'pt','portimao':'pt','autodromo enzo':'it','imola':'it',
   'autodromo josé carlos':'br','autodromo jose carlos':'br','interlagos':'br',
   'autodromo nazionale monza':'it','monza':'it',
   'bahrain international':'bh','bahrain':'bh',
@@ -301,31 +311,14 @@ const FLAGS = {
   'circuit de la sarthe':'fr','la sarthe':'fr','le mans':'fr',
   'circuit de spa':'be','spa-francorchamps':'be','spa':'be',
   'circuit of the americas':'us','cota':'us',
-  'fuji speedway':'jp','fuji':'jp',
-  'paul ricard':'fr',
-  'sebring international':'us','sebring':'us',
-  'silverstone':'gb',
-  'suzuka':'jp',
-  'lusail':'qa','qatar':'qa',
-  'nurburgring':'de','nordschleife':'de',
-  'zandvoort':'nl',
-  'mugello':'it',
-  'misano':'it',
-  'daytona':'us',
-  'kyalami':'za',
-  'istanbul':'tr',
-  'shanghai':'cn',
-  'motegi':'jp',
-  'buenos aires':'ar',
+  'fuji speedway':'jp','fuji':'jp','paul ricard':'fr',
+  'sebring international':'us','sebring':'us','silverstone':'gb',
+  'suzuka':'jp','lusail':'qa','qatar':'qa',
+  'nurburgring':'de','nordschleife':'de','zandvoort':'nl',
+  'mugello':'it','misano':'it','daytona':'us','kyalami':'za',
+  'istanbul':'tr','shanghai':'cn','motegi':'jp','buenos aires':'ar',
 };
-function getFlag(circuit) {
-  const l = circuit.toLowerCase();
-  for (const [k,code] of Object.entries(FLAGS))
-    if (l.includes(k)) return `<img class="flag-img" src="https://flagcdn.com/32x24/${code}.png" alt="${code}" onerror="this.style.display='none'">`;
-  return '';
-}
 
-// Logos constructeurs
 const LOGOS = {
   'Ferrari':'https://upload.wikimedia.org/wikipedia/commons/d/d1/Ferrari-Logo.svg',
   'Lamborghini':'https://upload.wikimedia.org/wikipedia/commons/7/7f/Lamborghini_Logo.svg',
@@ -343,15 +336,42 @@ const LOGOS = {
   'Nissan':'https://upload.wikimedia.org/wikipedia/commons/8/8a/Nissan_2020_logo.svg',
   'Genesis':'https://upload.wikimedia.org/wikipedia/commons/7/72/Genesis_Motor_logo.svg',
 };
+
+function getFlag(circuit) {
+  const l = circuit.toLowerCase();
+  for (const [k,code] of Object.entries(FLAGS))
+    if (l.includes(k)) return `<img class="flag-img" src="https://flagcdn.com/32x24/${code}.png" alt="${code}" onerror="this.style.display='none'">`;
+  return '';
+}
 function brandImg(brand, h=11) {
   const url = LOGOS[brand];
   if (url) return `<img class="brand-img" style="height:${h}px" src="${url}" alt="${brand||''}" onerror="this.outerHTML='<span class=brand-txt>${brand||''}</span>'">`;
   return brand ? `<span class="brand-txt">${brand}</span>` : '';
 }
+function normalizeClass(cl) {
+  if (!cl) return 'Unknown';
+  const l = cl.toLowerCase();
+  if (l.includes('hyper')) return 'Hypercar';
+  if (l.includes('gt3'))   return 'GT3';
+  if (l.includes('lmp2'))  return 'LMP2';
+  if (l.includes('lmp3'))  return 'LMP3';
+  return cl;
+}
+function fmt(s) {
+  if (!s && s!==0) return '—';
+  const m=Math.floor(s/60), sec=s-m*60;
+  return `${String(m).padStart(2,'0')}:${sec.toFixed(3).padStart(6,'0')}`;
+}
+function initials(name) {
+  return name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
+}
 
 // State
-let S = { remote:{}, myName:'', myFolder:'', lastSync:null, c1:null, c2:null,
-           cls_t:'', cls_g:'', cls_p:'' };
+let S = {
+  remote:{}, myName:'', myFolder:'', lastSync:null,
+  prevBests:{}, c1:null, c2:null,
+  cls_t:'', cls_g:'', cls_p:''
+};
 
 // Boot
 window.addEventListener('load', async () => {
@@ -378,7 +398,8 @@ function showPage(id, el) {
   document.getElementById('page-'+id).classList.add('active');
   el.classList.add('active');
   if (id==='graphiques') renderCharts();
-  if (id==='podium') renderPodium();
+  if (id==='podium')    renderPodium();
+  if (id==='profils')   renderProfiles();
 }
 
 // Filters
@@ -388,34 +409,67 @@ function setClass(cls, el, which) {
   el.classList.add('on');
   if (which==='t') renderTable();
   else if (which==='g') renderCharts();
-  else if (which==='p') renderPodium();
+  else if (which==='p') { renderPodium(); }
 }
 
-// Sync
+// Sync + record detection
 async function syncNow() {
   const dot = document.getElementById('sdot');
-  dot.className = 'sdot';
-  document.getElementById('stText').textContent = 'Synchronisation…';
+  dot.className='sdot';
+  document.getElementById('stText').textContent='Synchronisation…';
   try { await fetch(LOCAL+'/api/sync'); } catch(e) {}
   try {
-    const r = await fetch(REMOTE+'/all');
+    const r    = await fetch(REMOTE+'/all');
     const data = await r.json();
+
+    // Record detection for my pilot
+    if (S.myName && S.remote && Object.keys(S.prevBests).length) {
+      const me = S.myName.toLowerCase();
+      for (const [pilot, info] of Object.entries(data)) {
+        if (pilot.toLowerCase() !== me) continue;
+        for (const [key, rec] of Object.entries(info.times||{})) {
+          const prev = S.prevBests[key];
+          if (prev && rec.time_sec < prev) {
+            const parts = key.split('|');
+            showRecord(parts[0], rec.time_str, prev);
+          }
+        }
+      }
+    }
+
+    // Save current bests for next comparison
+    const me = S.myName.toLowerCase();
+    for (const [pilot, info] of Object.entries(data)) {
+      if (pilot.toLowerCase() !== me) continue;
+      for (const [key, rec] of Object.entries(info.times||{}))
+        S.prevBests[key] = rec.time_sec;
+    }
+
     S.remote = data;
     S.lastSync = new Date().toLocaleTimeString('fr-FR');
-    dot.className = 'sdot on';
+    dot.className='sdot on';
     document.getElementById('stServer').textContent = 'Serveur : ✓ en ligne';
-    document.getElementById('stText').textContent = Object.keys(data).length+' pilotes synchronisés';
-    document.getElementById('s-sync').textContent = S.lastSync;
+    document.getElementById('stText').textContent   = Object.keys(data).length+' pilotes synchronisés';
+    document.getElementById('s-sync').textContent   = S.lastSync;
   } catch(e) {
-    dot.className = 'sdot';
-    document.getElementById('stServer').textContent = 'Serveur : ✗ hors ligne';
-    document.getElementById('stText').textContent = 'Erreur de connexion';
+    dot.className='sdot';
+    document.getElementById('stServer').textContent='Serveur : ✗ hors ligne';
+    document.getElementById('stText').textContent  ='Erreur de connexion';
   }
-  updateStats(); updateFilters(); renderTable(); renderPilots();
+  updateStats(); updateFilters(); renderTable(); renderPilots_mini();
   const active = document.querySelector('.page.active');
-  if (active && active.id==='page-podium') renderPodium();
+  if (active?.id==='page-podium')  renderPodium();
+  if (active?.id==='page-profils') renderProfiles();
 }
 function reload() { syncNow(); }
+
+function showRecord(circuit, newTime, oldTime) {
+  const gain = (oldTime - parseFloat(newTime||0)).toFixed(3);
+  document.getElementById('rb-body').textContent = `${circuit} — ${newTime} (-${gain}s)`;
+  const b = document.getElementById('record-badge');
+  b.style.display='block';
+  setTimeout(()=>{b.style.transition='opacity .5s';b.style.opacity='0';setTimeout(()=>{b.style.display='none';b.style.opacity='1';},500);}, 5000);
+}
 
 // Data
 function getMerged(cf, cls) {
@@ -424,94 +478,72 @@ function getMerged(cf, cls) {
     for (const [key, rec] of Object.entries(info.times||{})) {
       const parts = key.split('|');
       if (parts.length < 2) continue;
-      const circ = parts[0], cfg = parts[1], cl = parts[2]||'';
-      // FIX: normalise car class — match "Hyper" → "Hypercar" etc.
-      const clNorm = normalizeClass(cl);
-      if (cf  && circ   !== cf)      continue;
-      if (cls && clNorm !== cls)     continue;
+      const circ=parts[0], cfg=parts[1], clNorm=normalizeClass(parts[2]||'');
+      if (cf  && circ   !== cf)    continue;
+      if (cls && clNorm !== cls)   continue;
       const k = `${circ}||${cfg}||${clNorm}`;
-      if (!T[k]) T[k] = { circuit:circ, config:cfg, car_class:clNorm, times:{} };
-      const cur = T[k].times[pilot];
-      if (!cur || rec.time_sec < cur.time_sec)
-        T[k].times[pilot] = { time_sec:rec.time_sec, brand:rec.brand||'', car_type:rec.car_type||'' };
+      if (!T[k]) T[k]={circuit:circ,config:cfg,car_class:clNorm,times:{}};
+      const cur=T[k].times[pilot];
+      if (!cur||rec.time_sec<cur.time_sec)
+        T[k].times[pilot]={time_sec:rec.time_sec,brand:rec.brand||'',car_type:rec.car_type||''};
     }
   }
   return Object.values(T).sort((a,b)=>{
-    const c = a.circuit.localeCompare(b.circuit);
-    return c || a.car_class.localeCompare(b.car_class);
+    const c=a.circuit.localeCompare(b.circuit);
+    return c||a.car_class.localeCompare(b.car_class);
   });
 }
 
-function normalizeClass(cl) {
-  if (!cl) return 'Unknown';
-  const l = cl.toLowerCase();
-  if (l.includes('hyper'))   return 'Hypercar';
-  if (l.includes('gt3'))     return 'GT3';
-  if (l.includes('lmp2'))    return 'LMP2';
-  if (l.includes('lmp3'))    return 'LMP3';
-  if (l === 'gt3')           return 'GT3';
-  return cl;
-}
-
-function fmt(s) {
-  if (!s && s!==0) return '—';
-  const m=Math.floor(s/60), sec=s-m*60;
-  return `${String(m).padStart(2,'0')}:${sec.toFixed(3).padStart(6,'0')}`;
-}
-
 function updateStats() {
-  const merged = getMerged(null,null);
+  const merged=getMerged(null,null);
   document.getElementById('s-pilots').textContent   = Object.keys(S.remote).length;
   document.getElementById('s-circuits').textContent = [...new Set(merged.map(r=>r.circuit))].length;
   document.getElementById('s-tours').textContent    = merged.reduce((s,r)=>s+Object.keys(r.times).length,0);
 }
 
 function updateFilters() {
-  const circs = [...new Set(getMerged(null,null).map(r=>r.circuit))].sort();
+  const circs=[...new Set(getMerged(null,null).map(r=>r.circuit))].sort();
   ['fCirc','fCircG'].forEach(id=>{
     const sel=document.getElementById(id), cur=sel.value;
-    sel.innerHTML = '<option value="">Tous les circuits</option>' +
+    sel.innerHTML='<option value="">Tous les circuits</option>'+
       circs.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
   });
 }
 
 // Table
 function renderTable() {
-  const cf     = document.getElementById('fCirc').value;
-  const merged = getMerged(cf||null, S.cls_t||null);
-  const pilots = [...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
-  const me     = (S.myName||'').toLowerCase();
+  const cf=document.getElementById('fCirc').value;
+  const merged=getMerged(cf||null,S.cls_t||null);
+  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const me=(S.myName||'').toLowerCase();
 
-  document.getElementById('tHead').innerHTML = `<tr>
+  document.getElementById('tHead').innerHTML=`<tr>
     <th style="min-width:220px">Circuit / Catégorie</th>
     ${pilots.map(p=>`<th class="${p.toLowerCase()===me?'me-col':''}" style="min-width:130px">${p}${p.toLowerCase()===me?' ★':''}</th>`).join('')}
   </tr>`;
 
-  let lastCirc = null;
-  document.getElementById('tBody').innerHTML = merged.map(row=>{
-    const times = row.times;
-    const bestT = Math.min(...Object.values(times).map(v=>v.time_sec));
-    const bestP = Object.entries(times).find(([,v])=>v.time_sec===bestT)?.[0];
+  let lastCirc=null;
+  document.getElementById('tBody').innerHTML=merged.map(row=>{
+    const times=row.times;
+    const bestT=Math.min(...Object.values(times).map(v=>v.time_sec));
+    const bestP=Object.entries(times).find(([,v])=>v.time_sec===bestT)?.[0];
     let header;
-    if (row.circuit !== lastCirc) {
-      lastCirc = row.circuit;
-      header = `<tr class="grp"><td colspan="${pilots.length+1}">
-        <div class="grp-inner">
-          ${getFlag(row.circuit)}
+    if (row.circuit!==lastCirc) {
+      lastCirc=row.circuit;
+      header=`<tr class="grp"><td colspan="${pilots.length+1}">
+        <div class="grp-inner">${getFlag(row.circuit)}
           <span class="grp-name">${row.circuit}</span>
           <span class="grp-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
           <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
-        </div>
-      </td></tr>`;
+        </div></td></tr>`;
     } else {
-      header = `<tr class="grp"><td colspan="${pilots.length+1}" style="padding-left:54px">
+      header=`<tr class="grp"><td colspan="${pilots.length+1}" style="padding-left:54px">
         <div class="grp-inner">
           <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
           <span class="grp-cfg">${row.config&&row.config!==row.circuit?row.config:''}</span>
-        </div>
-      </td></tr>`;
+        </div></td></tr>`;
     }
-    const cells = pilots.map(p=>{
+    const cells=pilots.map(p=>{
       const rec=times[p], isBest=p===bestP&&rec;
       if (!rec) return `<td style="color:var(--sub2)">—</td>`;
       if (isBest) return `<td class="best"><span class="brand-wrap">${brandImg(rec.brand)}${fmt(rec.time_sec)}</span></td>`;
@@ -523,80 +555,159 @@ function renderTable() {
 
 // Podium & Championship
 function renderPodium() {
-  const merged = getMerged(null, S.cls_p||null);
-  const pilots = [...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
-
-  // Championship score: 1st=25, 2nd=18, 3rd=15, 4th=12, 5th=10...
-  const PTS = [25,18,15,12,10,8,6,4,2,1];
-  const scores = {};
-  pilots.forEach(p => scores[p] = 0);
+  const merged=getMerged(null,S.cls_p||null);
+  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const scores={}, wins={}, podiums={};
+  pilots.forEach(p=>{scores[p]=0;wins[p]=0;podiums[p]=0;});
 
   merged.forEach(row=>{
-    const sorted = Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
-    sorted.forEach(([p],i)=>{ if(PTS[i]) scores[p]=(scores[p]||0)+PTS[i]; });
+    const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
+    sorted.forEach(([p],i)=>{
+      if(PTS_SYS[i]) scores[p]=(scores[p]||0)+PTS_SYS[i];
+      if(i===0) wins[p]=(wins[p]||0)+1;
+      if(i<3)   podiums[p]=(podiums[p]||0)+1;
+    });
   });
 
-  const ranked = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-  const maxPts = ranked[0]?.[1] || 1;
+  const ranked=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const maxPts=ranked[0]?.[1]||1;
 
-  // Championship grid
-  document.getElementById('champGrid').innerHTML = ranked.map(([pilot,pts],i)=>{
-    const color = COLORS[pilots.indexOf(pilot)%COLORS.length];
-    const rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
-    const medal = MEDALS[i]||`#${i+1}`;
-    return `<div class="champ-card ${rankClass}">
-      <div class="champ-rank">${medal}</div>
+  document.getElementById('champGrid').innerHTML=ranked.map(([pilot,pts],i)=>{
+    const color=COLORS[pilots.indexOf(pilot)%COLORS.length];
+    const rankClass=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const medal=MEDALS[i]||`<span style="font-size:16px;color:var(--sub)">#${i+1}</span>`;
+    return`<div class="champ-card ${rankClass}">
+      <div class="champ-medal">${medal}</div>
       <div class="champ-name" title="${pilot}">${pilot}</div>
-      <div class="champ-pts">${pts} points</div>
+      <div class="champ-pts">${pts} pts</div>
+      <div class="champ-wins">${wins[pilot]||0} victoire${wins[pilot]>1?'s':''} · ${podiums[pilot]||0} podium${podiums[pilot]>1?'s':''}</div>
       <div class="champ-bar"><div class="champ-bar-fill" style="width:${Math.round(pts/maxPts*100)}%;background:${color}"></div></div>
     </div>`;
   }).join('');
 
-  // Podium per circuit
-  document.getElementById('podiumGrid').innerHTML = merged.map(row=>{
-    const sorted = Object.entries(row.times)
-      .sort((a,b)=>a[1].time_sec-b[1].time_sec)
-      .slice(0,3);
-    if (sorted.length===0) return '';
-    const best = sorted[0][1].time_sec;
-    const places = sorted.map(([p,rec],i)=>{
-      const color = COLORS[pilots.indexOf(p)%COLORS.length];
-      const gap   = i===0 ? '' : `+${(rec.time_sec-best).toFixed(3)}s`;
-      return `<div class="podium-place">
-        <span class="pp-medal">${MEDALS[i]||''}</span>
-        <div>
-          <div class="pp-name" style="color:${color}">${p}</div>
-          <div class="pp-time">${fmt(rec.time_sec)}</div>
-          ${gap?`<div class="pp-gap">${gap}</div>`:''}
-        </div>
-        ${LOGOS[rec.brand]?`<img class="pp-brand" src="${LOGOS[rec.brand]}" alt="${rec.brand}" onerror="this.style.display='none'">` : ''}
-      </div>`;
-    }).join('');
-    return `<div class="podium-row">
+  document.getElementById('podiumGrid').innerHTML=merged.map(row=>{
+    const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec).slice(0,3);
+    if(!sorted.length) return '';
+    const best=sorted[0][1].time_sec;
+    return`<div class="podium-row">
       <div class="podium-header">
         ${getFlag(row.circuit)}
         <span class="podium-circuit">${row.circuit}</span>
         <span class="podium-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
         <span class="cat-pill cat-${row.car_class}" style="margin-left:auto">${row.car_class}</span>
       </div>
-      <div class="podium-places">${places}</div>
+      <div class="podium-places">
+        ${sorted.map(([p,rec],i)=>{
+          const color=COLORS[pilots.indexOf(p)%COLORS.length];
+          const gap=i===0?'':'+'+((rec.time_sec-best).toFixed(3))+'s';
+          return`<div class="pp">
+            <span class="pp-medal">${MEDALS[i]||''}</span>
+            <div class="pp-info">
+              <div class="pp-name" style="color:${color}">${p}</div>
+              <div class="pp-time">${fmt(rec.time_sec)}</div>
+              ${gap?`<div class="pp-gap">${gap}</div>`:''}
+            </div>
+            ${LOGOS[rec.brand]?`<img class="pp-brand" src="${LOGOS[rec.brand]}" alt="${rec.brand}" onerror="this.style.display='none'">` : ''}
+          </div>`;
+        }).join('')}
+      </div>
     </div>`;
   }).join('');
 }
 
+// Pilot profiles
+function renderProfiles() {
+  const merged=getMerged(null,null);
+  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const me=(S.myName||'').toLowerCase();
+
+  // Compute stats per pilot
+  const stats={};
+  pilots.forEach(p=>{
+    stats[p]={wins:0,podiums:0,entries:0,bestCircuit:'',bestTime:Infinity,brands:{}};
+  });
+  merged.forEach(row=>{
+    const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
+    sorted.forEach(([p,rec],i)=>{
+      if(!stats[p]) return;
+      stats[p].entries++;
+      if(i===0) stats[p].wins++;
+      if(i<3)   stats[p].podiums++;
+      if(rec.brand) stats[p].brands[rec.brand]=(stats[p].brands[rec.brand]||0)+1;
+      if(rec.time_sec<stats[p].bestTime){
+        stats[p].bestTime=rec.time_sec;
+        stats[p].bestCircuit=row.circuit;
+      }
+    });
+  });
+
+  // Streak: how many consecutive circuits where pilot won
+  function getStreak(pilot) {
+    let streak=0;
+    const rows=[...merged].reverse();
+    for(const row of rows){
+      const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
+      if(sorted[0]?.[0]===pilot) streak++;
+      else break;
+    }
+    return streak;
+  }
+
+  function topBrand(brands) {
+    const entries=Object.entries(brands);
+    if(!entries.length) return '';
+    return entries.sort((a,b)=>b[1]-a[1])[0][0];
+  }
+
+  document.getElementById('profilesGrid').innerHTML=pilots.map((pilot,i)=>{
+    const color=COLORS[i%COLORS.length];
+    const st=stats[pilot]||{};
+    const streak=getStreak(pilot);
+    const fav=topBrand(st.brands||{});
+    const isMe=pilot.toLowerCase()===me;
+    const info=S.remote[pilot]||{};
+    return`<div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar" style="background:${color}">${initials(pilot)}</div>
+        <div>
+          <div class="profile-name">${pilot}${isMe?` <span class="me-tag">MOI</span>`:''}</div>
+          <div class="profile-sync">${info.updated_at||'—'}</div>
+        </div>
+        ${streak>=2?`<span class="streak-badge" style="margin-left:auto">🔥 ${streak} streak</span>`:''}
+      </div>
+      <div class="profile-stats">
+        <div class="ps"><div class="ps-val" style="color:${color}">${st.wins||0}</div><div class="ps-lbl">Victoires</div></div>
+        <div class="ps"><div class="ps-val">${st.podiums||0}</div><div class="ps-lbl">Podiums</div></div>
+        <div class="ps"><div class="ps-val">${st.entries||0}</div><div class="ps-lbl">Circuits</div></div>
+      </div>
+      <div class="profile-best">
+        ${fav?`${brandImg(fav,12)}`:''}
+        <div>
+          <span>Circuit favori : <strong>${st.bestCircuit||'—'}</strong></span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Placeholder for mini pilot count in stats
+function renderPilots_mini() {
+  document.getElementById('s-pilots').textContent=Object.keys(S.remote).length;
+}
+
 // Charts
 function renderCharts() {
-  const cf     = document.getElementById('fCircG').value;
-  const merged = getMerged(cf||null, S.cls_g||null).slice(0,18);
-  const pilots = [...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
-  const me     = (S.myName||'').toLowerCase();
-  const labels = merged.map(r=>r.circuit+(r.car_class!=='Unknown'?' ['+r.car_class+']':''));
-  const base   = {responsive:true,maintainAspectRatio:false,
+  const cf=document.getElementById('fCircG').value;
+  const merged=getMerged(cf||null,S.cls_g||null).slice(0,18);
+  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const me=(S.myName||'').toLowerCase();
+  const labels=merged.map(r=>r.circuit+(r.car_class!=='Unknown'?' ['+r.car_class+']':''));
+  const base={responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:true,labels:{color:'#64748B',font:{size:11},boxWidth:10,boxHeight:10,padding:14}}},
     scales:{x:{ticks:{color:'#94A3B8',font:{size:9},maxRotation:35},grid:{color:'rgba(0,0,0,.05)'}},
             y:{ticks:{color:'#94A3B8',font:{size:9}},grid:{color:'rgba(0,0,0,.05)'}}}};
-  if (S.c1) S.c1.destroy();
-  S.c1 = new Chart(document.getElementById('chart1'),{
+  if(S.c1) S.c1.destroy();
+  S.c1=new Chart(document.getElementById('chart1'),{
     type:'bar',
     data:{labels,datasets:pilots.map((p,i)=>({label:p,
       data:merged.map(r=>r.times[p]?.time_sec||0),
@@ -607,8 +718,8 @@ function renderCharts() {
     options:{...base,scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,
       callback:v=>{if(!v)return'';const m=Math.floor(v/60),s=v-m*60;return`${m}:${String(Math.floor(s)).padStart(2,'0')}`}}}}}
   });
-  if (S.c2) S.c2.destroy();
-  S.c2 = new Chart(document.getElementById('chart2'),{
+  if(S.c2) S.c2.destroy();
+  S.c2=new Chart(document.getElementById('chart2'),{
     type:'line',
     data:{labels,datasets:pilots.map((p,i)=>({label:p,
       data:merged.map(r=>{if(!r.times[p])return null;const b=Math.min(...Object.values(r.times).map(v=>v.time_sec));return parseFloat((r.times[p].time_sec-b).toFixed(3));}),
@@ -617,23 +728,6 @@ function renderCharts() {
       borderWidth:p.toLowerCase()===me?2.5:1.5,tension:0.3,spanGaps:true}))},
     options:{...base,scales:{...base.scales,y:{...base.scales.y,min:0,ticks:{...base.scales.y.ticks,callback:v=>`+${v.toFixed(1)}s`}}}}
   });
-}
-
-// Pilots
-function renderPilots() {
-  const me = (S.myName||'').toLowerCase();
-  document.getElementById('pilotsGrid').innerHTML = Object.entries(S.remote)
-    .sort(([a],[b])=>a.localeCompare(b))
-    .map(([pilot,info],i)=>{
-      const isMe=pilot.toLowerCase()===me, color=COLORS[i%COLORS.length];
-      const n=Object.keys(info.times||{}).length;
-      return`<div class="pcard${isMe?' me':''}">
-        <div class="pcard-top" style="background:${color}"></div>
-        <div class="pname" style="color:${color}">${pilot}${isMe?'<span class="me-tag">MOI</span>':''}</div>
-        <div class="pmeta">${n} entrée${n>1?'s':''}</div>
-        <div class="pupd">${info.updated_at||''}</div>
-      </div>`;
-    }).join('');
 }
 
 // CSV
