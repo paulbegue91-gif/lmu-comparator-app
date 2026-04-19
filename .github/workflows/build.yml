@@ -39,9 +39,12 @@ jobs:
         run: iscc setup.iss
 
       - name: Delete old release
-        run: gh release delete latest --yes || true
+        run: gh release delete latest --yes --cleanup-tag || true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Wait for tag cleanup
+        run: Start-Sleep -Seconds 5
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
