@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,42 +16,61 @@
   --gt3-bg:#DBEAFE;   --gt3-fg:#1E40AF;
   --lmp2-bg:#FEF3C7;  --lmp2-fg:#92400E;
   --lmp3-bg:#D1FAE5;  --lmp3-fg:#065F46;
+  --shadow: 0 1px 3px rgba(0,0,0,.06);
 }
-*{margin:0;padding:0;box-sizing:border-box}
+[data-theme="dark"] {
+  --bg:#0F172A; --white:#1E293B; --border:#334155; --bord2:#475569;
+  --text:#F1F5F9; --sub:#94A3B8; --sub2:#64748B;
+  --red2:rgba(220,38,38,.2); --shadow:0 1px 3px rgba(0,0,0,.3);
+  --hyper-bg:rgba(220,38,38,.2); --hyper-fg:#FCA5A5;
+  --gt3-bg:rgba(29,78,216,.2);   --gt3-fg:#93C5FD;
+  --lmp2-bg:rgba(217,119,6,.2);  --lmp2-fg:#FCD34D;
+  --lmp3-bg:rgba(5,150,105,.2);  --lmp3-fg:#6EE7B7;
+}
+*{margin:0;padding:0;box-sizing:border-box;transition:background .2s,color .2s,border-color .2s}
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 
-header{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+/* Header */
+header{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;box-shadow:var(--shadow)}
 .logo{display:flex;align-items:center;gap:10px}
-.logo-mark{width:26px;height:26px;background:var(--red);clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%,20% 50%)}
+.logo-mark{width:26px;height:26px;background:var(--red);clip-path:polygon(0 0,80% 0,100% 50%,80% 100%,0 100%,20% 50%);flex-shrink:0}
 .logo-text{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:.06em}
 .logo-text span{color:var(--red)}
-.hright{display:flex;align-items:center;gap:8px}
-.pilot-pill{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--red2);border:1px solid #FECACA;color:var(--red);padding:3px 10px;border-radius:4px;display:none;font-weight:500}
-.hbtn{display:flex;align-items:center;gap:5px;font-weight:500;font-size:12px;padding:6px 14px;border:1px solid var(--bord2);background:var(--white);color:var(--sub);cursor:pointer;border-radius:6px;transition:all .15s}
+.hright{display:flex;align-items:center;gap:6px}
+.pilot-pill{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--red2);border:1px solid rgba(220,38,38,.3);color:var(--red);padding:3px 10px;border-radius:4px;display:none;font-weight:500}
+.hbtn{display:flex;align-items:center;gap:5px;font-weight:500;font-size:12px;padding:6px 12px;border:1px solid var(--bord2);background:var(--white);color:var(--sub);cursor:pointer;border-radius:6px;transition:all .15s}
 .hbtn:hover{background:var(--bg);color:var(--text)}
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--sub2)}
-.sdot.on{background:var(--green);box-shadow:0 0 0 2px #D1FAE5;animation:pulse 2s infinite}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--sub2);flex-shrink:0}
+.sdot.on{background:var(--green);box-shadow:0 0 0 2px rgba(5,150,105,.2);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
-nav{position:fixed;top:54px;left:0;right:0;z-index:199;background:var(--white);border-bottom:1px solid var(--border);display:flex;padding:0 24px;gap:2px;overflow-x:auto}
-.ntab{font-weight:500;font-size:13px;padding:12px 16px;cursor:pointer;color:var(--sub);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+/* Dark mode toggle */
+.theme-btn{background:none;border:1px solid var(--bord2);color:var(--sub);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:14px}
+.theme-btn:hover{background:var(--bg)}
+
+/* Nav */
+nav{position:fixed;top:54px;left:0;right:0;z-index:199;background:var(--white);border-bottom:1px solid var(--border);display:flex;padding:0 20px;gap:2px;overflow-x:auto}
+nav::-webkit-scrollbar{height:0}
+.ntab{font-weight:500;font-size:12px;padding:11px 14px;cursor:pointer;color:var(--sub);border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
 .ntab:hover{color:var(--text)}
 .ntab.active{color:var(--red);border-bottom-color:var(--red);font-weight:600}
 
 main{padding-top:98px;padding-bottom:48px}
-.page{display:none;padding:24px 28px}
+.page{display:none;padding:20px 24px}
 .page.active{display:block;animation:up .2s ease}
 @keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.scard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;border-top:3px solid var(--red)}
-.sval{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;line-height:1}
-.slbl{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.scard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 18px;border-top:3px solid var(--red);box-shadow:var(--shadow)}
+.sval{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:26px;line-height:1}
+.slbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
 
-.filterbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+/* Filters */
+.filterbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .flabel{font-size:11px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
-.pills{display:flex;gap:6px;flex-wrap:wrap}
-.pill{font-weight:500;font-size:12px;padding:5px 14px;border-radius:20px;cursor:pointer;border:1px solid var(--bord2);color:var(--sub);background:var(--white);transition:all .15s}
+.pills{display:flex;gap:5px;flex-wrap:wrap}
+.pill{font-weight:500;font-size:11px;padding:4px 12px;border-radius:20px;cursor:pointer;border:1px solid var(--bord2);color:var(--sub);background:var(--white);transition:all .15s}
 .pill:hover{border-color:var(--sub2);color:var(--text)}
 .pill.on{color:white;border-color:transparent;font-weight:600}
 .pill[data-c=""].on{background:var(--sub)}
@@ -59,127 +78,157 @@ main{padding-top:98px;padding-bottom:48px}
 .pill[data-c="GT3"].on{background:var(--blue)}
 .pill[data-c="LMP2"].on{background:#D97706}
 .pill[data-c="LMP3"].on{background:#059669}
-.fsep{width:1px;height:22px;background:var(--bord2);margin:0 4px;flex-shrink:0}
-.fsel{background:var(--white);border:1px solid var(--bord2);color:var(--text);font-size:12px;padding:6px 28px 6px 12px;border-radius:6px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;background-color:var(--white)}
+.fsep{width:1px;height:20px;background:var(--bord2);margin:0 2px;flex-shrink:0}
+.fsel{background:var(--white);border:1px solid var(--bord2);color:var(--text);font-size:12px;padding:5px 26px 5px 10px;border-radius:6px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-color:var(--white)}
+.search-input{background:var(--white);border:1px solid var(--bord2);color:var(--text);font-size:12px;padding:5px 12px;border-radius:6px;outline:none;width:160px}
+.search-input:focus{border-color:var(--red)}
+.search-input::placeholder{color:var(--sub2)}
 
-/* View toggle */
-.view-toggle{display:flex;gap:0;border:1px solid var(--bord2);border-radius:6px;overflow:hidden;margin-left:auto}
-.vbtn{font-size:12px;font-weight:500;padding:5px 14px;cursor:pointer;color:var(--sub);background:var(--white);border:none;transition:all .15s}
-.vbtn:hover{background:var(--bg);color:var(--text)}
-.vbtn.on{background:var(--red);color:white;font-weight:600}
-.vbtn:not(:last-child){border-right:1px solid var(--bord2)}
-
-.tbox{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+/* Table */
+.tbox{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow)}
 .tscroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse}
-thead th{background:#F8FAFC;padding:10px 16px;text-align:right;font-weight:600;font-size:11px;letter-spacing:.06em;color:var(--sub);text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
-thead th:first-child{text-align:left}
+thead th{background:var(--bg);padding:9px 14px;text-align:right;font-weight:600;font-size:10px;letter-spacing:.06em;color:var(--sub);text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{color:var(--text)}
+thead th:first-child{text-align:left;cursor:default}
 thead th.me-col{color:var(--red)}
-thead th.s1h{color:var(--s1)}
-thead th.s2h{color:var(--s2)}
-thead th.s3h{color:var(--s3)}
-
-tr.grp td{padding:8px 16px;background:#F8FAFC;border-top:2px solid var(--border)}
+thead th.sorted{color:var(--red)}
+thead th .sort-arrow{margin-left:4px;opacity:.5}
+thead th.sorted .sort-arrow{opacity:1}
+tr.grp td{padding:7px 14px;background:var(--bg);border-top:2px solid var(--border)}
 tr.grp:first-child td{border-top:none}
 .grp-inner{display:flex;align-items:center;gap:8px}
-.flag-img{width:22px;height:15px;border-radius:2px;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,0,0,.08)}
-.grp-name{font-weight:600;font-size:13px}
+.flag-img{width:20px;height:14px;border-radius:2px;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,0,0,.08)}
+.grp-name{font-weight:600;font-size:12px}
 .grp-cfg{font-size:11px;color:var(--sub2)}
-.cat-pill{font-weight:600;font-size:10px;letter-spacing:.05em;padding:2px 8px;border-radius:10px;text-transform:uppercase;flex-shrink:0}
+.cat-pill{font-weight:600;font-size:10px;letter-spacing:.05em;padding:2px 7px;border-radius:10px;text-transform:uppercase;flex-shrink:0}
 .cat-Hypercar{background:var(--hyper-bg);color:var(--hyper-fg)}
 .cat-GT3{background:var(--gt3-bg);color:var(--gt3-fg)}
 .cat-LMP2{background:var(--lmp2-bg);color:var(--lmp2-fg)}
 .cat-LMP3{background:var(--lmp3-bg);color:var(--lmp3-fg)}
-.cat-Unknown{background:#F1F5F9;color:var(--sub)}
-
-tr.drow td{padding:9px 16px;border-bottom:1px solid #F1F5F9;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--sub);white-space:nowrap;text-align:right}
+.cat-Unknown{background:var(--bg);color:var(--sub)}
+tr.drow td{padding:8px 14px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--sub);white-space:nowrap;text-align:right}
 tr.drow:last-child td{border-bottom:none}
-tr.drow:hover td{background:#FAFBFC}
-tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:12px;color:var(--text)}
+tr.drow:hover td{background:var(--bg)}
 tr.drow td.best-lap{color:var(--gold);font-weight:600}
 tr.drow td.best-s1{color:var(--s1);font-weight:600}
 tr.drow td.best-s2{color:var(--s2);font-weight:600}
 tr.drow td.best-s3{color:var(--s3);font-weight:600}
-.brand-wrap{display:inline-flex;align-items:center;gap:5px;vertical-align:middle}
-.brand-img{height:11px;width:auto;object-fit:contain;opacity:.55;vertical-align:middle}
+tr.drow td.theo{color:var(--green);font-weight:600;font-style:italic}
+tr.drow td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:12px;color:var(--text)}
+.brand-wrap{display:inline-flex;align-items:center;gap:4px;vertical-align:middle}
+.brand-img{height:10px;width:auto;object-fit:contain;opacity:.5;vertical-align:middle}
 .brand-txt{font-size:10px;color:var(--sub2);font-weight:500}
-
-/* Sector legend */
-.sector-legend{display:flex;gap:16px;margin-bottom:12px;font-size:11px;font-weight:500}
-.sl-item{display:flex;align-items:center;gap:5px}
-.sl-dot{width:8px;height:8px;border-radius:50%}
+.delta-up{color:var(--green);font-size:10px;margin-left:3px}
+.delta-down{color:var(--red);font-size:10px;margin-left:3px}
 
 /* Section title */
-.sec-title{font-weight:600;font-size:16px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sec-title{font-weight:600;font-size:15px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 
 /* Championship */
-.champ-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:32px}
-.champ-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s}
-.champ-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.champ-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:28px}
+.champ-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center;box-shadow:var(--shadow);transition:all .15s}
+.champ-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .champ-card.rank-1{border-top:3px solid #F59E0B}
 .champ-card.rank-2{border-top:3px solid #94A3B8}
 .champ-card.rank-3{border-top:3px solid #B45309}
-.champ-medal{font-size:28px;line-height:1;margin-bottom:6px}
-.champ-name{font-weight:600;font-size:14px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.champ-pts{font-size:12px;color:var(--sub);margin-bottom:6px}
-.champ-wins{font-size:11px;color:var(--sub2)}
-.champ-bar{height:3px;background:var(--bg);border-radius:2px;margin-top:10px;overflow:hidden}
+.champ-medal{font-size:26px;line-height:1;margin-bottom:5px}
+.champ-name{font-weight:600;font-size:13px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.champ-pts{font-size:11px;color:var(--sub);margin-bottom:4px}
+.champ-wins{font-size:10px;color:var(--sub2)}
+.champ-bar{height:3px;background:var(--bg);border-radius:2px;margin-top:8px;overflow:hidden}
 .champ-bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
 
 /* Podium */
-.podium-grid{display:grid;grid-template-columns:1fr;gap:10px}
-.podium-row{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.podium-header{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#F8FAFC;border-bottom:1px solid var(--border)}
-.podium-circuit{font-weight:600;font-size:13px}
+.podium-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.podium-row{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow)}
+.podium-header{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
+.podium-circuit{font-weight:600;font-size:12px}
 .podium-cfg{font-size:11px;color:var(--sub2)}
 .podium-places{display:flex}
-.pp{flex:1;padding:10px 14px;display:flex;align-items:center;gap:10px;border-right:1px solid var(--border)}
+.pp{flex:1;padding:9px 12px;display:flex;align-items:center;gap:8px;border-right:1px solid var(--border)}
 .pp:last-child{border-right:none}
-.pp-medal{font-size:18px;flex-shrink:0}
+.pp-medal{font-size:16px;flex-shrink:0}
 .pp-info{flex:1;min-width:0}
-.pp-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pp-time{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--sub)}
-.pp-gap{font-size:10px;color:var(--red);font-weight:500;margin-top:1px}
-.pp-brand{height:10px;width:auto;opacity:.45;flex-shrink:0}
+.pp-name{font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--sub)}
+.pp-gap{font-size:9px;color:var(--red);font-weight:500}
+.pp-brand{height:9px;width:auto;opacity:.4;flex-shrink:0}
 
 /* Profiles */
-.profiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-.profile-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .15s}
-.profile-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-2px)}
-.profile-header{padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
-.profile-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;color:white;flex-shrink:0}
-.profile-name{font-weight:600;font-size:15px}
+.profiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.profile-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);transition:all .15s}
+.profile-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1);transform:translateY(-2px)}
+.profile-header{padding:14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.profile-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:white;flex-shrink:0}
+.profile-name{font-weight:600;font-size:14px}
 .profile-sync{font-size:10px;color:var(--sub2);font-family:'JetBrains Mono',monospace;margin-top:2px}
 .profile-stats{display:grid;grid-template-columns:repeat(3,1fr)}
-.ps{padding:12px 14px;border-right:1px solid var(--border);text-align:center}
+.ps{padding:10px 12px;border-right:1px solid var(--border);text-align:center}
 .ps:last-child{border-right:none}
-.ps-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px}
-.ps-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
-.profile-best{padding:10px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--sub);display:flex;align-items:center;gap:6px}
-.streak-badge{display:inline-flex;align-items:center;gap:4px;background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin-left:auto}
+.ps-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:18px}
+.ps-lbl{font-size:9px;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.profile-best{padding:9px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--sub);display:flex;align-items:center;gap:5px}
+.streak-badge{display:inline-flex;align-items:center;gap:3px;background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:600;margin-left:auto}
+[data-theme="dark"] .streak-badge{background:rgba(217,119,6,.2);color:#FCD34D;border-color:rgba(217,119,6,.3)}
+
+/* 1v1 */
+.v1v1-selectors{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.v1v1-select{background:var(--white);border:1px solid var(--bord2);color:var(--text);font-size:13px;padding:8px 30px 8px 12px;border-radius:8px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394A3B8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-color:var(--white);min-width:160px}
+.vs-badge{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px;color:var(--red)}
+.v1v1-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.v1v1-row{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow)}
+.v1v1-header{display:flex;align-items:center;gap:8px;padding:9px 14px;background:var(--bg);border-bottom:1px solid var(--border);font-weight:600;font-size:12px}
+.v1v1-body{display:grid;grid-template-columns:1fr 40px 1fr}
+.v1v1-cell{padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;text-align:center}
+.v1v1-cell.win{color:var(--green);font-weight:700;background:rgba(5,150,105,.05)}
+.v1v1-cell.lose{color:var(--red);background:rgba(220,38,38,.05)}
+.v1v1-diff{display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--sub);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+
+/* Achievements */
+.achiev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.achiev-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);transition:all .15s}
+.achiev-card.locked{opacity:.45;filter:grayscale(1)}
+.achiev-card:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.achiev-icon{font-size:28px;flex-shrink:0}
+.achiev-name{font-weight:600;font-size:13px;margin-bottom:2px}
+.achiev-desc{font-size:11px;color:var(--sub);line-height:1.4}
+.achiev-pilot{font-size:10px;color:var(--sub2);margin-top:4px;font-style:italic}
 
 /* Charts */
-.chart-grid{display:grid;grid-template-columns:1fr;gap:18px}
-.ccard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.ccard-title{font-weight:600;font-size:13px;margin-bottom:3px}
-.ccard-sub{font-size:11px;color:var(--sub);margin-bottom:18px}
-.cwrap{position:relative;height:300px}
+.chart-grid{display:grid;grid-template-columns:1fr;gap:16px}
+.ccard{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;box-shadow:var(--shadow)}
+.ccard-title{font-weight:600;font-size:13px;margin-bottom:2px}
+.ccard-sub{font-size:11px;color:var(--sub);margin-bottom:16px}
+.cwrap{position:relative;height:280px}
 
-.statusbar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--white);border-top:1px solid var(--border);padding:7px 24px;display:flex;align-items:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--sub)}
+/* Sector legend */
+.sector-legend{display:flex;gap:14px;margin-bottom:10px;font-size:11px;font-weight:500;flex-wrap:wrap}
+.sl-item{display:flex;align-items:center;gap:4px}
+.sl-dot{width:8px;height:8px;border-radius:50%}
+
+/* Status */
+.statusbar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--white);border-top:1px solid var(--border);padding:6px 20px;display:flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--sub)}
 .statusbar .sep{color:var(--bord2)}
 
-#loading{position:fixed;inset:0;background:var(--white);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
-.load-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:32px;letter-spacing:.08em}
+/* Loading */
+#loading{position:fixed;inset:0;background:var(--white);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.load-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:30px;letter-spacing:.08em}
 .load-logo span{color:var(--red)}
-.load-bar{width:160px;height:2px;background:var(--border);border-radius:1px;overflow:hidden}
+.load-bar{width:140px;height:2px;background:var(--border);border-radius:1px;overflow:hidden}
 .load-prog{height:100%;background:var(--red);animation:lanim 1s ease-in-out infinite}
 @keyframes lanim{0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%}}
 .load-txt{font-size:11px;color:var(--sub);letter-spacing:.1em;text-transform:uppercase}
 
-#record-badge{position:fixed;top:70px;right:24px;z-index:300;background:var(--white);border:2px solid #F59E0B;border-radius:10px;padding:12px 18px;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none;animation:slidein .3s ease;max-width:280px}
+/* Record badge */
+#record-badge{position:fixed;top:64px;right:20px;z-index:300;background:var(--white);border:2px solid #F59E0B;border-radius:10px;padding:10px 16px;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none;animation:slidein .3s ease;max-width:260px}
 @keyframes slidein{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-.rb-title{font-weight:700;font-size:13px;color:#92400E;margin-bottom:4px}
-.rb-body{font-size:12px;color:var(--sub)}
+.rb-title{font-weight:700;font-size:12px;color:#92400E;margin-bottom:3px}
+.rb-body{font-size:11px;color:var(--sub)}
+
+/* Notification permission btn */
+.notif-btn{font-size:11px;padding:4px 10px;border:1px solid var(--bord2);border-radius:4px;background:var(--white);color:var(--sub);cursor:pointer}
+.notif-btn:hover{background:var(--bg)}
 </style>
 </head>
 <body>
@@ -202,7 +251,9 @@ tr.drow td.best-s3{color:var(--s3);font-weight:600}
   </div>
   <div class="hright">
     <div class="pilot-pill" id="pilotPill"></div>
-    <button class="hbtn" onclick="reload()">↺ Recharger</button>
+    <button class="theme-btn" onclick="toggleTheme()" title="Mode nuit/jour">🌙</button>
+    <button class="hbtn" onclick="shareTable()" title="Partager">📤</button>
+    <button class="hbtn" onclick="reload()">↺</button>
     <button class="hbtn" onclick="syncNow()"><div class="sdot" id="sdot"></div> Sync</button>
     <button class="hbtn" onclick="exportCSV()">↓ CSV</button>
   </div>
@@ -210,9 +261,11 @@ tr.drow td.best-s3{color:var(--s3);font-weight:600}
 
 <nav>
   <div class="ntab active" onclick="showPage('tableau',this)">Tableau</div>
-  <div class="ntab" onclick="showPage('secteurs',this)">Secteurs S1/S2/S3</div>
-  <div class="ntab" onclick="showPage('podium',this)">Podium & Classement</div>
-  <div class="ntab" onclick="showPage('profils',this)">Profils pilotes</div>
+  <div class="ntab" onclick="showPage('secteurs',this)">Secteurs</div>
+  <div class="ntab" onclick="showPage('podium',this)">Podium</div>
+  <div class="ntab" onclick="showPage('v1v1',this)">1v1</div>
+  <div class="ntab" onclick="showPage('profils',this)">Profils</div>
+  <div class="ntab" onclick="showPage('achievements',this)">Trophées</div>
   <div class="ntab" onclick="showPage('graphiques',this)">Graphiques</div>
 </nav>
 
@@ -224,7 +277,7 @@ tr.drow td.best-s3{color:var(--s3);font-weight:600}
       <div class="scard"><div class="sval" id="s-pilots">—</div><div class="slbl">Pilotes</div></div>
       <div class="scard"><div class="sval" id="s-circuits">—</div><div class="slbl">Circuits</div></div>
       <div class="scard"><div class="sval" id="s-tours">—</div><div class="slbl">Meilleurs temps</div></div>
-      <div class="scard"><div class="sval" id="s-sync" style="font-size:14px;color:var(--sub)">—</div><div class="slbl">Dernière sync</div></div>
+      <div class="scard"><div class="sval" id="s-sync" style="font-size:13px;color:var(--sub)">—</div><div class="slbl">Dernière sync</div></div>
     </div>
     <div class="filterbar">
       <span class="flabel">Catégorie</span>
@@ -236,10 +289,10 @@ tr.drow td.best-s3{color:var(--s3);font-weight:600}
         <div class="pill" data-c="LMP3" onclick="setClass('LMP3',this,'t')">LMP3</div>
       </div>
       <div class="fsep"></div>
-      <span class="flabel">Circuit</span>
-      <select class="fsel" id="fCirc" onchange="renderTable()"><option value="">Tous</option></select>
+      <select class="fsel" id="fCirc" onchange="renderTable()"><option value="">Tous circuits</option></select>
+      <input class="search-input" id="searchPilot" placeholder="🔍 Rechercher pilote…" oninput="renderTable()">
     </div>
-    <div class="tbox"><div class="tscroll">
+    <div class="tbox" id="tableBox"><div class="tscroll">
       <table><thead id="tHead"></thead><tbody id="tBody"></tbody></table>
     </div></div>
   </div>
@@ -256,14 +309,14 @@ tr.drow td.best-s3{color:var(--s3);font-weight:600}
         <div class="pill" data-c="LMP3" onclick="setClass('LMP3',this,'s')">LMP3</div>
       </div>
       <div class="fsep"></div>
-      <span class="flabel">Circuit</span>
-      <select class="fsel" id="fCircS" onchange="renderSectors()"><option value="">Tous</option></select>
+      <select class="fsel" id="fCircS" onchange="renderSectors()"><option value="">Tous circuits</option></select>
     </div>
     <div class="sector-legend">
       <div class="sl-item"><div class="sl-dot" style="background:var(--s1)"></div><span style="color:var(--s1)">Meilleur S1</span></div>
       <div class="sl-item"><div class="sl-dot" style="background:var(--s2)"></div><span style="color:var(--s2)">Meilleur S2</span></div>
       <div class="sl-item"><div class="sl-dot" style="background:var(--s3)"></div><span style="color:var(--s3)">Meilleur S3</span></div>
       <div class="sl-item"><div class="sl-dot" style="background:var(--gold)"></div><span style="color:var(--gold)">Meilleur tour</span></div>
+      <div class="sl-item"><div class="sl-dot" style="background:var(--green)"></div><span style="color:var(--green)">Tour théorique</span></div>
     </div>
     <div class="tbox"><div class="tscroll">
       <table><thead id="sHead"></thead><tbody id="sBody"></tbody></table>
@@ -282,16 +335,39 @@ tr.drow td.best-s3{color:var(--s3);font-weight:600}
         <div class="pill" data-c="LMP3" onclick="setClass('LMP3',this,'p')">LMP3</div>
       </div>
     </div>
-    <div class="sec-title">🏆 Classement général <span style="font-size:12px;font-weight:400;color:var(--sub);margin-left:4px">— système F1 : 25-18-15-12-10-8-6-4-2-1 pts</span></div>
+    <div class="sec-title">🏆 Classement général <span style="font-size:11px;font-weight:400;color:var(--sub)">— système F1</span></div>
     <div class="champ-grid" id="champGrid"></div>
     <div class="sec-title">🥇 Podiums par circuit</div>
     <div class="podium-grid" id="podiumGrid"></div>
+  </div>
+
+  <!-- 1V1 -->
+  <div class="page" id="page-v1v1">
+    <div class="v1v1-selectors">
+      <select class="v1v1-select" id="v1p1" onchange="renderV1v1()"><option value="">Pilote 1</option></select>
+      <span class="vs-badge">VS</span>
+      <select class="v1v1-select" id="v1p2" onchange="renderV1v1()"><option value="">Pilote 2</option></select>
+      <div class="pills" id="pills-v" style="margin-left:auto">
+        <div class="pill on" data-c="" onclick="setClass('',this,'v')">Toutes</div>
+        <div class="pill" data-c="Hypercar" onclick="setClass('Hypercar',this,'v')">Hypercar</div>
+        <div class="pill" data-c="GT3" onclick="setClass('GT3',this,'v')">GT3</div>
+        <div class="pill" data-c="LMP2" onclick="setClass('LMP2',this,'v')">LMP2</div>
+        <div class="pill" data-c="LMP3" onclick="setClass('LMP3',this,'v')">LMP3</div>
+      </div>
+    </div>
+    <div id="v1v1Grid"></div>
   </div>
 
   <!-- PROFILS -->
   <div class="page" id="page-profils">
     <div class="sec-title">Profils pilotes</div>
     <div class="profiles-grid" id="profilesGrid"></div>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="page" id="page-achievements">
+    <div class="sec-title">🏅 Trophées</div>
+    <div class="achiev-grid" id="achievGrid"></div>
   </div>
 
   <!-- GRAPHIQUES -->
@@ -306,20 +382,11 @@ tr.drow td.best-s3{color:var(--s3);font-weight:600}
         <div class="pill" data-c="LMP3" onclick="setClass('LMP3',this,'g')">LMP3</div>
       </div>
       <div class="fsep"></div>
-      <span class="flabel">Circuit</span>
-      <select class="fsel" id="fCircG" onchange="renderCharts()"><option value="">Tous</option></select>
+      <select class="fsel" id="fCircG" onchange="renderCharts()"><option value="">Tous circuits</option></select>
     </div>
     <div class="chart-grid">
-      <div class="ccard">
-        <div class="ccard-title">Meilleur temps par circuit</div>
-        <div class="ccard-sub">Temps absolu par pilote</div>
-        <div class="cwrap"><canvas id="chart1" role="img" aria-label="Temps par circuit"></canvas></div>
-      </div>
-      <div class="ccard">
-        <div class="ccard-title">Écart au meilleur temps</div>
-        <div class="ccard-sub">En secondes — 0 = référence</div>
-        <div class="cwrap"><canvas id="chart2" role="img" aria-label="Écarts entre pilotes"></canvas></div>
-      </div>
+      <div class="ccard"><div class="ccard-title">Meilleur temps par circuit</div><div class="ccard-sub">Temps absolu</div><div class="cwrap"><canvas id="chart1"></canvas></div></div>
+      <div class="ccard"><div class="ccard-title">Écart au meilleur</div><div class="ccard-sub">En secondes</div><div class="cwrap"><canvas id="chart2"></canvas></div></div>
     </div>
   </div>
 
@@ -328,19 +395,20 @@ tr.drow td.best-s3{color:var(--s3);font-weight:600}
 <div class="statusbar">
   <span id="stText">Initialisation…</span>
   <span class="sep">|</span>
-  <span id="stServer">Serveur : —</span>
+  <span id="stServer">—</span>
   <span class="sep">|</span>
   <span id="stFolder">—</span>
+  <span class="sep" id="notifSep" style="display:none">|</span>
+  <button class="notif-btn" id="notifBtn" onclick="requestNotifs()" style="display:none">🔔 Activer notifications</button>
 </div>
 
 <script>
-const REMOTE = 'https://lmu-comparator-server.onrender.com';
-const LOCAL  = '';
-const COLORS = ['#DC2626','#1D4ED8','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#EA580C','#0D9488','#65A30D'];
-const MEDALS = ['🥇','🥈','🥉'];
-const PTS    = [25,18,15,12,10,8,6,4,2,1];
+const REMOTE='https://lmu-comparator-server.onrender.com',LOCAL='';
+const COLORS=['#DC2626','#1D4ED8','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#EA580C','#0D9488','#65A30D'];
+const MEDALS=['🥇','🥈','🥉'];
+const PTS=[25,18,15,12,10,8,6,4,2,1];
 
-const FLAGS = {
+const FLAGS={
   'algarve':'pt','portimao':'pt','autodromo enzo':'it','imola':'it',
   'autodromo josé carlos':'br','autodromo jose carlos':'br','interlagos':'br',
   'autodromo nazionale monza':'it','monza':'it',
@@ -356,7 +424,7 @@ const FLAGS = {
   'mugello':'it','misano':'it','daytona':'us','kyalami':'za',
   'istanbul':'tr','shanghai':'cn','motegi':'jp','buenos aires':'ar',
 };
-const LOGOS = {
+const LOGOS={
   'Ferrari':'https://upload.wikimedia.org/wikipedia/commons/d/d1/Ferrari-Logo.svg',
   'Lamborghini':'https://upload.wikimedia.org/wikipedia/commons/7/7f/Lamborghini_Logo.svg',
   'Porsche':'https://upload.wikimedia.org/wikipedia/en/3/3c/Porsche_logo.svg',
@@ -369,476 +437,545 @@ const LOGOS = {
   'Peugeot':'https://upload.wikimedia.org/wikipedia/commons/9/94/Peugeot_2021_Logo.svg',
   'Alpine':'https://upload.wikimedia.org/wikipedia/commons/6/6c/Alpine_logo.svg',
   'Cadillac':'https://upload.wikimedia.org/wikipedia/commons/9/99/Cadillac_logo.svg',
-  'Chevrolet':'https://upload.wikimedia.org/wikipedia/commons/f/f5/Chevrolet_logo.svg',
-  'Nissan':'https://upload.wikimedia.org/wikipedia/commons/8/8a/Nissan_2020_logo.svg',
-  'Genesis':'https://upload.wikimedia.org/wikipedia/commons/7/72/Genesis_Motor_logo.svg',
   'Lexus':'https://upload.wikimedia.org/wikipedia/commons/3/35/Lexus_division_wordmark.svg',
+  'Genesis':'https://upload.wikimedia.org/wikipedia/commons/7/72/Genesis_Motor_logo.svg',
 };
 
-function getFlag(circuit) {
-  const l = circuit.toLowerCase();
-  for (const [k,code] of Object.entries(FLAGS))
-    if (l.includes(k)) return `<img class="flag-img" src="https://flagcdn.com/32x24/${code}.png" alt="${code}" onerror="this.style.display='none'">`;
-  return '';
-}
-function brandImg(brand, h=11) {
-  const url = LOGOS[brand];
-  if (url) return `<img class="brand-img" style="height:${h}px" src="${url}" alt="${brand||''}" onerror="this.outerHTML='<span class=brand-txt>${brand||''}</span>'">`;
-  return brand ? `<span class="brand-txt">${brand}</span>` : '';
-}
-function normalizeClass(cl) {
-  if (!cl) return 'Unknown';
-  const l = cl.toLowerCase();
-  if (l.includes('hyper')) return 'Hypercar';
-  if (l.includes('gt3'))   return 'GT3';
-  if (l.includes('lmp2'))  return 'LMP2';
-  if (l.includes('lmp3'))  return 'LMP3';
-  return cl;
-}
-function fmt(s) {
-  if (!s && s!==0) return '—';
-  const m=Math.floor(s/60), sec=s-m*60;
-  return `${String(m).padStart(2,'0')}:${sec.toFixed(3).padStart(6,'0')}`;
-}
-function fmtS(s) {
-  if (!s || s<=0) return '—';
-  return s.toFixed(3);
-}
-function initials(name) {
-  return name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);
-}
+function getFlag(c){const l=c.toLowerCase();for(const[k,code]of Object.entries(FLAGS))if(l.includes(k))return`<img class="flag-img" src="https://flagcdn.com/32x24/${code}.png" alt="${code}" onerror="this.style.display='none'">`;return'';}
+function bImg(brand,h=10){const url=LOGOS[brand];if(url)return`<img class="brand-img" style="height:${h}px" src="${url}" alt="${brand||''}" onerror="this.outerHTML='<span class=brand-txt>${brand||''}</span>'">`;return brand?`<span class="brand-txt">${brand}</span>`:'';}
+function nClass(cl){if(!cl)return'Unknown';const l=cl.toLowerCase();if(l.includes('hyper'))return'Hypercar';if(l.includes('gt3'))return'GT3';if(l.includes('lmp2'))return'LMP2';if(l.includes('lmp3'))return'LMP3';return cl;}
+function fmt(s){if(!s&&s!==0)return'—';const m=Math.floor(s/60),sec=s-m*60;return`${String(m).padStart(2,'0')}:${sec.toFixed(3).padStart(6,'0')}`;}
+function fmtS(s){if(!s||s<=0)return'—';return s.toFixed(3);}
+function initials(n){return n.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2);}
 
-let S = {
-  remote:{}, myName:'', myFolder:'', lastSync:null, prevBests:{},
-  c1:null, c2:null, cls_t:'', cls_g:'', cls_p:'', cls_s:''
-};
+let S={remote:{},myName:'',myFolder:'',lastSync:null,prevBests:{},
+  c1:null,c2:null,cls_t:'',cls_g:'',cls_p:'',cls_s:'',cls_v:'',cls_1:'',
+  sortCol:'',sortDir:1,theme:'light'};
 
-window.addEventListener('load', async () => {
-  try {
-    const r = await fetch(LOCAL+'/api/config');
-    const c = await r.json();
-    S.myName = c.name||''; S.myFolder = c.folder||'';
-  } catch(e) {}
-  if (S.myName) {
-    document.getElementById('pilotPill').textContent = S.myName;
-    document.getElementById('pilotPill').style.display = 'block';
-    document.getElementById('stFolder').textContent = S.myFolder;
+// ── Boot ──────────────────────────────────────────────────────────
+window.addEventListener('load',async()=>{
+  S.theme=localStorage.getItem('lmu_theme')||'light';
+  document.documentElement.setAttribute('data-theme',S.theme);
+  document.querySelector('.theme-btn').textContent=S.theme==='dark'?'☀️':'🌙';
+  try{const r=await fetch(LOCAL+'/api/config');const c=await r.json();S.myName=c.name||'';S.myFolder=c.folder||'';}catch(e){}
+  if(S.myName){
+    document.getElementById('pilotPill').textContent=S.myName;
+    document.getElementById('pilotPill').style.display='block';
+    document.getElementById('stFolder').textContent=S.myFolder;
+  }
+  if('Notification' in window&&Notification.permission==='default'){
+    document.getElementById('notifBtn').style.display='block';
+    document.getElementById('notifSep').style.display='block';
   }
   await syncNow();
-  const l = document.getElementById('loading');
-  l.style.transition='opacity .4s'; l.style.opacity='0';
-  setTimeout(()=>l.style.display='none', 440);
+  const l=document.getElementById('loading');
+  l.style.transition='opacity .4s';l.style.opacity='0';
+  setTimeout(()=>l.style.display='none',440);
 });
 
-function showPage(id, el) {
+// ── Theme ─────────────────────────────────────────────────────────
+function toggleTheme(){
+  S.theme=S.theme==='light'?'dark':'light';
+  document.documentElement.setAttribute('data-theme',S.theme);
+  localStorage.setItem('lmu_theme',S.theme);
+  document.querySelector('.theme-btn').textContent=S.theme==='dark'?'☀️':'🌙';
+  if(S.c1)renderCharts();
+}
+
+// ── Notifications ─────────────────────────────────────────────────
+async function requestNotifs(){
+  const perm=await Notification.requestPermission();
+  if(perm==='granted'){
+    document.getElementById('notifBtn').style.display='none';
+    document.getElementById('notifSep').style.display='none';
+  }
+}
+function notify(title,body){
+  if(Notification.permission==='granted') new Notification(title,{body,icon:'https://flagcdn.com/32x24/fr.png'});
+}
+
+// ── Nav ───────────────────────────────────────────────────────────
+function showPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   el.classList.add('active');
-  if (id==='graphiques') renderCharts();
-  if (id==='podium')     renderPodium();
-  if (id==='profils')    renderProfiles();
-  if (id==='secteurs')   renderSectors();
+  if(id==='graphiques')renderCharts();
+  if(id==='podium')renderPodium();
+  if(id==='profils')renderProfiles();
+  if(id==='secteurs')renderSectors();
+  if(id==='v1v1')renderV1v1();
+  if(id==='achievements')renderAchievements();
 }
 
-function setClass(cls, el, which) {
-  S['cls_'+which] = cls;
+function setClass(cls,el,which){
+  S['cls_'+which]=cls;
   document.querySelectorAll(`#pills-${which} .pill`).forEach(p=>p.classList.remove('on'));
   el.classList.add('on');
-  if (which==='t') renderTable();
-  else if (which==='g') renderCharts();
-  else if (which==='p') renderPodium();
-  else if (which==='s') renderSectors();
+  if(which==='t')renderTable();
+  else if(which==='g')renderCharts();
+  else if(which==='p')renderPodium();
+  else if(which==='s')renderSectors();
+  else if(which==='v'){renderV1v1();}
 }
 
-async function syncNow() {
-  const dot = document.getElementById('sdot');
+// ── Sync ──────────────────────────────────────────────────────────
+async function syncNow(){
+  const dot=document.getElementById('sdot');
   dot.className='sdot';
   document.getElementById('stText').textContent='Synchronisation…';
-  try { await fetch(LOCAL+'/api/sync'); } catch(e) {}
-  try {
-    const r    = await fetch(REMOTE+'/all');
-    const data = await r.json();
+  try{await fetch(LOCAL+'/api/sync');}catch(e){}
+  try{
+    const r=await fetch(REMOTE+'/all');
+    const data=await r.json();
     // Record detection
-    if (S.myName && Object.keys(S.prevBests).length) {
-      const me = S.myName.toLowerCase();
-      for (const [pilot, info] of Object.entries(data)) {
-        if (pilot.toLowerCase()!==me) continue;
-        for (const [key, rec] of Object.entries(info.times||{})) {
-          const prev = S.prevBests[key];
-          if (prev && rec.time_sec < prev) {
-            const parts = key.split('|');
-            showRecord(parts[0], rec.time_str, prev);
+    if(S.myName&&Object.keys(S.prevBests).length){
+      const me=S.myName.toLowerCase();
+      for(const[pilot,info]of Object.entries(data)){
+        if(pilot.toLowerCase()!==me)continue;
+        for(const[key,rec]of Object.entries(info.times||{})){
+          const prev=S.prevBests[key];
+          if(prev&&rec.time_sec<prev){
+            const parts=key.split('|');
+            showRecord(parts[0],rec.time_str,prev);
+            notify('🏆 Nouveau record!',`${parts[0]} — ${rec.time_str}`);
           }
         }
       }
     }
-    // Save prev bests
-    const me = (S.myName||'').toLowerCase();
-    for (const [pilot, info] of Object.entries(data)) {
-      if (pilot.toLowerCase()!==me) continue;
-      for (const [key, rec] of Object.entries(info.times||{}))
-        S.prevBests[key] = rec.time_sec;
+    const me=(S.myName||'').toLowerCase();
+    for(const[pilot,info]of Object.entries(data)){
+      if(pilot.toLowerCase()!==me)continue;
+      for(const[key,rec]of Object.entries(info.times||{}))S.prevBests[key]=rec.time_sec;
     }
-    S.remote = data; S.lastSync = new Date().toLocaleTimeString('fr-FR');
+    S.remote=data;S.lastSync=new Date().toLocaleTimeString('fr-FR');
     dot.className='sdot on';
-    document.getElementById('stServer').textContent='Serveur : ✓ en ligne';
-    document.getElementById('stText').textContent=Object.keys(data).length+' pilotes synchronisés';
+    document.getElementById('stServer').textContent='✓ en ligne';
+    document.getElementById('stText').textContent=Object.keys(data).length+' pilotes';
     document.getElementById('s-sync').textContent=S.lastSync;
-  } catch(e) {
+  }catch(e){
     dot.className='sdot';
-    document.getElementById('stServer').textContent='Serveur : ✗ hors ligne';
-    document.getElementById('stText').textContent='Erreur de connexion';
+    document.getElementById('stServer').textContent='✗ hors ligne';
+    document.getElementById('stText').textContent='Erreur connexion';
   }
-  updateStats(); updateFilters(); renderTable(); renderPilots_mini();
-  const active = document.querySelector('.page.active');
-  if (active?.id==='page-podium')  renderPodium();
-  if (active?.id==='page-profils') renderProfiles();
-  if (active?.id==='page-secteurs') renderSectors();
+  updateStats();updateFilters();renderTable();
+  const active=document.querySelector('.page.active');
+  if(active?.id==='page-podium')renderPodium();
+  if(active?.id==='page-profils')renderProfiles();
+  if(active?.id==='page-secteurs')renderSectors();
+  if(active?.id==='page-v1v1')renderV1v1();
+  if(active?.id==='page-achievements')renderAchievements();
 }
-function reload() { syncNow(); }
+function reload(){syncNow();}
 
-function showRecord(circuit, newTime, oldTime) {
-  const gain = (oldTime - parseFloat(newTime||oldTime)).toFixed(3);
-  document.getElementById('rb-body').textContent = `${circuit} — ${newTime} (-${gain}s)`;
-  const b = document.getElementById('record-badge');
-  b.style.display='block'; b.style.opacity='1';
-  setTimeout(()=>{b.style.transition='opacity .5s';b.style.opacity='0';setTimeout(()=>{b.style.display='none';},500);}, 5000);
+function showRecord(circuit,newTime,oldTime){
+  const gain=(oldTime-parseFloat(newTime||oldTime)).toFixed(3);
+  document.getElementById('rb-body').textContent=`${circuit} — ${newTime} (-${gain}s)`;
+  const b=document.getElementById('record-badge');
+  b.style.display='block';b.style.opacity='1';
+  setTimeout(()=>{b.style.transition='opacity .5s';b.style.opacity='0';setTimeout(()=>{b.style.display='none';},500);},5000);
 }
 
-function getMerged(cf, cls) {
-  const T = {};
-  for (const [pilot, info] of Object.entries(S.remote)) {
-    for (const [key, rec] of Object.entries(info.times||{})) {
-      const parts = key.split('|');
-      if (parts.length < 2) continue;
-      const circ=parts[0], cfg=parts[1], clNorm=normalizeClass(parts[2]||'');
-      if (cf  && circ   !== cf)    continue;
-      if (cls && clNorm !== cls)   continue;
-      const k = `${circ}||${cfg}||${clNorm}`;
-      if (!T[k]) T[k]={circuit:circ,config:cfg,car_class:clNorm,times:{}};
+// ── Data ──────────────────────────────────────────────────────────
+function getMerged(cf,cls){
+  const T={};
+  for(const[pilot,info]of Object.entries(S.remote)){
+    for(const[key,rec]of Object.entries(info.times||{})){
+      const parts=key.split('|');if(parts.length<2)continue;
+      const circ=parts[0],cfg=parts[1],clNorm=nClass(parts[2]||'');
+      if(cf&&circ!==cf)continue;if(cls&&clNorm!==cls)continue;
+      const k=`${circ}||${cfg}||${clNorm}`;
+      if(!T[k])T[k]={circuit:circ,config:cfg,car_class:clNorm,times:{}};
       const cur=T[k].times[pilot];
-      if (!cur||rec.time_sec<cur.time_sec)
-        T[k].times[pilot]=rec;
+      if(!cur||rec.time_sec<cur.time_sec)T[k].times[pilot]=rec;
     }
   }
-  return Object.values(T).sort((a,b)=>{
-    const c=a.circuit.localeCompare(b.circuit);
-    return c||a.car_class.localeCompare(b.car_class);
-  });
+  return Object.values(T).sort((a,b)=>{const c=a.circuit.localeCompare(b.circuit);return c||a.car_class.localeCompare(b.car_class);});
 }
 
-function updateStats() {
+function getAllPilots(){return[...new Set(getMerged(null,null).flatMap(r=>Object.keys(r.times)))].sort();}
+
+function updateStats(){
   const merged=getMerged(null,null);
   document.getElementById('s-pilots').textContent=Object.keys(S.remote).length;
   document.getElementById('s-circuits').textContent=[...new Set(merged.map(r=>r.circuit))].length;
   document.getElementById('s-tours').textContent=merged.reduce((s,r)=>s+Object.keys(r.times).length,0);
 }
-function renderPilots_mini() {
-  document.getElementById('s-pilots').textContent=Object.keys(S.remote).length;
-}
 
-function updateFilters() {
+function updateFilters(){
   const circs=[...new Set(getMerged(null,null).map(r=>r.circuit))].sort();
   ['fCirc','fCircG','fCircS'].forEach(id=>{
-    const sel=document.getElementById(id), cur=sel.value;
-    sel.innerHTML='<option value="">Tous les circuits</option>'+
-      circs.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
+    const sel=document.getElementById(id),cur=sel.value;
+    sel.innerHTML='<option value="">Tous circuits</option>'+circs.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
+  });
+  // 1v1 selectors
+  const pilots=getAllPilots();
+  ['v1p1','v1p2'].forEach((id,i)=>{
+    const sel=document.getElementById(id),cur=sel.value;
+    sel.innerHTML=`<option value="">Pilote ${i+1}</option>`+pilots.map(p=>`<option value="${p}"${p===cur?' selected':''}>${p}</option>`).join('');
   });
 }
 
-// ── TABLE ─────────────────────────────────────────────────────────
-function renderTable() {
+// ── Table ─────────────────────────────────────────────────────────
+function renderTable(){
   const cf=document.getElementById('fCirc').value;
-  const merged=getMerged(cf||null,S.cls_t||null);
-  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const search=(document.getElementById('searchPilot').value||'').toLowerCase();
+  let merged=getMerged(cf||null,S.cls_t||null);
+  const allPilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const pilots=search?allPilots.filter(p=>p.toLowerCase().includes(search)):allPilots;
   const me=(S.myName||'').toLowerCase();
 
+  // Sort by pilot
+  let sortedPilots=[...pilots];
+  if(S.sortCol&&pilots.includes(S.sortCol)){
+    // keep as is, sort data rows by this pilot's time
+  }
+
   document.getElementById('tHead').innerHTML=`<tr>
-    <th style="min-width:220px">Circuit / Catégorie</th>
-    ${pilots.map(p=>`<th class="${p.toLowerCase()===me?'me-col':''}" style="min-width:130px">${p}${p.toLowerCase()===me?' ★':''}</th>`).join('')}
+    <th style="min-width:200px">Circuit / Catégorie</th>
+    ${sortedPilots.map(p=>`<th class="${p.toLowerCase()===me?'me-col':''} ${S.sortCol===p?'sorted':''}" onclick="sortBy('${p}')" style="min-width:120px">${p}${p.toLowerCase()===me?' ★':''} <span class="sort-arrow">${S.sortCol===p?(S.sortDir===1?'↑':'↓'):'↕'}</span></th>`).join('')}
   </tr>`;
 
   let lastCirc=null;
-  document.getElementById('tBody').innerHTML=merged.map(row=>{
+  let rows=merged;
+  if(S.sortCol&&sortedPilots.includes(S.sortCol)){
+    rows=[...merged].sort((a,b)=>{
+      const ta=a.times[S.sortCol]?.time_sec||999999;
+      const tb=b.times[S.sortCol]?.time_sec||999999;
+      return S.sortDir*(ta-tb);
+    });
+  }
+
+  document.getElementById('tBody').innerHTML=rows.map(row=>{
     const times=row.times;
-    const bestT=Math.min(...Object.values(times).map(v=>v.time_sec));
-    const bestP=Object.entries(times).find(([,v])=>v.time_sec===bestT)?.[0];
+    const visibleTimes=Object.fromEntries(Object.entries(times).filter(([p])=>sortedPilots.includes(p)));
+    if(!Object.keys(visibleTimes).length)return'';
+    const bestT=Math.min(...Object.values(visibleTimes).map(v=>v.time_sec));
+    const bestP=Object.entries(visibleTimes).find(([,v])=>v.time_sec===bestT)?.[0];
     let header;
-    if (row.circuit!==lastCirc) {
+    if(row.circuit!==lastCirc||S.sortCol){
       lastCirc=row.circuit;
-      header=`<tr class="grp"><td colspan="${pilots.length+1}">
-        <div class="grp-inner">${getFlag(row.circuit)}
-          <span class="grp-name">${row.circuit}</span>
-          <span class="grp-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
-          <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
-        </div></td></tr>`;
+      header=`<tr class="grp"><td colspan="${sortedPilots.length+1}">
+        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>
+        <span class="grp-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
+        <span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     } else {
-      header=`<tr class="grp"><td colspan="${pilots.length+1}" style="padding-left:54px">
-        <div class="grp-inner">
-          <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
-          <span class="grp-cfg">${row.config&&row.config!==row.circuit?row.config:''}</span>
-        </div></td></tr>`;
+      header=`<tr class="grp"><td colspan="${sortedPilots.length+1}" style="padding-left:50px">
+        <div class="grp-inner"><span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
+        <span class="grp-cfg">${row.config&&row.config!==row.circuit?row.config:''}</span></div></td></tr>`;
     }
-    const cells=pilots.map(p=>{
-      const rec=times[p], isBest=p===bestP&&rec;
-      if (!rec) return `<td style="color:var(--sub2)">—</td>`;
-      if (isBest) return `<td class="best-lap"><span class="brand-wrap">${brandImg(rec.brand)}${fmt(rec.time_sec)}</span></td>`;
-      return `<td>${fmt(rec.time_sec)}</td>`;
+    const cells=sortedPilots.map(p=>{
+      const rec=times[p],isBest=p===bestP&&rec;
+      if(!rec)return`<td style="color:var(--sub2)">—</td>`;
+      if(isBest)return`<td class="best-lap"><span class="brand-wrap">${bImg(rec.brand)}${fmt(rec.time_sec)}</span></td>`;
+      const delta=rec.time_sec-bestT;
+      return`<td>${fmt(rec.time_sec)} <span style="font-size:9px;color:var(--sub)">+${delta.toFixed(3)}</span></td>`;
     }).join('');
     return header+`<tr class="drow"><td></td>${cells}</tr>`;
   }).join('');
 }
 
-// ── SECTORS ───────────────────────────────────────────────────────
-function renderSectors() {
+function sortBy(pilot){
+  if(S.sortCol===pilot)S.sortDir*=-1;
+  else{S.sortCol=pilot;S.sortDir=1;}
+  renderTable();
+}
+
+// ── Sectors ───────────────────────────────────────────────────────
+function renderSectors(){
   const cf=document.getElementById('fCircS').value;
-  const merged=getMerged(cf||null, S.cls_s||null);
+  const merged=getMerged(cf||null,S.cls_s||null);
   const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
   const me=(S.myName||'').toLowerCase();
 
-  // Header: Circuit | P1 Lap | P1 S1 | P1 S2 | P1 S3 | P2 Lap | ...
-  const pilotCols = pilots.flatMap(p => [
-    `<th class="${p.toLowerCase()===me?'me-col':''}" colspan="4" style="text-align:center;border-left:2px solid var(--border)">${p}${p.toLowerCase()===me?' ★':''}</th>`
+  const pilotCols=pilots.flatMap(p=>[`<th class="${p.toLowerCase()===me?'me-col':''}" colspan="5" style="text-align:center;border-left:2px solid var(--border)">${p}${p.toLowerCase()===me?' ★':''}</th>`]).join('');
+  const subCols=pilots.flatMap(()=>[
+    `<th style="min-width:105px;border-left:2px solid var(--border)">Tour</th>`,
+    `<th class="s1h" style="min-width:72px;color:var(--s1)">S1</th>`,
+    `<th class="s2h" style="min-width:72px;color:var(--s2)">S2</th>`,
+    `<th class="s3h" style="min-width:72px;color:var(--s3)">S3</th>`,
+    `<th style="min-width:90px;color:var(--green)">Théo.</th>`,
   ]).join('');
+  document.getElementById('sHead').innerHTML=`<tr><th rowspan="2" style="min-width:200px;vertical-align:middle">Circuit</th>${pilotCols}</tr><tr>${subCols}</tr>`;
 
-  const subCols = pilots.flatMap(p => [
-    `<th style="min-width:110px;border-left:2px solid var(--border)">Tour</th>`,
-    `<th class="s1h" style="min-width:80px">S1</th>`,
-    `<th class="s2h" style="min-width:80px">S2</th>`,
-    `<th class="s3h" style="min-width:80px">S3</th>`,
-  ]).join('');
-
-  document.getElementById('sHead').innerHTML=`
-    <tr><th rowspan="2" style="min-width:220px;vertical-align:middle">Circuit / Catégorie</th>${pilotCols}</tr>
-    <tr>${subCols}</tr>`;
-
-  // Best S1/S2/S3 across all pilots per row
   let lastCirc=null;
   document.getElementById('sBody').innerHTML=merged.map(row=>{
     const times=row.times;
-
-    // Find global bests per sector
-    let globalBestLap=Infinity, globalBestS1=Infinity, globalBestS2=Infinity, globalBestS3=Infinity;
-    const bestLapPilot={}, bestS1Pilot={}, bestS2Pilot={}, bestS3Pilot={};
-    for (const [p,rec] of Object.entries(times)) {
-      if (rec.time_sec < globalBestLap) { globalBestLap=rec.time_sec; bestLapPilot.p=p; }
-      if (rec.best_s1 && rec.best_s1 < globalBestS1) { globalBestS1=rec.best_s1; bestS1Pilot.p=p; }
-      if (rec.best_s2 && rec.best_s2 < globalBestS2) { globalBestS2=rec.best_s2; bestS2Pilot.p=p; }
-      if (rec.best_s3 && rec.best_s3 < globalBestS3) { globalBestS3=rec.best_s3; bestS3Pilot.p=p; }
+    let gBestLap=Infinity,gBestS1=Infinity,gBestS2=Infinity,gBestS3=Infinity;
+    const bLapP={},bS1P={},bS2P={},bS3P={};
+    for(const[p,rec]of Object.entries(times)){
+      if(rec.time_sec<gBestLap){gBestLap=rec.time_sec;bLapP.p=p;}
+      if(rec.best_s1&&rec.best_s1<gBestS1){gBestS1=rec.best_s1;bS1P.p=p;}
+      if(rec.best_s2&&rec.best_s2<gBestS2){gBestS2=rec.best_s2;bS2P.p=p;}
+      if(rec.best_s3&&rec.best_s3<gBestS3){gBestS3=rec.best_s3;bS3P.p=p;}
     }
-
     let header;
-    if (row.circuit!==lastCirc) {
+    if(row.circuit!==lastCirc){
       lastCirc=row.circuit;
-      header=`<tr class="grp"><td colspan="${pilots.length*4+1}">
-        <div class="grp-inner">${getFlag(row.circuit)}
-          <span class="grp-name">${row.circuit}</span>
-          <span class="grp-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
-          <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
-        </div></td></tr>`;
+      header=`<tr class="grp"><td colspan="${pilots.length*5+1}">
+        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>
+        <span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     } else {
-      header=`<tr class="grp"><td colspan="${pilots.length*4+1}" style="padding-left:54px">
-        <div class="grp-inner">
-          <span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
-        </div></td></tr>`;
+      header=`<tr class="grp"><td colspan="${pilots.length*5+1}" style="padding-left:50px">
+        <div class="grp-inner"><span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     }
-
     const cells=pilots.flatMap(p=>{
       const rec=times[p];
-      const borderStyle='border-left:2px solid var(--border)';
-      if (!rec) return [
-        `<td style="${borderStyle};color:var(--sub2)">—</td>`,
-        `<td style="color:var(--sub2)">—</td>`,
-        `<td style="color:var(--sub2)">—</td>`,
-        `<td style="color:var(--sub2)">—</td>`,
-      ];
-      const isLap = p===bestLapPilot.p;
-      const isS1  = p===bestS1Pilot.p && rec.best_s1;
-      const isS2  = p===bestS2Pilot.p && rec.best_s2;
-      const isS3  = p===bestS3Pilot.p && rec.best_s3;
-      return [
-        `<td class="${isLap?'best-lap':''}" style="${borderStyle}">${isLap?`<span class="brand-wrap">${brandImg(rec.brand)}`:''} ${fmt(rec.time_sec)}${isLap?'</span>':''}</td>`,
+      const bs='border-left:2px solid var(--border)';
+      if(!rec)return[`<td style="${bs};color:var(--sub2)">—</td>`,`<td>—</td>`,`<td>—</td>`,`<td>—</td>`,`<td>—</td>`];
+      const isLap=p===bLapP.p,isS1=p===bS1P.p&&rec.best_s1,isS2=p===bS2P.p&&rec.best_s2,isS3=p===bS3P.p&&rec.best_s3;
+      // Theoretical best
+      const theo=(rec.best_s1&&rec.best_s2&&rec.best_s3)?rec.best_s1+rec.best_s2+rec.best_s3:null;
+      return[
+        `<td class="${isLap?'best-lap':''}" style="${bs}">${isLap?`<span class="brand-wrap">${bImg(rec.brand)} `:''} ${fmt(rec.time_sec)}${isLap?'</span>':''}</td>`,
         `<td class="${isS1?'best-s1':''}">${fmtS(rec.best_s1)}</td>`,
         `<td class="${isS2?'best-s2':''}">${fmtS(rec.best_s2)}</td>`,
         `<td class="${isS3?'best-s3':''}">${fmtS(rec.best_s3)}</td>`,
+        `<td class="theo">${theo?fmtS(theo):'—'}</td>`,
       ];
     }).join('');
-
     return header+`<tr class="drow"><td></td>${cells}</tr>`;
   }).join('');
 }
 
-// ── PODIUM ────────────────────────────────────────────────────────
-function renderPodium() {
+// ── Podium ────────────────────────────────────────────────────────
+function renderPodium(){
   const merged=getMerged(null,S.cls_p||null);
   const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
-  const scores={},wins={},podiums_={};
-  pilots.forEach(p=>{scores[p]=0;wins[p]=0;podiums_[p]=0;});
+  const scores={},wins={},pods={};
+  pilots.forEach(p=>{scores[p]=0;wins[p]=0;pods[p]=0;});
   merged.forEach(row=>{
     const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
-    sorted.forEach(([p],i)=>{
-      if(PTS[i]) scores[p]=(scores[p]||0)+PTS[i];
-      if(i===0)  wins[p]=(wins[p]||0)+1;
-      if(i<3)    podiums_[p]=(podiums_[p]||0)+1;
-    });
+    sorted.forEach(([p],i)=>{if(PTS[i])scores[p]=(scores[p]||0)+PTS[i];if(i===0)wins[p]=(wins[p]||0)+1;if(i<3)pods[p]=(pods[p]||0)+1;});
   });
   const ranked=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
   const maxPts=ranked[0]?.[1]||1;
   document.getElementById('champGrid').innerHTML=ranked.map(([pilot,pts],i)=>{
     const color=COLORS[pilots.indexOf(pilot)%COLORS.length];
-    const rankClass=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
-    const medal=MEDALS[i]||`<span style="font-size:16px;color:var(--sub)">#${i+1}</span>`;
-    return`<div class="champ-card ${rankClass}">
+    const rc=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const medal=MEDALS[i]||`<span style="font-size:14px;color:var(--sub)">#${i+1}</span>`;
+    return`<div class="champ-card ${rc}">
       <div class="champ-medal">${medal}</div>
       <div class="champ-name" title="${pilot}">${pilot}</div>
       <div class="champ-pts">${pts} pts</div>
-      <div class="champ-wins">${wins[pilot]||0} victoire${wins[pilot]>1?'s':''} · ${podiums_[pilot]||0} podium${podiums_[pilot]>1?'s':''}</div>
+      <div class="champ-wins">${wins[pilot]||0}V · ${pods[pilot]||0}P</div>
       <div class="champ-bar"><div class="champ-bar-fill" style="width:${Math.round(pts/maxPts*100)}%;background:${color}"></div></div>
     </div>`;
   }).join('');
   document.getElementById('podiumGrid').innerHTML=merged.map(row=>{
     const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec).slice(0,3);
-    if(!sorted.length) return '';
+    if(!sorted.length)return'';
     const best=sorted[0][1].time_sec;
     return`<div class="podium-row">
-      <div class="podium-header">
-        ${getFlag(row.circuit)}
-        <span class="podium-circuit">${row.circuit}</span>
-        <span class="podium-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
-        <span class="cat-pill cat-${row.car_class}" style="margin-left:auto">${row.car_class}</span>
-      </div>
-      <div class="podium-places">
-        ${sorted.map(([p,rec],i)=>{
-          const color=COLORS[pilots.indexOf(p)%COLORS.length];
-          const gap=i===0?'':'+'+((rec.time_sec-best).toFixed(3))+'s';
-          return`<div class="pp">
-            <span class="pp-medal">${MEDALS[i]||''}</span>
-            <div class="pp-info">
-              <div class="pp-name" style="color:${color}">${p}</div>
-              <div class="pp-time">${fmt(rec.time_sec)}</div>
-              ${gap?`<div class="pp-gap">${gap}</div>`:''}
-            </div>
-            ${LOGOS[rec.brand]?`<img class="pp-brand" src="${LOGOS[rec.brand]}" alt="${rec.brand}" onerror="this.style.display='none'">` : ''}
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
+      <div class="podium-header">${getFlag(row.circuit)}<span class="podium-circuit">${row.circuit}</span>
+      <span class="podium-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
+      <span class="cat-pill cat-${row.car_class}" style="margin-left:auto">${row.car_class}</span></div>
+      <div class="podium-places">${sorted.map(([p,rec],i)=>{
+        const color=COLORS[pilots.indexOf(p)%COLORS.length];
+        const gap=i===0?'':'+'+((rec.time_sec-best).toFixed(3))+'s';
+        return`<div class="pp"><span class="pp-medal">${MEDALS[i]||''}</span>
+          <div class="pp-info"><div class="pp-name" style="color:${color}">${p}</div>
+          <div class="pp-time">${fmt(rec.time_sec)}</div>${gap?`<div class="pp-gap">${gap}</div>`:''}</div>
+          ${LOGOS[rec.brand]?`<img class="pp-brand" src="${LOGOS[rec.brand]}" alt="${rec.brand}" onerror="this.style.display='none'">`:''}</div>`;
+      }).join('')}</div></div>`;
   }).join('');
 }
 
-// ── PROFILES ──────────────────────────────────────────────────────
-function renderProfiles() {
+// ── 1V1 ───────────────────────────────────────────────────────────
+function renderV1v1(){
+  const p1=document.getElementById('v1p1').value;
+  const p2=document.getElementById('v1p2').value;
+  const grid=document.getElementById('v1v1Grid');
+  if(!p1||!p2||p1===p2){grid.innerHTML='<p style="color:var(--sub);font-size:13px;padding:20px 0">Sélectionnez deux pilotes différents.</p>';return;}
+  const merged=getMerged(null,S.cls_v||null);
+  const c1=COLORS[getAllPilots().indexOf(p1)%COLORS.length];
+  const c2=COLORS[getAllPilots().indexOf(p2)%COLORS.length];
+  let w1=0,w2=0;
+  grid.innerHTML=`
+    <div style="display:flex;gap:20px;margin-bottom:16px;font-weight:600;font-size:14px">
+      <span style="color:${c1}">${p1}</span>
+      <span style="color:var(--sub)">vs</span>
+      <span style="color:${c2}">${p2}</span>
+    </div>`+
+  merged.map(row=>{
+    const t1=row.times[p1],t2=row.times[p2];
+    if(!t1&&!t2)return'';
+    const both=t1&&t2;
+    const win1=both&&t1.time_sec<=t2.time_sec;
+    const win2=both&&t2.time_sec<t1.time_sec;
+    if(win1)w1++;if(win2)w2++;
+    const diff=both?Math.abs(t1.time_sec-t2.time_sec).toFixed(3):'';
+    return`<div class="v1v1-row">
+      <div class="v1v1-header">${getFlag(row.circuit)}${row.circuit}
+        <span class="cat-pill cat-${row.car_class}" style="margin-left:8px">${row.car_class}</span>
+      </div>
+      <div class="v1v1-body">
+        <div class="v1v1-cell ${both?(win1?'win':'lose'):''}">${t1?`<span class="brand-wrap">${bImg(t1.brand)} ${fmt(t1.time_sec)}</span>`:'—'}</div>
+        <div class="v1v1-diff">${diff?`+${diff}s`:''}</div>
+        <div class="v1v1-cell ${both?(win2?'win':'lose'):''}">${t2?`<span class="brand-wrap">${bImg(t2.brand)} ${fmt(t2.time_sec)}</span>`:'—'}</div>
+      </div>
+    </div>`;
+  }).join('')+
+  `<div style="display:flex;gap:20px;margin-top:16px;font-weight:700;font-size:16px;padding:14px;background:var(--white);border-radius:8px;border:1px solid var(--border)">
+    <span style="color:${c1}">${p1} : ${w1} victoire${w1>1?'s':''}</span>
+    <span style="color:var(--sub);margin-left:auto">${p2} : ${w2} victoire${w2>1?'s':''}</span>
+  </div>`;
+}
+
+// ── Profiles ──────────────────────────────────────────────────────
+function renderProfiles(){
   const merged=getMerged(null,null);
   const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
   const me=(S.myName||'').toLowerCase();
   const stats={};
-  pilots.forEach(p=>{stats[p]={wins:0,podiums:0,entries:0,bestCircuit:'',bestTime:Infinity,brands:{}};});
+  pilots.forEach(p=>{stats[p]={wins:0,pods:0,entries:0,bestCircuit:'',bestTime:Infinity,brands:{}};});
   merged.forEach(row=>{
     const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
     sorted.forEach(([p,rec],i)=>{
-      if(!stats[p]) return;
-      stats[p].entries++;
-      if(i===0) stats[p].wins++;
-      if(i<3)   stats[p].podiums++;
-      if(rec.brand) stats[p].brands[rec.brand]=(stats[p].brands[rec.brand]||0)+1;
+      if(!stats[p])return;
+      stats[p].entries++;if(i===0)stats[p].wins++;if(i<3)stats[p].pods++;
+      if(rec.brand)stats[p].brands[rec.brand]=(stats[p].brands[rec.brand]||0)+1;
       if(rec.time_sec<stats[p].bestTime){stats[p].bestTime=rec.time_sec;stats[p].bestCircuit=row.circuit;}
     });
   });
-  function getStreak(pilot) {
-    let streak=0;
-    for(const row of [...merged].reverse()){
-      const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
-      if(sorted[0]?.[0]===pilot) streak++; else break;
-    }
-    return streak;
-  }
-  function topBrand(brands){
-    const e=Object.entries(brands);
-    return e.length?e.sort((a,b)=>b[1]-a[1])[0][0]:'';
-  }
+  function streak(pilot){let s=0;for(const row of [...merged].reverse()){const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);if(sorted[0]?.[0]===pilot)s++;else break;}return s;}
+  function topBrand(brands){const e=Object.entries(brands);return e.length?e.sort((a,b)=>b[1]-a[1])[0][0]:'';}
   document.getElementById('profilesGrid').innerHTML=pilots.map((pilot,i)=>{
     const color=COLORS[i%COLORS.length];
     const st=stats[pilot]||{};
-    const streak=getStreak(pilot);
+    const sk=streak(pilot);
     const fav=topBrand(st.brands||{});
     const isMe=pilot.toLowerCase()===me;
     const info=S.remote[pilot]||{};
     return`<div class="profile-card">
       <div class="profile-header">
         <div class="profile-avatar" style="background:${color}">${initials(pilot)}</div>
-        <div>
-          <div class="profile-name">${pilot}${isMe?` <span style="font-size:9px;background:var(--red2);color:var(--red);padding:2px 6px;border-radius:3px;font-weight:700">MOI</span>`:''}</div>
-          <div class="profile-sync">${info.updated_at||'—'}</div>
-        </div>
-        ${streak>=2?`<span class="streak-badge" style="margin-left:auto">🔥 ${streak} streak</span>`:''}
+        <div><div class="profile-name">${pilot}${isMe?` <span style="font-size:9px;background:var(--red2);color:var(--red);padding:2px 5px;border-radius:3px;font-weight:700">MOI</span>`:''}</div>
+        <div class="profile-sync">${info.updated_at||'—'}</div></div>
+        ${sk>=2?`<span class="streak-badge" style="margin-left:auto">🔥 ${sk}</span>`:''}
       </div>
       <div class="profile-stats">
         <div class="ps"><div class="ps-val" style="color:${color}">${st.wins||0}</div><div class="ps-lbl">Victoires</div></div>
-        <div class="ps"><div class="ps-val">${st.podiums||0}</div><div class="ps-lbl">Podiums</div></div>
+        <div class="ps"><div class="ps-val">${st.pods||0}</div><div class="ps-lbl">Podiums</div></div>
         <div class="ps"><div class="ps-val">${st.entries||0}</div><div class="ps-lbl">Circuits</div></div>
       </div>
-      <div class="profile-best">
-        ${fav?brandImg(fav,12):''}
-        <span>Circuit favori : <strong>${st.bestCircuit||'—'}</strong></span>
+      <div class="profile-best">${fav?bImg(fav,11):''}<span>Circuit favori : <strong>${st.bestCircuit||'—'}</strong></span></div>
+    </div>`;
+  }).join('');
+}
+
+// ── Achievements ──────────────────────────────────────────────────
+function renderAchievements(){
+  const merged=getMerged(null,null);
+  const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
+  const me=(S.myName||'').toLowerCase();
+
+  // Compute stats
+  const wins={},entries={},classes={},minTime={};
+  pilots.forEach(p=>{wins[p]=0;entries[p]=0;classes[p]=new Set();});
+  merged.forEach(row=>{
+    const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);
+    sorted.forEach(([p,rec],i)=>{
+      entries[p]=(entries[p]||0)+1;
+      if(i===0)wins[p]=(wins[p]||0)+1;
+      classes[p].add(row.car_class);
+      if(!minTime[p]||rec.time_sec<minTime[p])minTime[p]=rec.time_sec;
+    });
+  });
+
+  const ACHIEVEMENTS=[
+    {icon:'🏆',name:'Premier sang',desc:'Remporter sa première victoire',check:pilots.find(p=>wins[p]>=1)},
+    {icon:'👑',name:'Dominateur',desc:'5 victoires ou plus',check:pilots.find(p=>wins[p]>=5)},
+    {icon:'🌍',name:'Globe-trotter',desc:'Rouler sur 5 circuits différents',check:pilots.find(p=>entries[p]>=5)},
+    {icon:'🏎',name:'Polyvalent',desc:'Rouler dans 3 catégories différentes',check:pilots.find(p=>(classes[p]||new Set()).size>=3)},
+    {icon:'⚡',name:'Éclair',desc:'Avoir un meilleur tour sous 1:40',check:pilots.find(p=>minTime[p]<100)},
+    {icon:'🔥',name:'En feu',desc:'Streak de 3 victoires consécutives',check:(()=>{for(const p of pilots){let s=0;for(const row of [...merged].reverse()){const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);if(sorted[0]?.[0]===p)s++;else break;}if(s>=3)return p;}return null;})()},
+    {icon:'🎯',name:'Perfectionniste',desc:'Rouler sur 10 circuits différents',check:pilots.find(p=>entries[p]>=10)},
+    {icon:'🥇',name:'Hat-trick',desc:'3 victoires dans la même catégorie',check:(()=>{const catWins={};merged.forEach(row=>{const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);if(sorted[0]){const[p]=sorted[0];const k=`${p}|${row.car_class}`;catWins[k]=(catWins[k]||0)+1;}});const e=Object.entries(catWins).find(([,v])=>v>=3);return e?e[0].split('|')[0]:null;})()},
+    {icon:'🚀',name:'Intouchable',desc:'Meilleur temps sur tous les circuits',check:(()=>{if(pilots.length<2)return null;const winCount={};merged.forEach(row=>{const sorted=Object.entries(row.times).sort((a,b)=>a[1].time_sec-b[1].time_sec);if(sorted[0])winCount[sorted[0][0]]=(winCount[sorted[0][0]]||0)+1;});const total=merged.length;return Object.entries(winCount).find(([,v])=>v===total)?.[0]||null;})()},
+  ];
+
+  document.getElementById('achievGrid').innerHTML=ACHIEVEMENTS.map(a=>{
+    const locked=!a.check;
+    const pilot=a.check||'';
+    const isMe=pilot.toLowerCase()===me;
+    return`<div class="achiev-card ${locked?'locked':''}">
+      <div class="achiev-icon">${a.icon}</div>
+      <div>
+        <div class="achiev-name">${a.name}</div>
+        <div class="achiev-desc">${a.desc}</div>
+        ${!locked?`<div class="achiev-pilot">${isMe?'🏅 Vous !':pilot}</div>`:'<div class="achiev-pilot">Non débloqué</div>'}
       </div>
     </div>`;
   }).join('');
 }
 
-// ── CHARTS ────────────────────────────────────────────────────────
-function renderCharts() {
+// ── Charts ────────────────────────────────────────────────────────
+function renderCharts(){
   const cf=document.getElementById('fCircG').value;
   const merged=getMerged(cf||null,S.cls_g||null).slice(0,18);
   const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
   const me=(S.myName||'').toLowerCase();
   const labels=merged.map(r=>r.circuit+(r.car_class!=='Unknown'?' ['+r.car_class+']':''));
+  const dark=S.theme==='dark';
+  const axColor=dark?'#475569':'#94A3B8';
+  const gridColor=dark?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';
   const base={responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:true,labels:{color:'#64748B',font:{size:11},boxWidth:10,boxHeight:10,padding:14}}},
-    scales:{x:{ticks:{color:'#94A3B8',font:{size:9},maxRotation:35},grid:{color:'rgba(0,0,0,.05)'}},
-            y:{ticks:{color:'#94A3B8',font:{size:9}},grid:{color:'rgba(0,0,0,.05)'}}}};
-  if(S.c1) S.c1.destroy();
-  S.c1=new Chart(document.getElementById('chart1'),{
-    type:'bar',
-    data:{labels,datasets:pilots.map((p,i)=>({label:p,
-      data:merged.map(r=>r.times[p]?.time_sec||0),
+    plugins:{legend:{display:true,labels:{color:axColor,font:{size:10},boxWidth:10,boxHeight:10,padding:12}},
+    tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmt(ctx.raw)||ctx.raw}`}}},
+    scales:{x:{ticks:{color:axColor,font:{size:9},maxRotation:35},grid:{color:gridColor}},
+            y:{ticks:{color:axColor,font:{size:9}},grid:{color:gridColor}}}};
+  if(S.c1)S.c1.destroy();
+  S.c1=new Chart(document.getElementById('chart1'),{type:'bar',
+    data:{labels,datasets:pilots.map((p,i)=>({label:p,data:merged.map(r=>r.times[p]?.time_sec||0),
       backgroundColor:COLORS[i%COLORS.length]+(p.toLowerCase()===me?'EE':'88'),
       borderColor:p.toLowerCase()===me?COLORS[i%COLORS.length]:'transparent',
       borderWidth:p.toLowerCase()===me?1.5:0,borderRadius:3,
-      barThickness:Math.max(6,Math.floor(44/Math.max(pilots.length,1)))}))},
+      barThickness:Math.max(5,Math.floor(40/Math.max(pilots.length,1)))}))},
     options:{...base,scales:{...base.scales,y:{...base.scales.y,ticks:{...base.scales.y.ticks,
-      callback:v=>{if(!v)return'';const m=Math.floor(v/60),s=v-m*60;return`${m}:${String(Math.floor(s)).padStart(2,'0')}`}}}}}
-  });
-  if(S.c2) S.c2.destroy();
-  S.c2=new Chart(document.getElementById('chart2'),{
-    type:'line',
+      callback:v=>{if(!v)return'';const m=Math.floor(v/60),s=v-m*60;return`${m}:${String(Math.floor(s)).padStart(2,'0')}`}}}}}});
+  if(S.c2)S.c2.destroy();
+  S.c2=new Chart(document.getElementById('chart2'),{type:'line',
     data:{labels,datasets:pilots.map((p,i)=>({label:p,
       data:merged.map(r=>{if(!r.times[p])return null;const b=Math.min(...Object.values(r.times).map(v=>v.time_sec));return parseFloat((r.times[p].time_sec-b).toFixed(3));}),
       borderColor:COLORS[i%COLORS.length],backgroundColor:COLORS[i%COLORS.length]+'18',
       pointBackgroundColor:COLORS[i%COLORS.length],pointRadius:4,pointHoverRadius:6,
       borderWidth:p.toLowerCase()===me?2.5:1.5,tension:0.3,spanGaps:true}))},
-    options:{...base,scales:{...base.scales,y:{...base.scales.y,min:0,ticks:{...base.scales.y.ticks,callback:v=>`+${v.toFixed(1)}s`}}}}
-  });
+    options:{...base,scales:{...base.scales,y:{...base.scales.y,min:0,ticks:{...base.scales.y.ticks,callback:v=>`+${v.toFixed(1)}s`}}}}});
+}
+
+// ── Share ─────────────────────────────────────────────────────────
+function shareTable(){
+  const url=window.location.href;
+  if(navigator.share){
+    navigator.share({title:'LMU Lap Comparator',url});
+  } else {
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn=document.querySelector('.hbtn[onclick="shareTable()"]');
+      btn.textContent='✓ Copié !';
+      setTimeout(()=>btn.textContent='📤',2000);
+    });
+  }
 }
 
 // ── CSV ───────────────────────────────────────────────────────────
-function exportCSV() {
+function exportCSV(){
   const merged=getMerged(null,S.cls_t||null);
   const pilots=[...new Set(merged.flatMap(r=>Object.keys(r.times)))].sort();
-  if(!merged.length) return;
-  let csv='Circuit,Config,Categorie,'+pilots.flatMap(p=>[p+' Tour',p+' S1',p+' S2',p+' S3']).join(',')+'\n';
+  if(!merged.length)return;
+  let csv='Circuit,Config,Categorie,'+pilots.flatMap(p=>[p+' Tour',p+' S1',p+' S2',p+' S3',p+' Theo']).join(',')+'\n';
   merged.forEach(row=>{
     csv+=[row.circuit,row.config,row.car_class,...pilots.flatMap(p=>{
       const r=row.times[p];
-      return r?[fmt(r.time_sec),fmtS(r.best_s1),fmtS(r.best_s2),fmtS(r.best_s3)]:['','','',''];
+      if(!r)return['','','','',''];
+      const theo=(r.best_s1&&r.best_s2&&r.best_s3)?fmtS(r.best_s1+r.best_s2+r.best_s3):'';
+      return[fmt(r.time_sec),fmtS(r.best_s1),fmtS(r.best_s2),fmtS(r.best_s3),theo];
     })].join(',')+'\n';
   });
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='lmu_times.csv';a.click();
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='lmu_times.csv';a.click();
 }
 
-setInterval(syncNow, 60000);
+setInterval(syncNow,60000);
 </script>
 </body>
 </html>
