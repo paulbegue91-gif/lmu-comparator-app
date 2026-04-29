@@ -731,7 +731,7 @@ function renderSectors(){
         `<td class="${isS1?'best-s1':''}">${fmtS(rec.best_s1)}</td>`,
         `<td class="${isS2?'best-s2':''}">${fmtS(rec.best_s2)}</td>`,
         `<td class="${isS3?'best-s3':''}">${fmtS(rec.best_s3)}</td>`,
-        `<td class="theo">${theo?fmtS(theo):'—'}</td>`,
+        `<td class="theo">${theo?fmt(theo):'—'}</td>`,
       ];
     }).join('');
     return header+`<tr class="drow"><td></td>${cells}</tr>`;
@@ -968,7 +968,7 @@ function exportCSV(){
     csv+=[row.circuit,row.config,row.car_class,...pilots.flatMap(p=>{
       const r=row.times[p];
       if(!r)return['','','','',''];
-      const theo=(r.best_s1&&r.best_s2&&r.best_s3)?fmtS(r.best_s1+r.best_s2+r.best_s3):'';
+      const theo=(r.best_s1&&r.best_s2&&r.best_s3)?fmt(r.best_s1+r.best_s2+r.best_s3):'';
       return[fmt(r.time_sec),fmtS(r.best_s1),fmtS(r.best_s2),fmtS(r.best_s3),theo];
     })].join(',')+'\n';
   });
