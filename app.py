@@ -1,9 +1,10 @@
 """
-LMU Lap Comparator — App principale v5
-- Gestion robuste des fichiers XML corrompus
-- Push uniquement si des données sont trouvées
+LMU Lap Comparator — App principale v6
+- Meilleur temps = minimum absolu toutes voitures confondues
+- Tour théorique = meilleurs secteurs avec la MÊME voiture uniquement
+- Gestion robuste des XML corrompus
 """
-import os, sys, json, re, threading, time, webbrowser
+import os, sys, json, threading, time, webbrowser
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -39,32 +40,34 @@ def extract_brand(car_type):
     return car_type.split()[0] if car_type else ""
 
 def parse_xml_safe(filepath):
-    """Parse XML with fallback for corrupted files."""
     try:
         return ET.parse(filepath).getroot()
     except ET.ParseError:
-        # Try reading only valid portion
         try:
             with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.read()
-            # Find last valid closing tag
             idx = content.rfind('</Driver>')
-            if idx == -1:
-                return None
-            content = content[:idx + len('</Driver>')] + '\n</RaceResults>\n</rFactorXML>'
-            return ET.fromstring(content)
+            if idx == -1: return None
+            return ET.fromstring(content[:idx+9] + '</RaceResults></rFactorXML>')
         except:
             return None
 
 def parse_folder(folder, my_name):
-    best = {}
+    """
+    Retourne dict: "circuit|config|car_class" → {
+        time_sec, time_str, car_class, car_type, brand,
+        best_s1, best_s2, best_s3  (meilleurs secteurs avec la MÊME voiture)
+    }
+    Meilleur temps = minimum absolu toutes voitures.
+    """
+    # Structure: key=(circ,cfg,cc) → {best_lap, per_car: {car_type: {t, s1, s2, s3}}}
+    data = {}
+
     try:
-        files = sorted(Path(folder).glob("*.xml"), key=lambda x: x.stat().st_mtime)
-        for fp in files:
+        for fp in sorted(Path(folder).glob("*.xml"), key=lambda x: x.stat().st_mtime):
             try:
                 root = parse_xml_safe(str(fp))
-                if root is None:
-                    continue
+                if root is None: continue
 
                 circ = cfg = ""
                 for e in root.iter("TrackVenue"):
@@ -85,57 +88,88 @@ def parse_folder(folder, my_name):
                         cc = class_el.text.strip() if class_el is not None and class_el.text else "Unknown"
                         ct = type_el.text.strip()  if type_el  is not None and type_el.text  else ""
                         br = extract_brand(ct)
-                        k  = f"{circ}|{cfg}|{cc}"
+                        key = (circ, cfg, cc)
+
+                        if key not in data:
+                            data[key] = {"best_lap": None, "per_car": {}}
+
+                        if ct not in data[key]["per_car"]:
+                            data[key]["per_car"][ct] = {
+                                "brand": br, "best_t": None,
+                                "best_s1": None, "best_s2": None, "best_s3": None
+                            }
 
                         for lap in drv.findall("Lap"):
                             try:
-                                lap_text = (lap.text or "").strip()
-                                # Skip invalid laps
-                                if not lap_text or '-' in lap_text: 
-                                    # Still grab sectors if available
-                                    pass
-                                else:
-                                    t_sec = float(lap_text)
-                                    if 0 < t_sec < 600 and not lap.get("pit"):
-                                        def safe_s(attr):
-                                            v = lap.get(attr)
-                                            if not v: return None
-                                            try:
-                                                f = float(v)
-                                                return f if 0 < f < 300 else None
-                                            except: return None
+                                text = (lap.text or "").strip()
+                                if not text or '-' in text: continue
+                                if lap.get("pit"): continue
+                                t = float(text)
+                                if t <= 0 or t > 600: continue
 
-                                        s1 = safe_s("s1")
-                                        s2 = safe_s("s2")
-                                        s3 = safe_s("s3")
+                                def safe_s(attr):
+                                    v = lap.get(attr)
+                                    if not v: return None
+                                    try:
+                                        f = float(v)
+                                        return f if 0 < f < 300 else None
+                                    except: return None
 
-                                        if k not in best:
-                                            best[k] = {
-                                                "time_sec": t_sec, "time_str": fmt(t_sec),
-                                                "car_class": cc, "car_type": ct, "brand": br,
-                                                "best_s1": s1, "best_s2": s2, "best_s3": s3,
-                                            }
-                                        else:
-                                            rec = best[k]
-                                            if t_sec < rec["time_sec"]:
-                                                rec["time_sec"] = t_sec
-                                                rec["time_str"] = fmt(t_sec)
-                                            if s1 and (rec["best_s1"] is None or s1 < rec["best_s1"]):
-                                                rec["best_s1"] = s1
-                                            if s2 and (rec["best_s2"] is None or s2 < rec["best_s2"]):
-                                                rec["best_s2"] = s2
-                                            if s3 and (rec["best_s3"] is None or s3 < rec["best_s3"]):
-                                                rec["best_s3"] = s3
+                                s1, s2, s3 = safe_s("s1"), safe_s("s2"), safe_s("s3")
+                                car = data[key]["per_car"][ct]
+
+                                # Update best lap for this car
+                                if car["best_t"] is None or t < car["best_t"]:
+                                    car["best_t"] = t
+
+                                # Update best individual sectors for this car
+                                if s1 and (car["best_s1"] is None or s1 < car["best_s1"]):
+                                    car["best_s1"] = s1
+                                if s2 and (car["best_s2"] is None or s2 < car["best_s2"]):
+                                    car["best_s2"] = s2
+                                if s3 and (car["best_s3"] is None or s3 < car["best_s3"]):
+                                    car["best_s3"] = s3
+
+                                # Update global best lap (all cars)
+                                bl = data[key]["best_lap"]
+                                if bl is None or t < bl["time_sec"]:
+                                    data[key]["best_lap"] = {
+                                        "time_sec": t, "time_str": fmt(t),
+                                        "car_type": ct, "brand": br
+                                    }
                             except: continue
                     except: continue
             except: continue
     except Exception as e:
         print(f"[ERR] {e}")
-    return best
+
+    # Build final output
+    result = {}
+    for (circ, cfg, cc), val in data.items():
+        bl = val.get("best_lap")
+        if not bl: continue
+
+        # Find best sectors from the car that has the best lap
+        best_car_type = bl["car_type"]
+        best_car = val["per_car"].get(best_car_type, {})
+
+        k = f"{circ}|{cfg}|{cc}"
+        result[k] = {
+            "time_sec":  bl["time_sec"],
+            "time_str":  bl["time_str"],
+            "car_class": cc,
+            "car_type":  best_car_type,
+            "brand":     bl["brand"],
+            "best_s1":   best_car.get("best_s1"),
+            "best_s2":   best_car.get("best_s2"),
+            "best_s3":   best_car.get("best_s3"),
+        }
+
+    return result
 
 def api_push(name, times):
     if not times:
-        print("[SKIP] Aucune donnée à pousser")
+        print("[SKIP] Aucune donnée")
         return None
     try:
         body = json.dumps({"pilot": name, "times": times}).encode()
@@ -173,9 +207,9 @@ class Handler(BaseHTTPRequestHandler):
             folder = cfg.get("folder", "")
             result = {"ok": False, "pilots": 0, "times": 0, "error": ""}
             if name and folder:
-                print(f"[SYNC] Parsing {folder} pour {name}...")
+                print(f"[SYNC] Parsing pour {name}...")
                 times = parse_folder(folder, name)
-                print(f"[SYNC] {len(times)} entrées trouvées")
+                print(f"[SYNC] {len(times)} entrées")
                 if times:
                     api_push(name, times)
                 result["times"] = len(times)
@@ -198,8 +232,7 @@ class Handler(BaseHTTPRequestHandler):
             name   = cfg.get("name", ""); folder = cfg.get("folder", "")
             if name and folder:
                 times = parse_folder(folder, name)
-                if times:
-                    api_push(name, times)
+                if times: api_push(name, times)
             self._json({"ok": True})
         else:
             self.send_error(404)
