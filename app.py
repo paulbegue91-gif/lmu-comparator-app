@@ -1,8 +1,9 @@
 """
-LMU Lap Comparator — App principale v6
-- Meilleur temps = minimum absolu toutes voitures confondues
-- Tour théorique = meilleurs secteurs avec la MÊME voiture uniquement
-- Gestion robuste des XML corrompus
+LMU Lap Comparator — App principale v7
+- Une seule entrée par circuit/config (meilleur temps absolu toutes voitures)
+- Voiture = celle avec laquelle le meilleur temps a été réalisé
+- Secteurs = meilleurs secteurs avec cette même voiture uniquement
+- Tour théorique cohérent (même voiture)
 """
 import os, sys, json, threading, time, webbrowser
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -54,14 +55,13 @@ def parse_xml_safe(filepath):
 
 def parse_folder(folder, my_name):
     """
-    Retourne dict: "circuit|config|car_class" → {
-        time_sec, time_str, car_class, car_type, brand,
-        best_s1, best_s2, best_s3  (meilleurs secteurs avec la MÊME voiture)
-    }
-    Meilleur temps = minimum absolu toutes voitures.
+    Retourne dict: "circuit|config|car_class" → meilleur temps absolu.
+    - Une seule entrée par (circuit, config, car_class)
+    - Voiture = celle du meilleur tour
+    - Secteurs = meilleurs secteurs avec cette MÊME voiture
     """
-    # Structure: key=(circ,cfg,cc) → {best_lap, per_car: {car_type: {t, s1, s2, s3}}}
-    data = {}
+    # key=(circ,cfg,cc) → {best_t, best_car, per_car_sectors}
+    raw = {}
 
     try:
         for fp in sorted(Path(folder).glob("*.xml"), key=lambda x: x.stat().st_mtime):
@@ -75,7 +75,8 @@ def parse_folder(folder, my_name):
                 for e in root.iter("TrackCourse"):
                     if e.text: cfg = e.text.strip(); break
                 if not circ: continue
-                if cfg == circ: cfg = "WEC"
+                # Keep config separate only if different from venue
+                display_cfg = "" if cfg == circ else cfg
 
                 for drv in root.iter("Driver"):
                     try:
@@ -88,16 +89,14 @@ def parse_folder(folder, my_name):
                         cc = class_el.text.strip() if class_el is not None and class_el.text else "Unknown"
                         ct = type_el.text.strip()  if type_el  is not None and type_el.text  else ""
                         br = extract_brand(ct)
-                        key = (circ, cfg, cc)
 
-                        if key not in data:
-                            data[key] = {"best_lap": None, "per_car": {}}
+                        key = (circ, display_cfg, cc)
+                        if key not in raw:
+                            raw[key] = {"best_t": None, "best_car": ct, "brand": br, "sectors": {}}
 
-                        if ct not in data[key]["per_car"]:
-                            data[key]["per_car"][ct] = {
-                                "brand": br, "best_t": None,
-                                "best_s1": None, "best_s2": None, "best_s3": None
-                            }
+                        # Init per-car sector tracking
+                        if ct not in raw[key]["sectors"]:
+                            raw[key]["sectors"][ct] = {"s1": None, "s2": None, "s3": None}
 
                         for lap in drv.findall("Lap"):
                             try:
@@ -116,55 +115,43 @@ def parse_folder(folder, my_name):
                                     except: return None
 
                                 s1, s2, s3 = safe_s("s1"), safe_s("s2"), safe_s("s3")
-                                car = data[key]["per_car"][ct]
 
-                                # Update best lap for this car
-                                if car["best_t"] is None or t < car["best_t"]:
-                                    car["best_t"] = t
+                                # Update best sectors for this car
+                                sec = raw[key]["sectors"][ct]
+                                if s1 and (sec["s1"] is None or s1 < sec["s1"]): sec["s1"] = s1
+                                if s2 and (sec["s2"] is None or s2 < sec["s2"]): sec["s2"] = s2
+                                if s3 and (sec["s3"] is None or s3 < sec["s3"]): sec["s3"] = s3
 
-                                # Update best individual sectors for this car
-                                if s1 and (car["best_s1"] is None or s1 < car["best_s1"]):
-                                    car["best_s1"] = s1
-                                if s2 and (car["best_s2"] is None or s2 < car["best_s2"]):
-                                    car["best_s2"] = s2
-                                if s3 and (car["best_s3"] is None or s3 < car["best_s3"]):
-                                    car["best_s3"] = s3
+                                # Update global best lap
+                                if raw[key]["best_t"] is None or t < raw[key]["best_t"]:
+                                    raw[key]["best_t"] = t
+                                    raw[key]["best_car"] = ct
+                                    raw[key]["brand"] = br
 
-                                # Update global best lap (all cars)
-                                bl = data[key]["best_lap"]
-                                if bl is None or t < bl["time_sec"]:
-                                    data[key]["best_lap"] = {
-                                        "time_sec": t, "time_str": fmt(t),
-                                        "car_type": ct, "brand": br
-                                    }
                             except: continue
                     except: continue
             except: continue
     except Exception as e:
         print(f"[ERR] {e}")
 
-    # Build final output
+    # Build final result
     result = {}
-    for (circ, cfg, cc), val in data.items():
-        bl = val.get("best_lap")
-        if not bl: continue
-
-        # Find best sectors from the car that has the best lap
-        best_car_type = bl["car_type"]
-        best_car = val["per_car"].get(best_car_type, {})
-
+    for (circ, cfg, cc), val in raw.items():
+        if val["best_t"] is None: continue
+        best_car = val["best_car"]
+        sec = val["sectors"].get(best_car, {})
         k = f"{circ}|{cfg}|{cc}"
         result[k] = {
-            "time_sec":  bl["time_sec"],
-            "time_str":  bl["time_str"],
+            "time_sec":  val["best_t"],
+            "time_str":  fmt(val["best_t"]),
             "car_class": cc,
-            "car_type":  best_car_type,
-            "brand":     bl["brand"],
-            "best_s1":   best_car.get("best_s1"),
-            "best_s2":   best_car.get("best_s2"),
-            "best_s3":   best_car.get("best_s3"),
+            "car_type":  best_car,
+            "brand":     val["brand"],
+            "best_s1":   sec.get("s1"),
+            "best_s2":   sec.get("s2"),
+            "best_s3":   sec.get("s3"),
         }
-
+    print(f"[PARSE] {len(result)} entrées trouvées")
     return result
 
 def api_push(name, times):
@@ -209,7 +196,6 @@ class Handler(BaseHTTPRequestHandler):
             if name and folder:
                 print(f"[SYNC] Parsing pour {name}...")
                 times = parse_folder(folder, name)
-                print(f"[SYNC] {len(times)} entrées")
                 if times:
                     api_push(name, times)
                 result["times"] = len(times)
