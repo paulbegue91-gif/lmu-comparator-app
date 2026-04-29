@@ -653,16 +653,15 @@ function renderTable(){
     const bestT=Math.min(...Object.values(visibleTimes).map(v=>v.time_sec));
     const bestP=Object.entries(visibleTimes).find(([,v])=>v.time_sec===bestT)?.[0];
     let header;
+    const cfgLabel=row.config?` <span class="grp-cfg">— ${row.config}</span>`:'';
+    if(row.circuit!==lastCirc||S.sortCol){
       lastCirc=row.circuit;
-      lastCirc=row.circuit;
-      const cfgLabel=row.config?` <span class="grp-cfg">— ${row.config}</span>`:'';
       header=`<tr class="grp"><td colspan="${sortedPilots.length+1}">
         <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>${cfgLabel}
         <span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     } else {
-      const cfgLabel2=row.config?` <span class="grp-cfg">— ${row.config}</span>`:'';
       header=`<tr class="grp"><td colspan="${sortedPilots.length+1}" style="padding-left:34px">
-        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>${cfgLabel2}
+        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>${cfgLabel}
         <span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     }
     const cells=sortedPilots.map(p=>{
