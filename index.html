@@ -653,16 +653,17 @@ function renderTable(){
     const bestT=Math.min(...Object.values(visibleTimes).map(v=>v.time_sec));
     const bestP=Object.entries(visibleTimes).find(([,v])=>v.time_sec===bestT)?.[0];
     let header;
-    if(row.circuit!==lastCirc||S.sortCol){
       lastCirc=row.circuit;
+      lastCirc=row.circuit;
+      const cfgLabel=row.config?` <span class="grp-cfg">— ${row.config}</span>`:'';
       header=`<tr class="grp"><td colspan="${sortedPilots.length+1}">
-        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>
-        <span class="grp-cfg">${row.config&&row.config!==row.circuit?'/ '+row.config:''}</span>
+        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>${cfgLabel}
         <span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     } else {
-      header=`<tr class="grp"><td colspan="${sortedPilots.length+1}" style="padding-left:50px">
-        <div class="grp-inner"><span class="cat-pill cat-${row.car_class}">${row.car_class}</span>
-        <span class="grp-cfg">${row.config&&row.config!==row.circuit?row.config:''}</span></div></td></tr>`;
+      const cfgLabel2=row.config?` <span class="grp-cfg">— ${row.config}</span>`:'';
+      header=`<tr class="grp"><td colspan="${sortedPilots.length+1}" style="padding-left:34px">
+        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>${cfgLabel2}
+        <span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     }
     const cells=sortedPilots.map(p=>{
       const rec=times[p],isBest=p===bestP&&rec;
@@ -712,12 +713,15 @@ function renderSectors(){
     let header;
     if(row.circuit!==lastCirc){
       lastCirc=row.circuit;
+      const scfg=row.config?` <span class="grp-cfg">— ${row.config}</span>`:'';
       header=`<tr class="grp"><td colspan="${pilots.length*5+1}">
-        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>
+        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>${scfg}
         <span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     } else {
-      header=`<tr class="grp"><td colspan="${pilots.length*5+1}" style="padding-left:50px">
-        <div class="grp-inner"><span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
+      const scfg2=row.config?` <span class="grp-cfg">— ${row.config}</span>`:'';
+      header=`<tr class="grp"><td colspan="${pilots.length*5+1}" style="padding-left:34px">
+        <div class="grp-inner">${getFlag(row.circuit)}<span class="grp-name">${row.circuit}</span>${scfg2}
+        <span class="cat-pill cat-${row.car_class}">${row.car_class}</span></div></td></tr>`;
     }
     const cells=pilots.flatMap(p=>{
       const rec=times[p];
